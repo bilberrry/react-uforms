@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -17,6 +17,9 @@
     "email": "bohdam.protsiuk@gmail.com"
   },
   "license": "MIT",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "lint": "eslint src",
     "lintfix": "eslint src --fix",
