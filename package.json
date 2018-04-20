@@ -1,0 +1,46 @@
+{
+  "name": "react-uforms",
+  "version": "0.1.0",
+  "description": "Simple and elegant forms for your React application",
+  "keywords": [
+    "react",
+    "form",
+    "uform",
+    "react-uform",
+    "react form",
+    "react forms"
+  ],
+  "main": "lib/index.js",
+  "repository": "https://github.com/summerua/react-uforms.git",
+  "author": {
+    "name": "Bohdan Protsiuk",
+    "email": "bohdam.protsiuk@gmail.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src",
+    "lintfix": "eslint src --fix",
+    "clean": "rm -rf lib && mkdir lib",
+    "build": "babel src  --out-dir lib",
+    "start": "yarn run build --watch"
+  },
+  "peerDependencies": {
+    "react": "^16.3.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-standard-react": "^6.0.0",
+    "eslint-plugin-react": "^7.7.0"
+  }
+}
