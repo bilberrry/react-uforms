@@ -21,12 +21,16 @@ import { Form } from 'react-uforms'
 
 // ...
 
+// Comming soon
+
 ```
 ### 2. Validation
 ```jsx
 import { Form } from 'react-uforms'
 
 // ...
+
+// Comming soon
 
 ```
 
@@ -36,6 +40,8 @@ import { Form } from 'react-uforms'
 
 // ...
 
+// Comming soon
+
 ```
 
 ### 4. Custom validator
@@ -44,11 +50,13 @@ import { Form } from 'react-uforms'
 
 // ...
 
+// Comming soon
+
 ```
 
 ### 5. Advanced form with Bootsrap 4
 ```jsx
-import { Form } from 'react-uforms'
+import { Form, Validator, FieldError, Checkbox, Radio, Select, Text, TextArea } from 'react-uforms'
 
 // ...
 
