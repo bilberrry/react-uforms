@@ -1,6 +1,7 @@
 # React uForms
+[![npm version](https://badge.fury.io/js/react-uforms.svg)](https://badge.fury.io/js/react-uforms)
 
-Simple and elegant forms for your React application. React uForms based on new [Context API](https://reactjs.org/docs/context.html) (React v16.3 or higher).
+Simple and elegant forms for your React application. React uForms based on [Context API](https://reactjs.org/docs/context.html) (React v16.3 or higher).
 
 ### Installation
 Using Yarn
@@ -15,83 +16,123 @@ npm install react-uforms --save
 ```
 ## Usage
 
-### 1. Basic example
+### 1. Simple example
 ```jsx
-import { Form } from 'react-uforms'
+import { Form, Text } from 'react-uforms'
 
-// ...
-
-// Comming soon
-
+const example = (
+  <Form onSubmit={values => console.log(values)}>
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+    
+    <label htmlFor="password">Password</label>
+    <Text type="password" id="password" name="password" />
+    
+    <button type="submit">Submit</button>
+  </Form>
+);
 ```
+[Demo](http://react-ufroms.d3v.me#simple-example)
+
 ### 2. Validation
 ```jsx
-import { Form } from 'react-uforms'
-
-// ...
-
-// Comming soon
-
+import { Form, Text } from 'react-uforms'
+    
+const example = (
+  <Form
+    validation={() => ({
+      email: [
+        Validator.Required(),
+        Validator.Email(),
+      ],
+      password: [
+        Validator.Required(),
+        Validator.MinLength(6),
+        Validator.MaxLength(32),
+        Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
+        Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
+        Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
+      ]
+    })}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+  
+    <label htmlFor="password">Password</label>
+    <Text type="password" id="password" name="password" />
+  
+    <button type="submit">Submit</button>
+  </Form>
+);
 ```
+[Demo](http://react-ufroms.d3v.me#validation)
 
-### 3. Prefiled form
+### 3. Custom validation
 ```jsx
-import { Form } from 'react-uforms'
-
-// ...
-
-// Comming soon
-
+import { Form, Text } from 'react-uforms'
+    
+const example = (
+  <Form
+    validation={({ getValue }) => ({
+      email: [
+        Validator.Required(),
+        Validator.Email(),
+      ],
+      password: [
+        Validator.Required(),
+        Validator.MinLength(6),
+        Validator.MaxLength(32),
+        Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
+        Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
+        Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
+      ],
+      password2: [
+        Validator.Required(),
+        (value) => {
+          if (getValue('password') !== value) {
+            return 'Retype password is not equal.'
+          }
+          return true;
+        },
+      ]
+    })}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+  
+    <label htmlFor="password">Password</label>
+    <Text type="password" id="password" name="password" />
+    
+    <label htmlFor="password2">Retype Password</label>
+    <Text type="password" id="password2" name="password2" />
+  
+    <button type="submit">Submit</button>
+  </Form>
+);
 ```
+[Demo](http://react-ufroms.d3v.me#custom-validation)
 
-### 4. Custom validator
+### 4. Pre-filled form
 ```jsx
-import { Form } from 'react-uforms'
-
-// ...
-
-// Comming soon
-
-```
-
-### 5. Advanced form with Bootsrap 4
-```jsx
-import { Form, Validator, FieldError, Checkbox, Radio, Select, Text, TextArea } from 'react-uforms'
-
-// ...
-
-<Form
-  values={{
-    id: 1,
-    email: 'foo.bar@example.com',
-    username: 'foobar',
-    profile: {
-      firstName: 'Foo',
-      lastName: 'Bar',
-      sex: 'male',
-      bio: 'void, define'
-    },
-    address: {
-      country: 'US',
-      state: null,
-      city: 'Seattle',
-      address: '12 Long Ave',
-      address2: null,
-      zip: '98121',
-    },
-    newsletter: {
-      daily: true,
-      weekly: 0,
-    },
-  }}
-  onSubmit={(values) => {
-     // ...
-  }}
-  onError={(errors) => {
-    // ...
-  }}
-  validation={({ getValue }) => {
-    return {
+import { Form, Text, TextArea } from 'react-uforms'
+    
+const example = (
+  <Form
+    values={{
+      id: 1,
+      email: 'foo.bar@example.com',
+      profile: {
+        firstName: 'Foo',
+        lastName: 'Bar',
+        bio: 'Travel blogger',
+      },
+      createdAt: '2018-04-25T23:36:02+00:00'
+    }}
+    validation={() => ({
       email: [
         Validator.Required(),
         Validator.Email(),
@@ -100,154 +141,256 @@ import { Form, Validator, FieldError, Checkbox, Radio, Select, Text, TextArea } 
         firstName: [
           Validator.Required(),
           Validator.MinLength(2),
-          Validator.MaxLength(32),
+          Validator.MaxLength(20),
         ],
         lastName: [
           Validator.Required(),
           Validator.MinLength(2),
-          Validator.MaxLength(32),
-        ],
-        sex: [
-          Validator.Required(),
-          Validator.Range(['male', 'female']),
+          Validator.MaxLength(20),
         ],
         bio: [
-          Validator.MaxLength(200),
-        ],
+          Validator.MaxLength(200)
+        ]
       },
+    })}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+
+    <label htmlFor="firstName">First Name</label>
+    <Text type="text" id="firstName" name="profile.firstName" />
+
+    <label htmlFor="lastName">Last Name</label>
+    <Text type="text" id="lastName" name="profile.lastName" />
+
+    <label htmlFor="bio">Bio</label>
+    <TextArea id="bio" name="profile.bio" />
+
+    <button type="submit">Submit</button>
+  </Form>
+);
+```
+[Demo](http://react-ufroms.d3v.me#pre-filled-form)
+
+### 5. Dynamic form
+```jsx
+import { Form, Text, Select } from 'react-uforms'
+    
+const example = (
+  <Form
+    values={{
+      id: 1,
+      email: 'foo.bar@example.com',
+      address: {
+        country: 'US',
+        state: 'WA',
+        city: 'Seattle',
+      },
+    }}
+    validation={({ getValue }) => ({
       address: {
         country: [
           Validator.Required(),
-          Validator.Range(['US', 'UK']),
+          Validator.Range(['US', 'CA']),
         ],
         state: [
           ...(getValue('address.country') === 'US' ? [Validator.Required()] : []),
-          Validator.MaxLength(30),
+          Validator.Range(['WA', 'OR', 'CA']),
         ],
         city: [
           Validator.Required(),
           Validator.MaxLength(30),
         ],
-        address: [
+      },
+    })}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
+  >
+    {({ getValue, setValue }) => (
+      <Fragment>
+        <label htmlFor="country">Country</label>
+        <Select
+          id="country"
+          name="address.country"
+          onChange={() => {
+            if (getValue('address.country') !== 'US') {
+              setValue('address.state', '');
+            }
+          }}
+          options={[
+            { value: '', name: 'Select country' },
+            { value: 'US', name: 'United States' },
+            { value: 'CA', name: 'Canada' },
+            { value: 'UK', name: 'United Kingdom - coming soon', disabled: true }
+          ]}
+        />
+
+        {getValue('address.country') === 'US' && <Fragment>
+          <label htmlFor="state">State</label>
+          <Select
+            id="state"
+            name="address.state"
+            options={[
+              { value: '', name: 'Select state' },
+              { value: 'WA', name: 'Washington' },
+              { value: 'CA', name: 'California' },
+              { value: 'OR', name: 'Oregon' }
+            ]}
+          />
+        </Fragment>}
+
+        <label htmlFor="city">City</label>
+        <Text type="text" id="city" name="address.city" />
+
+        <button type="submit">Submit</button>
+      </Fragment>
+    )}
+  </Form>
+);
+```
+[Demo](http://react-ufroms.d3v.me#pre-filled-form)
+
+### 6. Errors customization
+```jsx
+import { Form, Text, FieldError } from 'react-uforms'
+    
+const example = (
+  <Form
+    validation={() => ({
+      email: [
+        Validator.Required(),
+        Validator.Email(),
+      ],
+      profile: {
+        firstName: [
           Validator.Required(),
-          Validator.MaxLength(60),
+          Validator.MinLength(2),
+          Validator.MaxLength(20),
         ],
-        address2: [
-          Validator.MaxLength(60),
+        lastName: [
+          Validator.Required(),
+          Validator.MinLength(2),
+          Validator.MaxLength(20),
         ],
       },
-    };
-  }}
->
-  {({ getValue }) => (
-    <div className="row">
-      <div className="col-md-6 mb-3">
-        <label htmlFor="email">Email</label>
-        <Text name="email" className="form-control" id="email" />
-      </div>
-    </div>
+    })}
+    errorClass="your-error-class"
+    invalidClass="your-invalid-input-class"
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" hideError={true} />
+    <strong><FieldError name="email" /></strong>
 
-    <div className="row">
-      <div className="col-md-6 mb-3">
-        <label htmlFor="profile.firstName">First name</label>
-        <Text name="profile.firstName" className="form-control" id="firstName" />
-      </div>
-      <div className="col-md-6 mb-3">
-        <label htmlFor="profile.lastName">Last name</label>
-        <Text name="profile.lastName" className="form-control" id="lastName" />
-      </div>
-    </div>
+    <label htmlFor="firstName">First Name</label>
+    <Text type="text" id="firstName" name="profile.firstName" hideError={true} />
+    <FieldError name="profile.firstName" className="add-some-error-class" />
 
-    <div className="row">
-      <div className="col-md-12 mb-3">
-        <div className="custom-control custom-radio custom-control-inline">
-          <Radio name="profile.sex" value="male" type="radio" id="male" className="custom-control-input" />
-          <label className="custom-control-label" htmlFor="male">Male</label>
-        </div>
-        <div className="custom-control custom-radio custom-control-inline">
-          <Radio name="profile.sex" value="female" type="radio" id="female" className="custom-control-input" />
-          <label className="custom-control-label" htmlFor="female">Female</label>
-        </div>
-        <FieldError name="profile.sex" />
-      </div>
-    </div>
+    <label htmlFor="lastName">Last Name</label>
+    <Text type="text" id="lastName" name="profile.lastName" />
 
-    <div className="row">
-      <div className="col-md-12 mb-3">
-        <label htmlFor="bio">Bio</label>
-        <TextArea name="profile.bio" className="form-control" id="bio" />
-      </div>
-    </div>
-
-    <hr className="mb-4" />
-
-    <h4 className="mb-3">Address</h4>
-
-    <div className="row">
-      <div className="col-md-12 mb-3">
-        <label htmlFor="address">Address</label>
-        <Text name="address.address" className="form-control" id="address" />
-      </div>
-    </div>
-
-    <div className="row">
-      <div className="col-md-12 mb-3">
-        <label htmlFor="address2">Address 2 (optional)</label>
-        <Text name="address.address2" className="form-control" id="address2" />
-      </div>
-    </div>
-
-    <div className="row">
-      <div className="col-md-5 mb-3">
-        <label htmlFor="country">Country</label>
-        <Select name="address.country" className="custom-select d-block w-100" id="country" options={[
-          { value: 'US', name: 'United States' },
-          { value: 'UK', name: 'United Kingdom' },
-          { value: 'CA', name: 'Canada', disabled: true },
-        ]} />
-      </div>
-    </div>
-
-    <div className="row">
-      <div className="col-md-5 mb-3">
-        <label htmlFor="city">City</label>
-        <Text name="address.city" type="text" className="form-control" id="city" />
-      </div>
-      {getValue('address.country') === 'US' && <div className="col-md-4 mb-3">
-        <label htmlFor="state">State</label>
-        <Select name="address.state" className="custom-select d-block w-100" id="state" options={[
-          { value: '', name: 'Select state' },
-          { value: 'CA', name: 'California' },
-          { value: 'WA', name: 'Washington' },
-        ]} />
-      </div>}
-      <div className="col-md-3 mb-3">
-        <label htmlFor="zip">Zip</label>
-        <Text name="address.zip" type="text" className="form-control" id="zip" />
-      </div>
-    </div>
-
-    <hr className="mb-4" />
-
-    <h4 className="mb-3">Newsletter</h4>
-
-    <div className="custom-control custom-checkbox">
-      <Checkbox name="newsletter.daily" onValue={true} offValue={false} className="custom-control-input" id="newsletter.daily" />
-      <label className="custom-control-label" htmlFor="newsletter.daily">Daily updates</label>
-    </div>
-    <div className="custom-control custom-checkbox">
-      <Checkbox name="newsletter.weekly" onValue={1} offValue={0} className="custom-control-input" id="newsletter.weekly" />
-      <label className="custom-control-label" htmlFor="newsletter.weekly">Weekly updates</label>
-    </div>
-
-    <hr className="mb-4" />
-
-    <button className="btn btn-primary btn-lg btn-block" type="submit">Save</button>
-  )}
-</Form>
-
-// ...
+    <button type="submit">Submit</button>
+  </Form>
+);
 ```
+[Demo](http://react-ufroms.d3v.me#errors-customization)
+
+### 7. All fields
+```jsx
+import { Form, Validator, Text, Select, TextArea, Radio, Checkbox, FieldError } from 'react-uforms'
+    
+const example = (
+  <Form
+    values={{
+      email: 'foo.bar@example.com',
+      country: 'US',
+      bio: 'Travel blogger',
+      gender: 'male',
+      newsletter: 0,
+    }}
+    validation={() => ({
+      email: [
+        Validator.Required(),
+        Validator.Email(),
+      ],
+      country: [
+        Validator.Required(),
+        Validator.Range(['US', 'CA']),
+      ],
+      gender: [
+        Validator.Required(),
+        Validator.Range(['male', 'female']),
+      ],
+      bio: [
+        Validator.MaxLength(200),
+      ],
+      newsletter: [
+        Validator.Required(),
+        Validator.Range([1, 0]),
+      ],
+    })}
+    onSubmit={(values) => {
+      this.setState({
+        errors: null,
+        values,
+      })
+    }}
+    onError={(errors) => {
+      this.setState({
+        errors,
+        values: null,
+      })
+    }}
+  >
+    <label htmlFor="email">Email</label>
+    <Text id="email" name="email" disabled={true} />
+
+    <label htmlFor="password">Password</label>
+    <Text type="password" id="password" name="password" />
+
+    <label htmlFor="country">Country</label>
+    <Select
+      id="country"
+      name="country"
+      options={[
+        { value: '', name: 'Select country' },
+        { value: 'US', name: 'United States' },
+        { value: 'CA', name: 'Canada' },
+        { value: 'UK', name: 'United Kingdom', disabled: true }
+      ]}
+    />
+
+    <div className="checkbox-group">
+      <label>Gender</label>
+      <div className="checkbox">
+        <Radio name="gender" value="male" type="radio" id="male" />
+        <label htmlFor="male">Male</label>
+      </div>
+      <div className="checkbox">
+        <Radio name="gender" value="female" type="radio" id="female" />
+        <label htmlFor="female">Female</label>
+      </div>
+      <FieldError name="gender" />
+    </div>
+
+    <label htmlFor="bio">Bio</label>
+    <TextArea id="bio" name="bio" />
+
+    <div className="radio-group">
+      <div className="radio">
+        <Checkbox name="newsletter" onValue={1} offValue={0} id="newsletter" />
+        <label htmlFor="newsletter">Receive Weekly Updates</label>
+      </div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </Form>
+);
+```
+[Demo](http://react-ufroms.d3v.me#all-fields)
 
 ## Authors
 
