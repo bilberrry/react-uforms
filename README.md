@@ -32,7 +32,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#simple-example)
+[Demo](http://react-uforms.d3v.me#simple-example)
 
 ### 2. Validation
 ```jsx
@@ -67,7 +67,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#validation)
+[Demo](http://react-uforms.d3v.me#validation)
 
 ### 3. Custom validation
 ```jsx
@@ -114,7 +114,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#custom-validation)
+[Demo](http://react-uforms.d3v.me#custom-validation)
 
 ### 4. Pre-filled form
 ```jsx
@@ -172,7 +172,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#pre-filled-form)
+[Demo](http://react-uforms.d3v.me#pre-filled-form)
 
 ### 5. Dynamic form
 ```jsx
@@ -250,7 +250,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#pre-filled-form)
+[Demo](http://react-uforms.d3v.me#pre-filled-form)
 
 ### 6. Errors customization
 ```jsx
@@ -296,7 +296,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#errors-customization)
+[Demo](http://react-uforms.d3v.me#errors-customization)
 
 ### 7. All fields
 ```jsx
@@ -390,7 +390,7 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-ufroms.d3v.me#all-fields)
+[Demo](http://react-uforms.d3v.me#all-fields)
 
 ## Authors
 
@@ -398,4 +398,4 @@ const example = (
 
 ## License
 
-MIT License - see the [LICENSE.md](LICENSE.md) file for details
+MIT License - see the [LICENSE](LICENSE) file for details
