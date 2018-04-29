@@ -15,7 +15,7 @@ class Form extends Component {
       PropTypes.node,
       PropTypes.func,
     ]).isRequired,
-    values: PropTypes.object.isRequired,
+    values: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
     validation: PropTypes.func,
@@ -24,8 +24,9 @@ class Form extends Component {
   };
 
   static defaultProps = {
+    values: {},
     onError: () => {},
-    validation: () => {},
+    validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
   };
