@@ -1,0 +1,261 @@
+*, ::after, ::before {
+   box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  background-color: #ffffff;
+}
+
+.container {
+  width: 100%;
+  max-width: 960px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.col-4, .col-6 {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.col-4 {
+  flex: 0 0 40%;
+  max-width: 40%;
+}
+
+.col-6 {
+  flex: 0 0 60%;
+  max-width: 60%;
+}
+
+label {
+  display: block;
+  width: 100%;
+  margin-bottom: .5rem;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+select {
+  display: block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: .375rem 1.75rem .375rem .75rem;
+  line-height: 1.5;
+  color: #495057;
+  vertical-align: middle;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  background-color: #fff;
+}
+
+button {
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px #007bff solid;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #fff;
+  background-color: #007bff;
+}
+
+input, textarea, select, button {
+  margin-bottom: 1rem;
+}
+
+pre, samp {
+  display: block;
+  font-size: 87.5%;
+  color: #212529;
+  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+
+pre code {
+  font-size: inherit;
+  color: inherit;
+  word-break: normal;
+}
+
+h1, h2, h3, h4 {
+  margin-bottom: .5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.2;
+  color: inherit;
+}
+
+h1 {
+  font-size: 2.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+hr {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+  background-color: #f7f7f9;
+  /*border: 1px solid #ced4da;*/
+  padding: 1rem;
+}
+form {
+  padding-top: .5rem;
+}
+.is-invalid, *:invalid {
+  border-color: #dc3545;
+}
+
+.your-invalid-input-class, .your-invalid-input-class:invalid {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.invalid-feedback {
+  width: 100%;
+  font-size: 80%;
+  color: #dc3545;
+  margin-top: -0.75rem;
+  margin-bottom: 1rem;
+}
+
+.your-error-class {
+  width: 100%;
+  font-size: 80%;
+  color: #dc16a9;
+  margin-top: -0.75rem;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  text-align: left;
+  position: relative;
+}
+
+.lead p {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.anchor {
+  font-weight: 400;
+  color: #6e8ae2;
+  transition: color .16s linear;
+  padding-left: 0.2em;
+  display: none;
+  text-decoration: none;
+}
+
+h4:hover .anchor {
+  display: inline-block;
+}
+
+*:disabled {
+  background-color: #e9ecef;
+}
+
+.add-some-error-class {
+  font-size: 1rem;
+}
+.checkbox, .radio {
+  position: relative;
+  display: block;
+  padding-left: 1.25rem;
+}
+
+.checkbox input, .radio input {
+  position: absolute;
+  margin-top: .3rem;
+  margin-left: -1.25rem;
+  width: auto;
+}
+
+.checkbox label,  .radio label {
+  display: inline-block;
+  width: auto;
+  margin-bottom: 0;
+  padding-left: .2rem;
+}
+
+.checkbox-group, .radio-group {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.repo {
+  position: absolute;
+  top: 1.5rem;
+  right: 0;
+  color: #007bff!important;
+}
+
+footer {
+  padding-bottom: 1rem;
+  text-align: center;
+}
