@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -25,25 +25,31 @@
     "lintfix": "eslint src --fix",
     "clean": "rm -rf lib && mkdir lib",
     "build": "babel src  --out-dir lib",
-    "start": "yarn run build --watch"
+    "start": "yarn run build --watch",
+    "test": "jest tests"
   },
   "peerDependencies": {
-    "react": "^16.3.2"
+    "react": "^16.6.3"
   },
   "dependencies": {
-    "lodash": "^4.17.5",
-    "prop-types": "^15.6.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.2.3",
-    "babel-preset-env": "^1.6.1",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
-    "eslint": "^4.19.1",
-    "eslint-config-standard-react": "^6.0.0",
-    "eslint-plugin-react": "^7.7.0"
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
+    "eslint": "^5.9.0",
+    "eslint-config-standard-react": "^7.0.2",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^23.6.0"
   }
 }

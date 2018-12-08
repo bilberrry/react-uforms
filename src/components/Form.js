@@ -31,14 +31,6 @@ class Form extends Component {
     errorClass: 'invalid-feedback',
   };
 
-  static componentWillReceiveProps(nextProps, prevState) {
-    if (!_.isEqual(nextProps.values, prevState.values)) { // JSON.stringify(nextProps.values) !== JSON.stringify(prevState.values)
-      return { values: _.cloneDeep(nextProps.values), errors: [] };
-    }
-
-    return null;
-  }
-
   api = {
     setValue: (name, value) => {
       const errors = { ...this.state.errors };
@@ -111,7 +103,9 @@ class Form extends Component {
   };
 
   onSubmit = (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     const { validation, onError, onSubmit } = this.props;
     const { values } = this.state;
     const result = {
