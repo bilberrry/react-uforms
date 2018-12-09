@@ -17,7 +17,9 @@ function Field(PassedComponent, passedProps = {}) {
                       <PassedComponent
                         {...props}
                         name={name}
-                        className={errors && errors.length ? `${className} ${api.getInvalidClass()}` : className}
+                        className={errors && errors.length
+                          ? (className ? `${className} ${api.getInvalidClass()}` : api.getInvalidClass())
+                          : className}
                         getValue={() => api.getValue(name)}
                         setValue={(value) => api.setValue(name, value)}
                         setTouched={() => api.setTouched(name)}
