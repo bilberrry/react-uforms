@@ -18,7 +18,7 @@ class App extends Component {
           <p>
             Simple and elegant forms for your <a href="https://github.com/facebook/react">React</a> application.
             <br />
-            <small>React uForms based on <a href="https://reactjs.org/docs/context.html">Context API</a> (React v16.3 or higher).</small>
+            <small>React uForms based on <a href="https://reactjs.org/docs/context.html">Context API</a> (React v16.6 or higher).</small>
           </p>
         </div>
         <h2>Installation</h2>

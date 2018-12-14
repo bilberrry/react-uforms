@@ -1,7 +1,7 @@
 # React uForms
 [![npm version](https://badge.fury.io/js/react-uforms.svg)](https://badge.fury.io/js/react-uforms)
 
-Simple and elegant forms for your React application. React uForms based on [Context API](https://reactjs.org/docs/context.html) (React v16.3 or higher).
+Simple and elegant forms for your React application. React uForms based on [Context API](https://reactjs.org/docs/context.html) (React v16.6 or higher).
 
 ### Installation
 Using Yarn
