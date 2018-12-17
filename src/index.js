@@ -1,6 +1,7 @@
 import Form from './components/Form';
 import Validator from './components/Validator';
 import FieldError from './components/FieldError';
+import Field from './components/Field';
 
 import Checkbox from './components/fields/Checkbox';
 import Radio from './components/fields/Radio';
@@ -16,5 +17,6 @@ export {
   Radio,
   Select,
   Text,
-  TextArea
+  TextArea,
+  Field
 }
