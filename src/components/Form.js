@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ContextApi, ContextValues, ContextErrors } from './FormContext';
+import { ContextApi, ContextForm } from './FormContext';
 import _ from 'lodash';
 
 class Form extends Component {
@@ -54,6 +54,7 @@ class Form extends Component {
           _.set(errors, name, this.validateValue(validators, value));
           return {
             errors,
+            values
           };
         }, () => {
           if (callback) {
@@ -136,13 +137,11 @@ class Form extends Component {
     const { children } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
-        <ContextValues.Provider value={this.state.values}>
-          <ContextErrors.Provider value={this.state.errors}>
-            <form onSubmit={this.onSubmit}>
-              {typeof children === 'function' ? children(this.api) : children}
-            </form>
-          </ContextErrors.Provider>
-        </ContextValues.Provider>
+        <ContextForm.Provider value={this.state}>
+          <form onSubmit={this.onSubmit}>
+            {typeof children === 'function' ? children(this.api) : children}
+          </form>
+        </ContextForm.Provider>
       </ContextApi.Provider>
     );
   }

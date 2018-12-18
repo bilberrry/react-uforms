@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ContextApi, ContextErrors } from './FormContext';
+import { ContextApi, ContextForm } from './FormContext';
 import PropTypes from "prop-types";
 
 class FieldError extends Component {
@@ -18,7 +18,7 @@ class FieldError extends Component {
     return (
       <ContextApi.Consumer>
         {api => (
-          <ContextErrors.Consumer>
+          <ContextForm.Consumer>
             {() => {
               const errors = api.getErrors(name);
               return errors && errors.length
@@ -34,7 +34,7 @@ class FieldError extends Component {
                 )
                 : null
             }}
-          </ContextErrors.Consumer>
+          </ContextForm.Consumer>
         )}
       </ContextApi.Consumer>
     );
