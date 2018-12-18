@@ -40,7 +40,7 @@ class Checkbox extends Component {
     return (
       <input
         {...props}
-        checked={onValue === getValue()}
+        checked={onValue == getValue()}
         type="checkbox"
         onChange={event => {
           setValue(event.target.checked ? onValue : offValue, () => {

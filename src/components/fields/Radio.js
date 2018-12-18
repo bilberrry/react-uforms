@@ -34,7 +34,7 @@ class Radio extends Component {
       <input
         {...props}
         value={value}
-        checked={value === getValue()}
+        checked={value == getValue()}
         type="radio"
         onChange={event => {
           if (!event.target.checked) {
