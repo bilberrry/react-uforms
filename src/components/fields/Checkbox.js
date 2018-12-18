@@ -43,19 +43,18 @@ class Checkbox extends Component {
         checked={onValue === getValue()}
         type="checkbox"
         onChange={event => {
-          setValue(event.target.checked
-            ? onValue
-            : offValue
-          );
-          if (onChange) {
-            onChange(event);
-          }
+          setValue(event.target.checked ? onValue : offValue, () => {
+            if (onChange) {
+              onChange(event);
+            }
+          });
         }}
         onBlur={event => {
-          setTouched();
-          if (onBlur) {
-            onBlur(event);
-          }
+          setTouched(() => {
+            if (onBlur) {
+              onBlur(event);
+            }
+          });
         }}
       />
     );

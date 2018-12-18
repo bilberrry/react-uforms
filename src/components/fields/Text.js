@@ -30,16 +30,18 @@ class Text extends Component {
         {...props}
         value={getValue()}
         onChange={event => {
-          setValue(event.target.value);
-          if (onChange) {
-            onChange(event);
-          }
+          setValue(event.target.value, () => {
+            if (onChange) {
+              onChange(event);
+            }
+          });
         }}
         onBlur={event => {
-          setTouched();
-          if (onBlur) {
-            onBlur(event);
-          }
+          setTouched(() => {
+            if (onBlur) {
+              onBlur(event);
+            }
+          });
         }}
       />
     );

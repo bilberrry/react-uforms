@@ -21,8 +21,8 @@ function Field(PassedComponent, passedProps = {}) {
                           ? (className ? `${className} ${api.getInvalidClass()}` : api.getInvalidClass())
                           : className}
                         getValue={() => api.getValue(name)}
-                        setValue={(value) => api.setValue(name, value)}
-                        setTouched={() => api.setTouched(name)}
+                        setValue={(value, callback) => api.setValue(name, value, callback)}
+                        setTouched={(callback) => api.setTouched(name, callback)}
                       />
                       {!hideError && errors && errors.length
                         ? <div className={api.getErrorClass()}>{errors[0]}</div>

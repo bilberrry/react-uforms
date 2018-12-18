@@ -40,16 +40,18 @@ class Radio extends Component {
           if (!event.target.checked) {
             return;
           }
-          setValue(event.target.value);
-          if (onChange) {
-            onChange(event);
-          }
+          setValue(event.target.value, () => {
+            if (onChange) {
+              onChange(event);
+            }
+          });
         }}
         onBlur={event => {
-          setTouched();
-          if (onBlur) {
-            onBlur(event);
-          }
+          setTouched(() => {
+            if (onBlur) {
+              onBlur(event);
+            }
+          });
         }}
       />
     );

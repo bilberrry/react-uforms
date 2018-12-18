@@ -32,25 +32,33 @@ class Form extends Component {
   };
 
   api = {
-    setValue: (name, value) => {
-      const errors = { ...this.state.errors };
-      const values = { ...this.state.values };
-      _.set(values, name, value);
-      _.set(errors, name, []);
-      this.setState({
-        values,
-        errors,
+    setValue: (name, value, callback) => {
+      this.setState(({ errors, values }) => {
+        _.set(values, name, value);
+        _.set(errors, name, []);
+        return {
+          values,
+          errors,
+        };
+      }, () => {
+        if (callback) {
+          callback();
+        }
       });
     },
-    setTouched: (name) => {
-      const { values } = this.state;
-      const errors = { ...this.state.errors };
+    setTouched: (name, callback) => {
       const validators = _.get(this.props.validation(this.api), name);
       if (validators && validators.length) {
-        const value =  _.get(values, name);
-        _.set(errors, name, this.validateValue(validators, value));
-        this.setState({
-          errors,
+        this.setState(({ errors, values }) => {
+          const value =  _.get(values, name);
+          _.set(errors, name, this.validateValue(validators, value));
+          return {
+            errors,
+          };
+        }, () => {
+          if (callback) {
+            callback();
+          }
         });
       }
     },
@@ -115,12 +123,13 @@ class Form extends Component {
     this.validateForm(result, validation(this.api));
     this.setState({
       errors: result.errors,
+    }, () => {
+      if (result.count && onError) {
+        onError(result.errors);
+      } else if (!result.count) {
+        onSubmit(_.cloneDeep(values));
+      }
     });
-    if (result.count && onError) {
-      onError(result.errors);
-    } else if (!result.count) {
-      onSubmit(_.cloneDeep(values));
-    }
   };
 
   render() {
