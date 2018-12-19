@@ -7929,10 +7929,10 @@ react-scripts@2.1.1:
   optionalDependencies:
     fsevents "1.2.4"
 
-react-uforms@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/react-uforms/-/react-uforms-0.2.5.tgz#bc1274bb19d948ac74a64fd0f3faa01dc37023c8"
-  integrity sha512-nv7kTt0p7XUA6h+YrLJJw4QpgokdE+8wlRtGNEhiK8YC8pRqa1H06RpVWyBqXgeZhQc1UO6z8mHAZkavlqHXtg==
+react-uforms@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/react-uforms/-/react-uforms-0.2.7.tgz#a307869e49ef7c93d7c86dbedb7816403f268ca3"
+  integrity sha512-WDyJAgbUQ/08ylBpWYHkN6DhUQzhl+txQWECHYTV8cpXmcPfXbx1CrhnRL3AjlvSNw+D7poCEORnWi7hRjYPQA==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
