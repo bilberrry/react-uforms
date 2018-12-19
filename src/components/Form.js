@@ -32,20 +32,6 @@ class Form extends Component {
   };
 
   api = {
-    setValue: (name, value, callback) => {
-      this.setState(({ errors, values }) => {
-        _.set(values, name, value);
-        _.set(errors, name, []);
-        return {
-          values,
-          errors,
-        };
-      }, () => {
-        if (callback) {
-          callback();
-        }
-      });
-    },
     setTouched: (name, callback) => {
       const validators = _.get(this.props.validation(this.api), name);
       if (validators && validators.length) {
@@ -56,12 +42,18 @@ class Form extends Component {
             errors,
             values
           };
-        }, () => {
-          if (callback) {
-            callback();
-          }
-        });
+        }, callback);
       }
+    },
+    setValue: (name, value, callback) => {
+      this.setState(({ errors, values }) => {
+        _.set(values, name, value);
+        _.set(errors, name, []);
+        return {
+          values,
+          errors,
+        };
+      }, callback);
     },
     getValue: (name) => {
       const { values } = this.state;
@@ -71,6 +63,14 @@ class Form extends Component {
       const { errors } = this.state;
       return _.get(errors, name);
     },
+    setErrors: (name, value, callback) => {
+      this.setState(({ errors }) => {
+        _.set(errors, name, value);
+        return {
+          errors,
+        };
+      }, callback);
+    },
     getErrorClass: () => {
       const { errorClass } = this.props;
       return errorClass;
@@ -79,6 +79,24 @@ class Form extends Component {
       const { invalidClass } = this.props;
       return invalidClass;
     },
+    getAllValues: () => {
+      const { values } = this.state;
+      return values;
+    },
+    getAllErrors: () => {
+      const { errors } = this.state;
+      return errors;
+    },
+    setAllErrors: (errors, callback) => {
+      this.setState({
+        errors
+      }, callback);
+    },
+    setAllValues: (values, callback) => {
+      this.setState({
+        values
+      }, callback);
+    }
   };
 
   validateValue = (validators, value) => {
@@ -126,9 +144,9 @@ class Form extends Component {
       errors: result.errors,
     }, () => {
       if (result.count && onError) {
-        onError(result.errors);
+        onError(result.errors, this.api);
       } else if (!result.count) {
-        onSubmit(_.cloneDeep(values));
+        onSubmit(_.cloneDeep(values), this.api);
       }
     });
   };
