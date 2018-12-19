@@ -29,7 +29,7 @@ class FieldError extends Component {
                       ? `${className} ${api.getErrorClass()}`
                       : api.getErrorClass()}
                   >
-                    {errors[0]}
+                    {typeof errors === "string" ? errors : errors[0]}
                   </div>
                 )
                 : null

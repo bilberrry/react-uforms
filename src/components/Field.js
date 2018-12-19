@@ -23,7 +23,7 @@ function Field(PassedComponent, passedProps = {}) {
                     setTouched={(callback) => api.setTouched(name, callback)}
                   />
                   {!hideError && errors && errors.length
-                    ? <div className={api.getErrorClass()}>{errors[0]}</div>
+                    ? <div className={api.getErrorClass()}>{typeof errors === "string" ? errors : errors[0]}</div>
                     : null
                   }
                 </Fragment>
