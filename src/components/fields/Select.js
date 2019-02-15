@@ -38,7 +38,9 @@ class Select extends Component {
         {...props}
         value={getValue()}
         onChange={event => {
-          setValue(event.target.value, () => {
+          const { target } = event;
+          const isNull = !target.options[target.selectedIndex].hasAttribute('value');
+          setValue(isNull ? null : target.value, () => {
             if (onChange) {
               onChange(event);
             }
