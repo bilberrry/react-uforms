@@ -1,61 +1,34 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Field from '../Field';
+import * as PropTypes from 'prop-types';
+import { RadioGroupContext } from '../FormContext';
 
-class Radio extends Component {
+export default class Radio extends Component {
   static propTypes = {
-    getValue: PropTypes.func.isRequired,
-    setValue: PropTypes.func.isRequired,
-    setTouched: PropTypes.func.isRequired,
-    onBlur: PropTypes.func,
-    onChange: PropTypes.func,
+    id: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
     ]).isRequired,
   };
 
-  static defaultProps = {
-    type: 'text',
-  };
-
   render() {
-    const {
-      getValue,
-      setValue,
-      setTouched,
-      onBlur,
-      onChange,
-      value,
-      ...props
-    } = this.props;
-
+    const {id, value, ...props} = this.props;
     return (
-      <input
-        {...props}
-        value={value}
-        checked={value == getValue()}
-        type="radio"
-        onChange={event => {
-          if (!event.target.checked) {
-            return;
-          }
-          setValue(event.target.value, () => {
-            if (onChange) {
-              onChange(event);
-            }
-          });
-        }}
-        onBlur={event => {
-          setTouched(() => {
-            if (onBlur) {
-              onBlur(event);
-            }
-          });
-        }}
-      />
+        <RadioGroupContext.Consumer>
+          {({name, chosenItem, getValue}) => {
+            return (
+                <input
+                    {...props}
+                    id={id}
+                    name={name}
+                    type="radio"
+                    onChange={event => chosenItem(event.target.value)}
+                    value={value}
+                    checked={Number.isInteger(value) ? value === +getValue(name) : value === getValue(name)}
+                />
+            );
+          }}
+        </RadioGroupContext.Consumer>
     );
   }
 }
-
-export default Field(Radio, { hideError: true });
