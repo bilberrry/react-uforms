@@ -31,29 +31,31 @@ class Radio extends Component {
     } = this.props;
 
     return (
-        <input
-            {...props}
-            value={value}
-            checked={value == getValue()}
-            type="radio"
-            onChange={event => {
-              if (!event.target.checked) {
-                return;
-              }
-              setValue(event.target.value, () => {
-                if (onChange) {
-                  onChange(event);
-                }
-              });
-            }}
-            onBlur={event => {
-              setTouched(() => {
-                if (onBlur) {
-                  onBlur(event);
-                }
-              });
-            }}
-        />
+      <input
+        {...props}
+        value={value}
+        checked={value == getValue()}
+        type="radio"
+        onChange={event => {
+          if (!event.target.checked) {
+            return;
+          }
+          event.persist();
+          setValue(event.target.value, () => {
+            if (onChange) {
+              onChange(event);
+            }
+          });
+        }}
+        onBlur={event => {
+          event.persist();
+          setTouched(() => {
+            if (onBlur) {
+              onBlur(event);
+            }
+          });
+        }}
+      />
     );
   }
 }
