@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { Form, Validator, Text, Select, TextArea, RadioGroup, Radio, Checkbox, FieldError } from 'react-uforms'
+import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
 class ExampleAllFields extends Component {
 
-  static radioItems = [
-    { id: 'e7_male', label: 'Male', value: 'male' },
-    { id: 'e7_female', label: 'Female', value: 'female' },
-  ];
-
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, Radio, Checkbox, FieldError } from 'react-uforms'
+    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
+
+const radioItems = [
+  { id: 'e7_male', label: 'Male', value: 'male' },
+  { id: 'e7_female', label: 'Female', value: 'female' },
+];
     
 const example = (
   <Form
@@ -22,7 +22,7 @@ const example = (
       country: 'US',
       bio: 'Travel blogger',
       gender: 'male',
-      newsletter: 0
+      newsletter: 0,
     }}
     validation={() => ({
       email: [
@@ -80,13 +80,13 @@ const example = (
       <RadioGroup
           name="gender"
           onChange={value=>{
-            //some code
+            //console.log(value);
           }}
       >
         <label>Gender</label>
-        {ExampleAllFields.radioItems.map(({ id, label, value }) => (
+        {radioItems.map(({ id, label, value }) => (
             <div key={id} className="radio">
-              <Radio name="gender" id={id} value={value} />
+              <RadioGroupItem id={id} value={value} />
               <label htmlFor={id}>{label}</label>
             </div>
         ))}
@@ -111,7 +111,10 @@ const example = (
 
   render() {
     const { code, values, errors } = this.state;
-
+    const radioItems = [
+      { id: 'e7_male', label: 'Male', value: 'male' },
+      { id: 'e7_female', label: 'Female', value: 'female' },
+    ];
     return (
       <div id="all-fields">
         <h4>7. All fields <a href="#all-fields" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
@@ -123,7 +126,7 @@ const example = (
                 country: 'US',
                 bio: 'Travel blogger',
                 gender: 'male',
-                newsletter: 0
+                newsletter: 0,
               }}
               validation={() => ({
                 email: [
@@ -144,7 +147,7 @@ const example = (
                 newsletter: [
                   Validator.Required(),
                   Validator.Range([1, 0]),
-                ]
+                ],
               })}
               onSubmit={(values) => {
                 this.setState({
@@ -181,13 +184,13 @@ const example = (
                 <RadioGroup
                     name="gender"
                     onChange={value => {
-                      //some code
+                      //console.log(value);
                     }}
                 >
                   <label>Gender</label>
-                  {ExampleAllFields.radioItems.map(({ id, label, value }) => (
+                  {radioItems.map(({ id, label, value }) => (
                       <div key={id} className="radio">
-                        <Radio name="gender" id={id} value={value} />
+                        <RadioGroupItem id={id} value={value} />
                         <label htmlFor={id}>{label}</label>
                       </div>
                   ))}
