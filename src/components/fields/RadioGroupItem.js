@@ -5,21 +5,29 @@ import { RadioGroupContext } from '../FormContext';
 export default class RadioGroupItem extends Component {
     static propTypes = {
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        onChange: PropTypes.func,
+        onBlur: PropTypes.func,
+    };
+
+    static defaultProps = {
+        onChange: () => {},
+        onBlur: () => {},
     };
 
     render() {
         const {value, ...props} = this.props;
         return (
             <RadioGroupContext.Consumer>
-                {({ name, chosenItem, getValue }) => {
+                {({ name, getValue, onChange, onBlur }) => {
                     return (
                         <input
                             {...props}
                             name={name}
                             type="radio"
-                            onChange={event => chosenItem(event.target.value)}
+                            onChange={onChange}
+                            onBlur={onBlur}
                             value={value}
-                            checked={Number.isInteger(value) ? value === +getValue(name) : value === getValue(name)}
+                            checked={value == getValue(name)}
                         />
                     )
                 }}

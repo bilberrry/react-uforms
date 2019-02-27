@@ -79,8 +79,8 @@ const example = (
     <div className="radio-group">
       <RadioGroup
           name="gender"
-          onChange={value=>{
-            //console.log(value);
+          onChange={event=>{
+            //console.log(event);
           }}
       >
         <label>Gender</label>
@@ -183,8 +183,8 @@ const example = (
               <div className="radio-group">
                 <RadioGroup
                     name="gender"
-                    onChange={value => {
-                      //console.log(value);
+                    onChange={event => {
+                      //console.log(event);
                     }}
                 >
                   <label>Gender</label>
