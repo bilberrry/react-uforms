@@ -30,6 +30,7 @@ class Text extends Component {
         {...props}
         value={getValue()}
         onChange={event => {
+          event.persist();
           setValue(event.target.value, () => {
             if (onChange) {
               onChange(event);
@@ -37,6 +38,7 @@ class Text extends Component {
           });
         }}
         onBlur={event => {
+          event.persist();
           setTouched(() => {
             if (onBlur) {
               onBlur(event);
