@@ -39,6 +39,7 @@ class Select extends Component {
         value={getValue()}
         onChange={event => {
           const { target } = event;
+          event.persist();
           const isNull = !target.options[target.selectedIndex].hasAttribute('value');
           setValue(isNull ? null : target.value, () => {
             if (onChange) {
@@ -47,6 +48,7 @@ class Select extends Component {
           });
         }}
         onBlur={event => {
+          event.persist();
           setTouched(() => {
             if (onBlur) {
               onBlur(event);

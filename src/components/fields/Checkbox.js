@@ -43,6 +43,7 @@ class Checkbox extends Component {
         checked={onValue == getValue()}
         type="checkbox"
         onChange={event => {
+          event.persist();
           setValue(event.target.checked ? onValue : offValue, () => {
             if (onChange) {
               onChange(event);
@@ -50,6 +51,7 @@ class Checkbox extends Component {
           });
         }}
         onBlur={event => {
+          event.persist();
           setTouched(() => {
             if (onBlur) {
               onBlur(event);
