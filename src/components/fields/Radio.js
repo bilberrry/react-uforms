@@ -40,6 +40,7 @@ class Radio extends Component {
           if (!event.target.checked) {
             return;
           }
+          event.persist();
           setValue(event.target.value, () => {
             if (onChange) {
               onChange(event);
@@ -47,6 +48,7 @@ class Radio extends Component {
           });
         }}
         onBlur={event => {
+          event.persist();
           setTouched(() => {
             if (onBlur) {
               onBlur(event);

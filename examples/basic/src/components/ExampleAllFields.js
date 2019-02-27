@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Validator, Text, Select, TextArea, Radio, Checkbox, FieldError } from 'react-uforms'
+import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
@@ -8,7 +8,12 @@ class ExampleAllFields extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Validator, Text, Select, TextArea, Radio, Checkbox, FieldError } from 'react-uforms'
+    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
+
+const radioItems = [
+  { id: 'e7_male', label: 'Male', value: 'male' },
+  { id: 'e7_female', label: 'Female', value: 'female' },
+];
     
 const example = (
   <Form
@@ -71,29 +76,34 @@ const example = (
       ]}
     />
 
-    <div className="checkbox-group">
-      <label>Gender</label>
-      <div className="checkbox">
-        <Radio name="gender" value="male" type="radio" id="male" />
-        <label htmlFor="male">Male</label>
-      </div>
-      <div className="checkbox">
-        <Radio name="gender" value="female" type="radio" id="female" />
-        <label htmlFor="female">Female</label>
-      </div>
-      <FieldError name="gender" />
+    <div className="radio-group">
+      <RadioGroup
+          name="gender"
+          onChange={event=>{
+            //console.log(event);
+          }}
+      >
+        <label>Gender</label>
+        {radioItems.map(({ id, label, value }) => (
+            <div key={id} className="radio">
+              <RadioGroupItem id={id} value={value} />
+              <label htmlFor={id}>{label}</label>
+            </div>
+        ))}
+        <FieldError name="gender" />
+      </RadioGroup>
     </div>
 
     <label htmlFor="bio">Bio</label>
     <TextArea id="bio" name="bio" />
 
-    <div className="radio-group">
-      <div className="radio">
+    <div className="checkbox-group">
+      <div className="checkbox">
         <Checkbox name="newsletter" onValue={1} offValue={0} id="newsletter" />
         <label htmlFor="newsletter">Receive Weekly Updates</label>
       </div>
     </div>
-
+    
     <button type="submit">Submit</button>
   </Form>
 );`,
@@ -101,7 +111,10 @@ const example = (
 
   render() {
     const { code, values, errors } = this.state;
-
+    const radioItems = [
+      { id: 'e7_male', label: 'Male', value: 'male' },
+      { id: 'e7_female', label: 'Female', value: 'female' },
+    ];
     return (
       <div id="all-fields">
         <h4>7. All fields <a href="#all-fields" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
@@ -167,24 +180,29 @@ const example = (
                 ]}
               />
 
-              <div className="checkbox-group">
-                <label>Gender</label>
-                <div className="checkbox">
-                  <Radio name="gender" value="male" type="radio" id="e7_male" />
-                  <label htmlFor="e7_male">Male</label>
-                </div>
-                <div className="checkbox">
-                  <Radio name="gender" value="female" type="radio" id="e7_female" />
-                  <label htmlFor="e7_female">Female</label>
-                </div>
-                <FieldError name="gender" />
+              <div className="radio-group">
+                <RadioGroup
+                    name="gender"
+                    onChange={event => {
+                      //console.log(event);
+                    }}
+                >
+                  <label>Gender</label>
+                  {radioItems.map(({ id, label, value }) => (
+                      <div key={id} className="radio">
+                        <RadioGroupItem id={id} value={value} />
+                        <label htmlFor={id}>{label}</label>
+                      </div>
+                  ))}
+                  <FieldError name="gender" />
+                </RadioGroup>
               </div>
 
               <label htmlFor="e7_bio">Bio</label>
               <TextArea id="e7_bio" name="bio" />
 
-              <div className="radio-group">
-                <div className="radio">
+              <div className="checkbox-group">
+                <div className="checkbox">
                   <Checkbox name="newsletter" onValue={1} offValue={0} id="e7_newsletter" />
                   <label htmlFor="e7_newsletter">Receive Weekly Updates</label>
                 </div>
