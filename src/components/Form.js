@@ -133,8 +133,11 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit } = this.props;
+    const { validation, onError, onSubmit, values: valuesProps } = this.props;
     const { values } = this.state;
+
+    if (_.isEqual(values, valuesProps)) return;
+
     const result = {
       count: 0,
       errors: {},
