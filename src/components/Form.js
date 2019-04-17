@@ -21,6 +21,7 @@ class Form extends Component {
     validation: PropTypes.func,
     errorClass: PropTypes.string,
     invalidClass: PropTypes.string,
+    isUpdatesOnly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -29,7 +30,23 @@ class Form extends Component {
     validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
+    isUpdatesOnly: false,
   };
+
+  static getValuesDifference(prev, current) {
+    function changes(prev, current) {
+      return _.transform(current, function(result, value, key) {
+        if (_.isUndefined(prev[key])){
+          result[key] = value;
+        } else {
+          if (!_.isEqual(value, prev[key])) {
+            result[key] = _.isObject(value) || _.isArray(value) ? changes(value, prev[key]) : value;
+          }
+        }
+      });
+    }
+    return changes(prev, current);
+  }
 
   api = {
     setTouched: (name, callback) => {
@@ -133,7 +150,7 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit } = this.props;
+    const { validation, onError, onSubmit, values: prevValues, isUpdatesOnly } = this.props;
     const { values } = this.state;
     const result = {
       count: 0,
@@ -146,7 +163,8 @@ class Form extends Component {
       if (result.count && onError) {
         onError(result.errors, this.api);
       } else if (!result.count) {
-        onSubmit(_.cloneDeep(values), this.api);
+        const currentValues = isUpdatesOnly ? Form.getValuesDifference(prevValues, values): values;
+        onSubmit(_.cloneDeep(currentValues), this.api);
       }
     });
   };
