@@ -6,6 +6,7 @@ import ExamplePreFilledForm from './components/ExamplePreFilledForm';
 import ExampleDynamicForm from './components/ExampleDynamicForm';
 import ExampleCustomErrors from './components/ExampleCustomErrors';
 import ExampleAllFields from './components/ExampleAllFields';
+import ExampleUpdatesOnlyReturn from './components/ExampleUpdatesOnlyReturn';
 
 class App extends Component {
 
@@ -40,6 +41,8 @@ class App extends Component {
         <ExampleCustomErrors />
         <hr />
         <ExampleAllFields />
+        <hr />
+        <ExampleUpdatesOnlyReturn />
         <hr />
         <footer>
           <p>React uForms is <a href="https://github.com/summerua/react-uforms/blob/master/LICENSE">MIT licensed</a></p>
