@@ -8,6 +8,7 @@ class Form extends Component {
   state = {
     values: _.cloneDeep(this.props.values),
     errors: {},
+    disabledFields: [],
   };
 
   static propTypes = {
@@ -113,7 +114,26 @@ class Form extends Component {
       this.setState({
         values
       }, callback);
-    }
+    },
+    getAllDisabledFields: () => {
+      const { disabledFields } = this.state;
+      return disabledFields;
+    },
+    setDisabledField: (name) => {
+      const { disabledFields } = this.state;
+
+      if (!disabledFields.includes(name)) {
+        this.setState({ disabledFields: [...disabledFields, name] })
+      }
+    },
+    removeDisabledField: (name) => {
+      const { disabledFields } = this.state;
+
+      if (disabledFields.includes(name)) {
+        const index = disabledFields.indexOf(name);
+        this.setState({ disabledFields: [...disabledFields.slice(0, index), ...disabledFields.slice(index+1)] })
+      }
+    },
   };
 
   validateValue = (validators, value) => {
