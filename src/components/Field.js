@@ -8,13 +8,19 @@ function Field(PassedComponent, passedProps = {}) {
         {api => (
           <ContextForm.Consumer>
             {() => {
-              const {name, className, hideError, ...props} = {...fieldProps, ...passedProps};
+              const {name, className, hideError, disabled, ...props} = {...fieldProps, ...passedProps};
               const errors = api.getErrors(name);
+              if (disabled) {
+                api.setDisabledField(name);
+              } else {
+                api.removeDisabledField(name);
+              }
               return (
                 <Fragment>
                   <PassedComponent
                     {...props}
                     name={name}
+                    disabled={disabled}
                     className={errors && errors.length
                       ? (className ? `${className} ${api.getInvalidClass()}` : api.getInvalidClass())
                       : className}

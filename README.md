@@ -392,6 +392,30 @@ const example = (
 ```
 [Demo](http://react-uforms.d3v.me#all-fields)
 
+### 8. A Form option to submit values difference
+```jsx
+import { Form, Text } from 'react-uforms'
+
+const example = (
+  <Form
+    values={{
+        email: 'foo.bar@example.com',
+        password: '12345',
+    }}
+    onSubmit={values => console.log(values)}
+    isUpdatesOnly={true}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+    
+    <label htmlFor="password">Password</label>
+    <Text type="password" id="password" name="password" />
+    
+    <button type="submit">Submit</button>
+  </Form>
+);
+```
+
 ## Authors
 
 * **Bohdan Protsiuk** - [summerua](https://github.com/summerua)

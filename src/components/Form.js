@@ -8,6 +8,7 @@ class Form extends Component {
   state = {
     values: _.cloneDeep(this.props.values),
     errors: {},
+    disabledFields: [],
   };
 
   static propTypes = {
@@ -21,6 +22,7 @@ class Form extends Component {
     validation: PropTypes.func,
     errorClass: PropTypes.string,
     invalidClass: PropTypes.string,
+    isUpdatesOnly: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -29,7 +31,23 @@ class Form extends Component {
     validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
+    isUpdatesOnly: false,
   };
+
+  static getValuesDifference(prev, current) {
+    function changes(prev, current) {
+      return _.transform(current, function(result, value, key) {
+        if (_.isUndefined(prev[key])){
+          result[key] = value;
+        } else {
+          if (!_.isEqual(value, prev[key])) {
+            result[key] = _.isObject(value) || _.isArray(value) ? changes(value, prev[key]) : value;
+          }
+        }
+      });
+    }
+    return changes(prev, current);
+  }
 
   api = {
     setTouched: (name, callback) => {
@@ -96,7 +114,26 @@ class Form extends Component {
       this.setState({
         values
       }, callback);
-    }
+    },
+    getAllDisabledFields: () => {
+      const { disabledFields } = this.state;
+      return disabledFields;
+    },
+    setDisabledField: (name) => {
+      const { disabledFields } = this.state;
+
+      if (!disabledFields.includes(name)) {
+        this.setState({ disabledFields: [...disabledFields, name] })
+      }
+    },
+    removeDisabledField: (name) => {
+      const { disabledFields } = this.state;
+
+      if (disabledFields.includes(name)) {
+        const index = disabledFields.indexOf(name);
+        this.setState({ disabledFields: [...disabledFields.slice(0, index), ...disabledFields.slice(index+1)] })
+      }
+    },
   };
 
   validateValue = (validators, value) => {
@@ -133,7 +170,7 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit } = this.props;
+    const { validation, onError, onSubmit, values: prevValues, isUpdatesOnly } = this.props;
     const { values } = this.state;
     const result = {
       count: 0,
@@ -146,7 +183,8 @@ class Form extends Component {
       if (result.count && onError) {
         onError(result.errors, this.api);
       } else if (!result.count) {
-        onSubmit(_.cloneDeep(values), this.api);
+        const currentValues = isUpdatesOnly ? Form.getValuesDifference(prevValues, values): values;
+        onSubmit(_.cloneDeep(currentValues), this.api);
       }
     });
   };
