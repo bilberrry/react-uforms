@@ -1,44 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { ContextApi, ContextForm } from './FormContext';
-import PropTypes from "prop-types";
 
-class FieldError extends Component {
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    className: PropTypes.string,
-  };
+const FieldError = ({ name, className, ...props }) => (
+  <ContextApi.Consumer>
+    {api => (
+      <ContextForm.Consumer>
+        {() => {
+          const errors = api.getErrors(name);
+          return errors && errors.length > 0 ? (
+            <div {...props} className={className ? `${className} ${api.getErrorClass()}` : api.getErrorClass()}>
+              {typeof errors === 'string' ? errors : errors[0]}
+            </div>
+          ) : null;
+        }}
+      </ContextForm.Consumer>
+    )}
+  </ContextApi.Consumer>
+);
 
-  render() {
-    const {
-      name,
-      className,
-      ...props
-    } = this.props;
-
-    return (
-      <ContextApi.Consumer>
-        {api => (
-          <ContextForm.Consumer>
-            {() => {
-              const errors = api.getErrors(name);
-              return errors && errors.length
-                ? (
-                  <div
-                    {...props}
-                    className={className
-                      ? `${className} ${api.getErrorClass()}`
-                      : api.getErrorClass()}
-                  >
-                    {typeof errors === "string" ? errors : errors[0]}
-                  </div>
-                )
-                : null
-            }}
-          </ContextForm.Consumer>
-        )}
-      </ContextApi.Consumer>
-    );
-  }
-}
+FieldError.propTypes = {
+  name: PropTypes.string.isRequired,
+};
 
 export default FieldError;

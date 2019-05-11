@@ -2,16 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Form } from '../src/index';
+import { Form } from '../src';
 
 configure({ adapter: new Adapter() });
 
 describe('Form', () => {
   it('renders without crashing', () => {
     const form = (
-      <Form
-        onSubmit={() => {}}
-      >
+      <Form onSubmit={() => {}}>
         <div />
       </Form>
     );
@@ -23,11 +21,9 @@ describe('Form', () => {
   it('simulate submit', () => {
     const submit = jest.fn();
     const form = shallow(
-      <Form
-        onSubmit={submit}
-      >
+      <Form onSubmit={submit}>
         <div />
-      </Form>
+      </Form>,
     );
     form.find('form').simulate('submit');
     expect(submit).toHaveBeenCalled();
@@ -39,19 +35,15 @@ describe('Form', () => {
       email: 'test@example.com',
       profile: {
         firstName: 'John',
-        lastName: 'Brown'
+        lastName: 'Brown',
       },
     };
     const form = shallow(
-      <Form
-        values={values}
-        onSubmit={submit}
-      >
+      <Form values={values} onSubmit={submit}>
         <div />
-      </Form>
+      </Form>,
     );
     form.find('form').simulate('submit');
     expect(submit).toHaveBeenCalledWith(values);
   });
 });
-

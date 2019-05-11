@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ContextApi, ContextForm } from './FormContext';
 import _ from 'lodash';
+import { ContextApi, ContextForm } from './FormContext';
+import Helpers from './Helpers';
 
 class Form extends Component {
-
   state = {
     values: _.cloneDeep(this.props.values),
     errors: {},
@@ -12,10 +12,8 @@ class Form extends Component {
   };
 
   static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.node,
-      PropTypes.func,
-    ]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
     values: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
@@ -34,31 +32,16 @@ class Form extends Component {
     isUpdatesOnly: false,
   };
 
-  static getValuesDifference(prev, current) {
-    function changes(prev, current) {
-      return _.transform(current, function(result, value, key) {
-        if (_.isUndefined(prev[key])){
-          result[key] = value;
-        } else {
-          if (!_.isEqual(value, prev[key])) {
-            result[key] = _.isObject(value) || _.isArray(value) ? changes(value, prev[key]) : value;
-          }
-        }
-      });
-    }
-    return changes(prev, current);
-  }
-
   api = {
     setTouched: (name, callback) => {
       const validators = _.get(this.props.validation(this.api), name);
       if (validators && validators.length) {
         this.setState(({ errors, values }) => {
-          const value =  _.get(values, name);
+          const value = _.get(values, name);
           _.set(errors, name, this.validateValue(validators, value));
           return {
             errors,
-            values
+            values,
           };
         }, callback);
       }
@@ -73,11 +56,11 @@ class Form extends Component {
         };
       }, callback);
     },
-    getValue: (name) => {
+    getValue: name => {
       const { values } = this.state;
       return _.get(values, name);
     },
-    getErrors: (name) => {
+    getErrors: name => {
       const { errors } = this.state;
       return _.get(errors, name);
     },
@@ -106,32 +89,38 @@ class Form extends Component {
       return errors;
     },
     setAllErrors: (errors, callback) => {
-      this.setState({
-        errors
-      }, callback);
+      this.setState(
+        {
+          errors,
+        },
+        callback,
+      );
     },
     setAllValues: (values, callback) => {
-      this.setState({
-        values
-      }, callback);
+      this.setState(
+        {
+          values,
+        },
+        callback,
+      );
     },
     getAllDisabledFields: () => {
       const { disabledFields } = this.state;
       return disabledFields;
     },
-    setDisabledField: (name) => {
+    setDisabledField: name => {
       const { disabledFields } = this.state;
 
       if (!disabledFields.includes(name)) {
-        this.setState({ disabledFields: [...disabledFields, name] })
+        this.setState({ disabledFields: [...disabledFields, name] });
       }
     },
-    removeDisabledField: (name) => {
+    removeDisabledField: name => {
       const { disabledFields } = this.state;
 
       if (disabledFields.includes(name)) {
         const index = disabledFields.indexOf(name);
-        this.setState({ disabledFields: [...disabledFields.slice(0, index), ...disabledFields.slice(index+1)] })
+        this.setState({ disabledFields: [...disabledFields.slice(0, index), ...disabledFields.slice(index + 1)] });
       }
     },
   };
@@ -139,7 +128,7 @@ class Form extends Component {
   validateValue = (validators, value) => {
     const errors = [];
 
-    validators.forEach((v) => {
+    validators.forEach(v => {
       const result = v(value);
       if (result !== true) {
         errors.push(result);
@@ -150,8 +139,8 @@ class Form extends Component {
   };
 
   validateForm = (result, obj, path = []) => {
-    Object.keys(obj).forEach((i) => {
-      const currentPath = [ ...path, i];
+    Object.keys(obj).forEach(i => {
+      const currentPath = [...path, i];
       const validator = obj[i];
       if (Array.isArray(validator)) {
         const value = this.api.getValue(currentPath.join('.'));
@@ -166,7 +155,7 @@ class Form extends Component {
     });
   };
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     if (event) {
       event.preventDefault();
     }
@@ -177,16 +166,19 @@ class Form extends Component {
       errors: {},
     };
     this.validateForm(result, validation(this.api));
-    this.setState({
-      errors: result.errors,
-    }, () => {
-      if (result.count && onError) {
-        onError(result.errors, this.api);
-      } else if (!result.count) {
-        const currentValues = isUpdatesOnly ? Form.getValuesDifference(prevValues, values): values;
-        onSubmit(_.cloneDeep(currentValues), this.api);
-      }
-    });
+    this.setState(
+      {
+        errors: result.errors,
+      },
+      () => {
+        if (result.count && onError) {
+          onError(result.errors, this.api);
+        } else if (!result.count) {
+          const currentValues = isUpdatesOnly ? Helpers.getValuesDiff(prevValues, values) : values;
+          onSubmit(_.cloneDeep(currentValues), this.api);
+        }
+      },
+    );
   };
 
   render() {
@@ -194,9 +186,7 @@ class Form extends Component {
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
-          <form onSubmit={this.onSubmit}>
-            {typeof children === 'function' ? children(this.api) : children}
-          </form>
+          <form onSubmit={this.onSubmit}>{typeof children === 'function' ? children(this.api) : children}</form>
         </ContextForm.Provider>
       </ContextApi.Provider>
     );
