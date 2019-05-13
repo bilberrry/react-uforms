@@ -1,73 +1,55 @@
 import React from 'react';
-import { configure, shallow, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import 'jest-dom/extend-expect';
+import { render, cleanup, fireEvent } from 'react-testing-library';
 import { Form, Text } from '../../src';
 
-configure({ adapter: new Adapter() });
+afterEach(() => {
+  cleanup();
+});
 
-describe('Fields -> Text', () => {
-  const apiContext = {};
-  const valuesContext = {};
-  const errorsContext = {};
-
-  jest.doMock('../../src/components/FormContext', () => ({
-    ContextApi: {
-      Consumer: props => props.children(apiContext),
-    },
-    ContextValues: {
-      Consumer: props => props.children(valuesContext),
-    },
-    ContextErrors: {
-      Consumer: props => props.children(errorsContext),
-    },
-  }));
-
-  it('onSubmit without value', () => {
-    const submit = jest.fn();
-    const form = mount(
-      <Form onSubmit={submit}>
-        <Text name="profile.firstName" />
-      </Form>,
-    );
-    form.find('input').simulate('change', {
-      target: {
-        value: 'John',
-      },
-    });
-    form.find('form').simulate('submit');
-    expect(submit).toHaveBeenCalledWith({
+test('change value and submit', () => {
+  const submit = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={submit} data-testid="form">
+      <Text name="profile.firstName" data-testid="input" />
+    </Form>,
+  );
+  fireEvent.change(getByTestId('input'), { target: { value: 'John' } });
+  fireEvent.submit(getByTestId('form'));
+  expect(submit).toHaveBeenCalledWith(
+    {
       profile: {
         firstName: 'John',
       },
-    });
-  });
+    },
+    expect.any(Object),
+  );
+});
 
-  it('onSubmit with values', () => {
-    const submit = jest.fn();
-    const values = {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'John',
-        lastName: 'Brown',
-      },
-    };
-    const form = mount(
-      <Form values={values} onSubmit={submit}>
-        <Text name="profile.firstName" />
-      </Form>,
-    );
-    form.find('input').simulate('change', {
-      target: {
-        value: 'Bill',
-      },
-    });
-    form.find('form').simulate('submit');
-    expect(submit).toHaveBeenCalledWith({
+test('set default values, change and submit', () => {
+  const submit = jest.fn();
+  const defaultValues = {
+    email: 'test@example.com',
+    profile: {
+      firstName: 'John',
+      lastName: 'Brown',
+    },
+  };
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
+      <Text name="profile.firstName" data-testid="input" />
+    </Form>,
+  );
+  fireEvent.change(getByTestId('input'), { target: { value: 'Bill' } });
+  fireEvent.submit(getByTestId('form'));
+  expect(submit).toHaveBeenCalledWith(
+    {
       email: 'test@example.com',
       profile: {
         firstName: 'Bill',
         lastName: 'Brown',
       },
-    });
-  });
+    },
+    expect.any(Object),
+  );
 });

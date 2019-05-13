@@ -14,7 +14,7 @@ class Form extends Component {
     validation: PropTypes.func,
     errorClass: PropTypes.string,
     invalidClass: PropTypes.string,
-    isUpdatesOnly: PropTypes.bool,
+    sendValuesDiff: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -23,7 +23,7 @@ class Form extends Component {
     validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
-    isUpdatesOnly: false,
+    sendValuesDiff: false,
   };
 
   api = {
@@ -165,7 +165,7 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit, defaultValues, isUpdatesOnly } = this.props;
+    const { validation, onError, onSubmit, defaultValues, sendValuesDiff } = this.props;
     const { values } = this.state;
     const result = {
       count: 0,
@@ -180,7 +180,7 @@ class Form extends Component {
         if (result.count && onError) {
           onError(result.errors, this.api);
         } else if (!result.count) {
-          const currentValues = isUpdatesOnly ? Helpers.getValuesDiff(defaultValues, values) : values;
+          const currentValues = sendValuesDiff ? Helpers.getValuesDiff(defaultValues, values) : values;
           onSubmit(_.cloneDeep(currentValues), this.api);
         }
       },
@@ -188,11 +188,23 @@ class Form extends Component {
   };
 
   render() {
-    const { children } = this.props;
+    const {
+      children,
+      defaultValues,
+      onSubmit,
+      onError,
+      validation,
+      errorClass,
+      invalidClass,
+      sendValuesDiff,
+      ...props
+    } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
-          <form onSubmit={this.onSubmit}>{typeof children === 'function' ? children(this.api) : children}</form>
+          <form {...props} onSubmit={this.onSubmit}>
+            {typeof children === 'function' ? children(this.api) : children}
+          </form>
         </ContextForm.Provider>
       </ContextApi.Provider>
     );

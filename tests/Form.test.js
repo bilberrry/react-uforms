@@ -1,49 +1,46 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import 'jest-dom/extend-expect';
+import { render, cleanup, fireEvent } from 'react-testing-library';
 import { Form } from '../src';
 
-configure({ adapter: new Adapter() });
+afterEach(() => {
+  cleanup();
+});
 
-describe('Form', () => {
-  it('renders without crashing', () => {
-    const form = (
-      <Form onSubmit={() => {}}>
-        <div />
-      </Form>
-    );
-    const div = document.createElement('div');
-    ReactDOM.render(form, div);
-    ReactDOM.unmountComponentAtNode(div);
-  });
+test('renders without crashing', () => {
+  const { unmount } = render(
+    <Form onSubmit={() => {}}>
+      <div />
+    </Form>,
+  );
+  unmount();
+});
 
-  it('simulate submit', () => {
-    const submit = jest.fn();
-    const form = shallow(
-      <Form onSubmit={submit}>
-        <div />
-      </Form>,
-    );
-    form.find('form').simulate('submit');
-    expect(submit).toHaveBeenCalled();
-  });
+test('simulate submit', () => {
+  const submit = jest.fn();
+  const { container } = render(
+    <Form onSubmit={submit}>
+      <div />
+    </Form>,
+  );
+  fireEvent.submit(container.firstChild);
+  expect(submit).toHaveBeenCalled();
+});
 
-  it('simulate submit and get values', () => {
-    const submit = jest.fn();
-    const values = {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'John',
-        lastName: 'Brown',
-      },
-    };
-    const form = shallow(
-      <Form values={values} onSubmit={submit}>
-        <div />
-      </Form>,
-    );
-    form.find('form').simulate('submit');
-    expect(submit).toHaveBeenCalledWith(values);
-  });
+test('simulate submit width default values', () => {
+  const submit = jest.fn();
+  const defaultValues = {
+    email: 'test@example.com',
+    profile: {
+      firstName: 'John',
+      lastName: 'Brown',
+    },
+  };
+  const { container } = render(
+    <Form defaultValues={defaultValues} onSubmit={submit}>
+      <div />
+    </Form>,
+  );
+  fireEvent.submit(container.firstChild);
+  expect(submit).toHaveBeenCalledWith(defaultValues, expect.any(Object));
 });
