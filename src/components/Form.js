@@ -5,16 +5,10 @@ import { ContextApi, ContextForm } from './FormContext';
 import Helpers from './Helpers';
 
 class Form extends Component {
-  state = {
-    values: _.cloneDeep(this.props.values),
-    errors: {},
-    disabledFields: [],
-  };
-
   static propTypes = {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    values: PropTypes.object,
+    defaultValues: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
     validation: PropTypes.func,
@@ -24,7 +18,7 @@ class Form extends Component {
   };
 
   static defaultProps = {
-    values: {},
+    defaultValues: {},
     onError: () => {},
     validation: () => ({}),
     invalidClass: 'is-invalid',
@@ -34,8 +28,9 @@ class Form extends Component {
 
   api = {
     setTouched: (name, callback) => {
-      const validators = _.get(this.props.validation(this.api), name);
-      if (validators && validators.length) {
+      const { validation } = this.props;
+      const validators = _.get(validation(this.api), name);
+      if (validators && validators.length > 0) {
         this.setState(({ errors, values }) => {
           const value = _.get(values, name);
           _.set(errors, name, this.validateValue(validators, value));
@@ -125,6 +120,16 @@ class Form extends Component {
     },
   };
 
+  constructor(props) {
+    super(props);
+    const { defaultValues } = props;
+    this.state = {
+      values: _.cloneDeep(defaultValues),
+      errors: {},
+      disabledFields: [],
+    };
+  }
+
   validateValue = (validators, value) => {
     const errors = [];
 
@@ -145,7 +150,8 @@ class Form extends Component {
       if (Array.isArray(validator)) {
         const value = this.api.getValue(currentPath.join('.'));
         const error = this.validateValue(validator, value);
-        if (error && error.length) {
+        if (error && error.length > 0) {
+          // eslint-disable-next-line no-param-reassign
           result.count += 1;
           _.set(result.errors, currentPath, error);
         }
@@ -159,7 +165,7 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit, values: prevValues, isUpdatesOnly } = this.props;
+    const { validation, onError, onSubmit, defaultValues, isUpdatesOnly } = this.props;
     const { values } = this.state;
     const result = {
       count: 0,
@@ -174,7 +180,7 @@ class Form extends Component {
         if (result.count && onError) {
           onError(result.errors, this.api);
         } else if (!result.count) {
-          const currentValues = isUpdatesOnly ? Helpers.getValuesDiff(prevValues, values) : values;
+          const currentValues = isUpdatesOnly ? Helpers.getValuesDiff(defaultValues, values) : values;
           onSubmit(_.cloneDeep(currentValues), this.api);
         }
       },

@@ -28,7 +28,7 @@ class Helpers {
         result[key] = value;
       } else if (!_.isEqual(value, prev[key])) {
         // eslint-disable-next-line no-param-reassign
-        result[key] = _.isObject(value) || _.isArray(value) ? Helpers.getValuesDifference(value, prev[key]) : value;
+        result[key] = _.isObject(value) || _.isArray(value) ? Helpers.getValuesDiff(value, prev[key]) : value;
       }
     });
   }
