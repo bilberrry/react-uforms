@@ -1,7 +1,7 @@
 import React from 'react';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
-import { Form, Text } from '../../src';
+import { Form, TextArea } from '../../src';
 
 afterEach(() => {
   cleanup();
@@ -10,7 +10,7 @@ afterEach(() => {
 test('renders without crashing', () => {
   const { unmount } = render(
     <Form onSubmit={() => {}}>
-      <Text name="profile.firstName" />
+      <TextArea name="profile.firstName" />
     </Form>,
   );
   unmount();
@@ -20,7 +20,7 @@ test('change input value -> submit form', () => {
   const submit = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={submit} data-testid="form">
-      <Text name="profile.firstName" data-testid="input" />
+      <TextArea name="profile.firstName" data-testid="input" />
     </Form>,
   );
   expect(getByTestId('input').value).toBe('');
@@ -47,7 +47,7 @@ test('set default values -> change input value -> submit form', () => {
   };
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
-      <Text name="profile.firstName" data-testid="input" />
+      <TextArea name="profile.firstName" data-testid="input" />
     </Form>,
   );
   expect(getByTestId('input').value).toBe('John');
@@ -76,7 +76,7 @@ test('set emptyValue attribute -> change input value -> submit form', () => {
   };
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
-      <Text name="profile.firstName" data-testid="input" emptyValue={null} />
+      <TextArea name="profile.firstName" data-testid="input" emptyValue={null} />
     </Form>,
   );
   expect(getByTestId('input').value).toBe('John');

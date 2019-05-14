@@ -16,7 +16,7 @@ test('renders without crashing', () => {
   unmount();
 });
 
-test('simulate submit', () => {
+test('submit form', () => {
   const submit = jest.fn();
   const { container } = render(
     <Form onSubmit={submit}>
@@ -27,7 +27,7 @@ test('simulate submit', () => {
   expect(submit).toHaveBeenCalled();
 });
 
-test('simulate submit width default values', () => {
+test('set default values -> submit form', () => {
   const submit = jest.fn();
   const defaultValues = {
     email: 'test@example.com',
