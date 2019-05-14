@@ -22,11 +22,12 @@
   ],
   "scripts": {
     "lint": "eslint src",
-    "lintfix": "eslint src --fix",
+    "lint-fix": "eslint src --fix",
     "clean": "rm -rf lib && mkdir lib",
     "build": "babel src  --out-dir lib",
     "start": "yarn run build --watch",
-    "test": "jest tests --verbose"
+    "test": "jest tests --verbose",
+    "test-coverage": "jest tests --coverage"
   },
   "peerDependencies": {
     "react": "^16.6.3"
