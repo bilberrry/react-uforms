@@ -23,9 +23,11 @@ test('change input value -> submit form', () => {
       <Text name="profile.firstName" data-testid="input" />
     </Form>,
   );
-  expect(getByTestId('input').value).toBe('');
-  fireEvent.change(getByTestId('input'), { target: { value: 'John' } });
-  fireEvent.submit(getByTestId('form'));
+  const input = getByTestId('input');
+  const form = getByTestId('input');
+  expect(input.value).toBe('');
+  fireEvent.change(input, { target: { value: 'John' } });
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
     {
       profile: {
@@ -50,9 +52,11 @@ test('set default values -> change input value -> submit form', () => {
       <Text name="profile.firstName" data-testid="input" />
     </Form>,
   );
-  expect(getByTestId('input').value).toBe('John');
-  fireEvent.change(getByTestId('input'), { target: { value: 'Bill' } });
-  fireEvent.submit(getByTestId('form'));
+  const input = getByTestId('input');
+  const form = getByTestId('input');
+  expect(input.value).toBe('John');
+  fireEvent.change(input, { target: { value: 'Bill' } });
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
     {
       email: 'test@example.com',
@@ -79,9 +83,11 @@ test('set emptyValue attribute -> change input value -> submit form', () => {
       <Text name="profile.firstName" data-testid="input" emptyValue={null} />
     </Form>,
   );
-  expect(getByTestId('input').value).toBe('John');
-  fireEvent.change(getByTestId('input'), { target: { value: '' } });
-  fireEvent.submit(getByTestId('form'));
+  const input = getByTestId('input');
+  const form = getByTestId('input');
+  expect(input.value).toBe('John');
+  fireEvent.change(input, { target: { value: '' } });
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
     {
       email: 'test@example.com',
@@ -92,4 +98,31 @@ test('set emptyValue attribute -> change input value -> submit form', () => {
     },
     expect.any(Object),
   );
+});
+
+test('set onChange attribute -> change input value ', async () => {
+  const change = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Text name="profile.firstName" onChange={change} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'John' } });
+  expect(change).toHaveBeenCalled();
+});
+
+test('set onBlur attribute -> focus input -> blur input', () => {
+  const blur = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Text name="profile.firstName" onBlur={blur} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  input.focus();
+  expect(input).toHaveFocus();
+  input.blur();
+  expect(input).not.toHaveFocus();
+  expect(blur).toHaveBeenCalled();
 });

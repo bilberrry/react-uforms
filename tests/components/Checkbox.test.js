@@ -23,9 +23,11 @@ test('check input -> submit form', () => {
       <Checkbox name="profile.isPrivate" onValue offValue={false} data-testid="input" />
     </Form>,
   );
-  fireEvent.click(getByTestId('input'));
-  expect(getByTestId('input')).toHaveProperty('checked');
-  fireEvent.submit(getByTestId('form'));
+  const input = getByTestId('input');
+  const form = getByTestId('form');
+  fireEvent.click(input);
+  expect(input).toHaveProperty('checked');
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
     {
       profile: {
@@ -51,9 +53,11 @@ test('set default values -> uncheck input -> submit form', () => {
       <Checkbox name="profile.isPrivate" onValue={1} offValue={0} data-testid="input" />
     </Form>,
   );
-  expect(getByTestId('input')).toHaveProperty('checked');
-  fireEvent.click(getByTestId('input'));
-  fireEvent.submit(getByTestId('form'));
+  const input = getByTestId('input');
+  const form = getByTestId('form');
+  expect(input).toHaveProperty('checked');
+  fireEvent.click(input);
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
     {
       email: 'test@example.com',
@@ -65,4 +69,31 @@ test('set default values -> uncheck input -> submit form', () => {
     },
     expect.any(Object),
   );
+});
+
+test('set onChange attribute -> change input value ', async () => {
+  const change = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Checkbox name="profile.isPrivate" onValue={1} offValue={0} onChange={change} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.click(input);
+  expect(change).toHaveBeenCalled();
+});
+
+test('set onBlur attribute -> focus input -> blur input', () => {
+  const blur = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Checkbox name="profile.isPrivate" onValue={1} offValue={0} onBlur={blur} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  input.focus();
+  expect(input).toHaveFocus();
+  input.blur();
+  expect(input).not.toHaveFocus();
+  expect(blur).toHaveBeenCalled();
 });

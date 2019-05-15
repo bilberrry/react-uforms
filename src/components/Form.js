@@ -39,6 +39,8 @@ class Form extends Component {
             values,
           };
         }, callback);
+      } else if (callback) {
+        callback();
       }
     },
     setValue: (name, value, callback) => {

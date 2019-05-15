@@ -18,12 +18,13 @@ test('renders without crashing', () => {
 
 test('submit form', () => {
   const submit = jest.fn();
-  const { container } = render(
-    <Form onSubmit={submit}>
+  const { getByTestId } = render(
+    <Form onSubmit={submit} data-testid="form">
       <div />
     </Form>,
   );
-  fireEvent.submit(container.firstChild);
+  const form = getByTestId('form');
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalled();
 });
 
@@ -36,11 +37,12 @@ test('set default values -> submit form', () => {
       lastName: 'Brown',
     },
   };
-  const { container } = render(
-    <Form defaultValues={defaultValues} onSubmit={submit}>
+  const { getByTestId } = render(
+    <Form defaultValues={defaultValues} onSubmit={submit} data-testid="form">
       <div />
     </Form>,
   );
-  fireEvent.submit(container.firstChild);
+  const form = getByTestId('form');
+  fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(defaultValues, expect.any(Object));
 });
