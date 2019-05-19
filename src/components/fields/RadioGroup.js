@@ -4,26 +4,16 @@ import { ContextRadioGroup } from '../FormContext';
 import Field from '../Field';
 import Helpers from '../Helpers';
 
-const RadioGroup = ({ name, children, getValue, setValue, onChange, setTouched, onBlur }) => {
+const RadioGroup = ({ name, children, getValue, setValue, setTouched, onChange }) => {
   const childApi = {
     name,
     getValue,
+    setTouched,
     onChange: event => {
       event.persist();
-      if (!event.target.checked) {
-        return;
-      }
       setValue(Helpers.jsonToValue(event.target.value), () => {
         if (onChange) {
           onChange(event);
-        }
-      });
-    },
-    onBlur: event => {
-      event.persist();
-      setTouched(() => {
-        if (onBlur) {
-          onBlur(event);
         }
       });
     },
@@ -39,12 +29,10 @@ RadioGroup.propTypes = {
   setValue: PropTypes.func.isRequired,
   setTouched: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  onBlur: PropTypes.func,
 };
 
 RadioGroup.defaultProps = {
   onChange: undefined,
-  onBlur: undefined,
 };
 
 export default Field(RadioGroup);

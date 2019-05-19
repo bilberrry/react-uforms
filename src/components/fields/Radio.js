@@ -11,17 +11,11 @@ const Radio = ({ getValue, setValue, setTouched, onBlur, onChange, value, ...pro
     type="radio"
     onChange={event => {
       event.persist();
-      if (!event.target.checked) {
+      setValue(value, () => {
         if (onChange) {
           onChange(event);
         }
-      } else {
-        setValue(value, () => {
-          if (onChange) {
-            onChange(event);
-          }
-        });
-      }
+      });
     }}
     onBlur={event => {
       event.persist();
