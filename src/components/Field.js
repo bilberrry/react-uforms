@@ -15,9 +15,9 @@ const Field = (PassedComponent, passedProps = {}) =>
                 classNames.push(api.getInvalidClass());
               }
               if (disabled) {
-                api.setDisabledField(name);
+                api.setDisabled(name);
               } else {
-                api.removeDisabledField(name);
+                api.removeDisabled(name);
               }
 
               return (

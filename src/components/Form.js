@@ -57,6 +57,10 @@ class Form extends Component {
       const { values } = this.state;
       return _.get(values, name);
     },
+    removeValue: name => {
+      const { values } = this.state;
+      return _.omit(values, name);
+    },
     getErrors: name => {
       const { errors } = this.state;
       return _.get(errors, name);
@@ -101,24 +105,28 @@ class Form extends Component {
         callback,
       );
     },
-    getAllDisabledFields: () => {
-      const { disabledFields } = this.state;
-      return disabledFields;
+    getAllDisabled: () => {
+      const { disabled } = this.state;
+      return disabled;
     },
-    setDisabledField: name => {
-      const { disabledFields } = this.state;
+    setDisabled: name => {
+      const { disabled } = this.state;
 
-      if (!disabledFields.includes(name)) {
-        this.setState({ disabledFields: [...disabledFields, name] });
+      if (!disabled.includes(name)) {
+        this.setState({ disabled: [...disabled, name] });
       }
     },
-    removeDisabledField: name => {
-      const { disabledFields } = this.state;
+    removeDisabled: name => {
+      const { disabled } = this.state;
 
-      if (disabledFields.includes(name)) {
-        const index = disabledFields.indexOf(name);
-        this.setState({ disabledFields: [...disabledFields.slice(0, index), ...disabledFields.slice(index + 1)] });
+      if (disabled.includes(name)) {
+        const index = disabled.indexOf(name);
+        this.setState({ disabled: [...disabled.slice(0, index), ...disabled.slice(index + 1)] });
       }
+    },
+    isDisabled: name => {
+      const { disabled } = this.state;
+      return disabled.includes(name);
     },
   };
 
@@ -128,7 +136,7 @@ class Form extends Component {
     this.state = {
       values: _.cloneDeep(defaultValues),
       errors: {},
-      disabledFields: [],
+      disabled: [],
     };
   }
 
