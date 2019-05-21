@@ -26,11 +26,11 @@ const Select = ({ getValue, setValue, setTouched, options, onBlur, onChange, ...
       });
     }}
   >
-    {options.map(option => {
-      const value = Helpers.valueToJson(option.value);
+    {options.map(({ name, value, ...rest }) => {
+      const jsonValue = Helpers.valueToJson(value);
       return (
-        <option key={value} value={value} disabled={option.disabled}>
-          {option.name}
+        <option {...rest} key={jsonValue} value={jsonValue}>
+          {name}
         </option>
       );
     })}
