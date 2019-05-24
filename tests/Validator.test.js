@@ -65,11 +65,11 @@ test('MaxLength', () => {
   expect(validateMessage('foo')).toBe(customErrorMessage);
 });
 
-test('Number', () => {
+test('Numeric', () => {
   const defaultErrorMessage = 'Not valid number';
   const customErrorMessage = 'Should be a number';
-  const validate = Validator.Number();
-  const validateMessage = Validator.Number(customErrorMessage);
+  const validate = Validator.Numeric();
+  const validateMessage = Validator.Numeric(customErrorMessage);
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);

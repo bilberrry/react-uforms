@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Field from '../Field';
 
-const CustomField = ({ children, ...props }) => <>{children({ ...props })}</>;
+const CustomField = ({ children, ...props }) => <Fragment>{children({ ...props })}</Fragment>;
 
 CustomField.propTypes = {
   children: PropTypes.func.isRequired,

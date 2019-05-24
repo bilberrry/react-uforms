@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { ContextApi, ContextForm } from './FormContext';
 
 const Field = (PassedComponent, passedProps = {}) =>
@@ -21,7 +21,7 @@ const Field = (PassedComponent, passedProps = {}) =>
               }
 
               return (
-                <>
+                <Fragment>
                   <PassedComponent
                     {...props}
                     name={name}
@@ -34,7 +34,7 @@ const Field = (PassedComponent, passedProps = {}) =>
                   {!hideError && errors && errors.length > 0 ? (
                     <div className={api.getErrorClass()}>{typeof errors === 'string' ? errors : errors[0]}</div>
                   ) : null}
-                </>
+                </Fragment>
               );
             }}
           </ContextForm.Consumer>

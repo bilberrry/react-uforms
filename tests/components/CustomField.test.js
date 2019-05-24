@@ -1,7 +1,7 @@
 import React from 'react';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
-import { Form, Text } from '../../src';
+import { Form } from '../../src';
 import CustomField from '../../src/components/fields/CustomField';
 
 afterEach(() => {
