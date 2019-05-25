@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
-import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
+import {
+  Form,
+  Validator,
+  Text,
+  Select,
+  TextArea,
+  RadioGroup,
+  RadioGroupItem,
+  Checkbox,
+  FieldError,
+} from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
 class ExampleAllFields extends Component {
-
   state = {
     values: null,
     errors: null,
@@ -117,7 +126,12 @@ const example = (
     ];
     return (
       <div id="all-fields">
-        <h4>7. All fields <a href="#all-fields" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          7. All fields{' '}
+          <a href="#all-fields" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
@@ -129,41 +143,27 @@ const example = (
                 newsletter: 0,
               }}
               validation={() => ({
-                email: [
-                  Validator.Required(),
-                  Validator.Email(),
-                ],
-                country: [
-                  Validator.Required(),
-                  Validator.Range(['US', 'CA']),
-                ],
-                gender: [
-                  Validator.Required(),
-                  Validator.Range(['male', 'female']),
-                ],
-                bio: [
-                  Validator.MaxLength(200),
-                ],
-                newsletter: [
-                  Validator.Required(),
-                  Validator.Range([1, 0]),
-                ],
+                email: [Validator.Required(), Validator.Email()],
+                country: [Validator.Required(), Validator.Range(['US', 'CA'])],
+                gender: [Validator.Required(), Validator.Range(['male', 'female'])],
+                bio: [Validator.MaxLength(200)],
+                newsletter: [Validator.Required(), Validator.Range([1, 0])],
               })}
-              onSubmit={(values) => {
+              onSubmit={values => {
                 this.setState({
                   errors: null,
                   values,
-                })
+                });
               }}
-              onError={(errors) => {
+              onError={errors => {
                 this.setState({
                   errors,
                   values: null,
-                })
+                });
               }}
             >
               <label htmlFor="e7_email">Email</label>
-              <Text id="e7_email" name="email" disabled={true} />
+              <Text id="e7_email" name="email" disabled />
 
               <label htmlFor="e7_password">Password</label>
               <Text type="password" id="e7_password" name="password" />
@@ -176,23 +176,23 @@ const example = (
                   { value: '', name: 'Select country' },
                   { value: 'US', name: 'United States' },
                   { value: 'CA', name: 'Canada' },
-                  { value: 'UK', name: 'United Kingdom', disabled: true }
+                  { value: 'UK', name: 'United Kingdom', disabled: true },
                 ]}
               />
 
               <div className="radio-group">
                 <RadioGroup
-                    name="gender"
-                    onChange={event => {
-                      //console.log(event);
-                    }}
+                  name="gender"
+                  onChange={event => {
+                    // console.log(event);
+                  }}
                 >
                   <label>Gender</label>
                   {radioItems.map(({ id, label, value }) => (
-                      <div key={id} className="radio">
-                        <RadioGroupItem id={id} value={value} />
-                        <label htmlFor={id}>{label}</label>
-                      </div>
+                    <div key={id} className="radio">
+                      <RadioGroupItem id={id} value={value} />
+                      <label htmlFor={id}>{label}</label>
+                    </div>
                   ))}
                   <FieldError name="gender" />
                 </RadioGroup>
@@ -212,14 +212,22 @@ const example = (
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
-            {errors && <div>
-              <samp>onError <small>log</small></samp>
-              <Json value={errors} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <Json value={values} />
+              </div>
+            )}
+            {errors && (
+              <div>
+                <samp>
+                  onError <small>log</small>
+                </samp>
+                <Json value={errors} />
+              </div>
+            )}
           </div>
         </div>
         <Code value={code} />

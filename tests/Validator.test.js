@@ -191,7 +191,6 @@ test('Max', () => {
   expect(validateMessage(-9)).toBe(customErrorMessage);
 });
 
-
 test('Email', () => {
   const defaultErrorMessage = 'Not valid email address';
   const customErrorMessage = 'Invalid email';

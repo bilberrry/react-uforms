@@ -59,7 +59,7 @@ module.exports = {
     'react/prefer-stateless-function': 'off',
     'prettier/prettier': 'error',
     camelcase: 'off',
-    'unicorn/filename-case': ['error', { case: 'pascalCase' }],
+    'unicorn/filename-case': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/label-has-associated-control': 'off',

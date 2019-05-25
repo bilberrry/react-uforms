@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Validator, Text, TextArea } from 'react-uforms'
+import { Form, Validator, Text, TextArea } from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
 class ExamplePreFilledForm extends Component {
-
   state = {
     values: null,
     errors: null,
@@ -68,7 +67,12 @@ const example = (
 
     return (
       <div id="pre-filled-form">
-        <h4>4. Pre-filled form <a href="#pre-filled-form" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          4. Pre-filled form{' '}
+          <a href="#pre-filled-form" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
@@ -80,40 +84,27 @@ const example = (
                   lastName: 'Bar',
                   bio: 'Travel blogger',
                 },
-                createdAt: '2018-04-25T20:36:02+00:00'
+                createdAt: '2018-04-25T20:36:02+00:00',
               }}
               validation={() => ({
-                email: [
-                  Validator.Required(),
-                  Validator.Email(),
-                ],
+                email: [Validator.Required(), Validator.Email()],
                 profile: {
-                  firstName: [
-                    Validator.Required(),
-                    Validator.MinLength(2),
-                    Validator.MaxLength(20),
-                  ],
-                  lastName: [
-                    Validator.Required(),
-                    Validator.MinLength(2),
-                    Validator.MaxLength(20),
-                  ],
-                  bio: [
-                    Validator.MaxLength(200)
-                  ]
+                  firstName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+                  lastName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+                  bio: [Validator.MaxLength(200)],
                 },
               })}
-              onSubmit={(values) => {
+              onSubmit={values => {
                 this.setState({
                   errors: null,
                   values,
-                })
+                });
               }}
-              onError={(errors) => {
+              onError={errors => {
                 this.setState({
                   errors,
                   values: null,
-                })
+                });
               }}
             >
               <label htmlFor="e4_email">Email</label>
@@ -132,14 +123,22 @@ const example = (
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
-            {errors && <div>
-              <samp>onError <small>log</small></samp>
-              <Json value={errors} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <Json value={values} />
+              </div>
+            )}
+            {errors && (
+              <div>
+                <samp>
+                  onError <small>log</small>
+                </samp>
+                <Json value={errors} />
+              </div>
+            )}
           </div>
         </div>
         <Code value={code} />

@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { Form, Validator, Text, Select } from 'react-uforms'
+import { Form, Validator, Text, Select } from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
 class ExampleDynamicForm extends Component {
-
   state = {
     values: null,
     errors: null,
@@ -88,7 +87,12 @@ const example = (
 
     return (
       <div id="dynamic-form">
-        <h4>5. Dynamic form <a href="#dynamic-form" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          5. Dynamic form{' '}
+          <a href="#dynamic-form" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
@@ -103,83 +107,87 @@ const example = (
               }}
               validation={({ getValue }) => ({
                 address: {
-                  country: [
-                    Validator.Required(),
-                    Validator.Range(['US', 'CA']),
-                  ],
+                  country: [Validator.Required(), Validator.Range(['US', 'CA'])],
                   state: [
                     ...(getValue('address.country') === 'US' ? [Validator.Required()] : []),
                     Validator.Range(['WA', 'OR', 'CA']),
                   ],
-                  city: [
-                    Validator.Required(),
-                    Validator.MaxLength(30),
-                  ],
+                  city: [Validator.Required(), Validator.MaxLength(30)],
                 },
               })}
-              onSubmit={(values) => {
+              onSubmit={values => {
                 this.setState({
                   errors: null,
                   values,
-                })
+                });
               }}
-              onError={(errors) => {
+              onError={errors => {
                 this.setState({
                   errors,
                   values: null,
-                })
+                });
               }}
             >
-            {({ getValue, setValue }) => (
-              <Fragment>
-                <label htmlFor="e5_country">Country</label>
-                <Select
-                  id="e5_country"
-                  name="address.country"
-                  onChange={() => {
-                    if (getValue('address.country') !== 'US') {
-                      setValue('address.state', '');
-                    }
-                  }}
-                  options={[
-                    { value: '', name: 'Select country' },
-                    { value: 'US', name: 'United States' },
-                    { value: 'CA', name: 'Canada' },
-                    { value: 'UK', name: 'United Kingdom - coming soon', disabled: true }
-                  ]}
-                />
-
-                {getValue('address.country') === 'US' && <Fragment>
-                  <label htmlFor="e5_state">State</label>
+              {({ getValue, setValue }) => (
+                <Fragment>
+                  <label htmlFor="e5_country">Country</label>
                   <Select
-                    id="e5_state"
-                    name="address.state"
+                    id="e5_country"
+                    name="address.country"
+                    onChange={() => {
+                      if (getValue('address.country') !== 'US') {
+                        setValue('address.state', '');
+                      }
+                    }}
                     options={[
-                      { value: '', name: 'Select state' },
-                      { value: 'WA', name: 'Washington' },
-                      { value: 'CA', name: 'California' },
-                      { value: 'OR', name: 'Oregon' }
+                      { value: '', name: 'Select country' },
+                      { value: 'US', name: 'United States' },
+                      { value: 'CA', name: 'Canada' },
+                      { value: 'UK', name: 'United Kingdom - coming soon', disabled: true },
                     ]}
                   />
-                </Fragment>}
 
-                <label htmlFor="e5_city">City</label>
-                <Text type="text" id="e5_city" name="address.city" />
+                  {getValue('address.country') === 'US' && (
+                    <Fragment>
+                      <label htmlFor="e5_state">State</label>
+                      <Select
+                        id="e5_state"
+                        name="address.state"
+                        options={[
+                          { value: '', name: 'Select state' },
+                          { value: 'WA', name: 'Washington' },
+                          { value: 'CA', name: 'California' },
+                          { value: 'OR', name: 'Oregon' },
+                        ]}
+                      />
+                    </Fragment>
+                  )}
 
-                <button type="submit">Submit</button>
-              </Fragment>
-            )}
+                  <label htmlFor="e5_city">City</label>
+                  <Text type="text" id="e5_city" name="address.city" />
+
+                  <button type="submit">Submit</button>
+                </Fragment>
+              )}
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
-            {errors && <div>
-              <samp>onError <small>log</small></samp>
-              <Json value={errors} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <Json value={values} />
+              </div>
+            )}
+            {errors && (
+              <div>
+                <samp>
+                  onError <small>log</small>
+                </samp>
+                <Json value={errors} />
+              </div>
+            )}
           </div>
         </div>
         <Code value={code} />

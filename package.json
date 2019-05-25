@@ -20,9 +20,26 @@
   "files": [
     "lib"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "ignore": [
+      "package.json"
+    ],
+    "linters": {
+      "*.{js,jsx}": [
+        "eslint",
+        "git add --force"
+      ]
+    }
+  },
   "scripts": {
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
     "clean": "rm -rf lib && mkdir lib",
     "build": "babel src  --out-dir lib",
     "start": "yarn run build --watch",
@@ -50,8 +67,6 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^24.7.1",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.0.1",
@@ -62,8 +77,10 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-unicorn": "^6.0.1",
+    "husky": "^2.3.0",
     "jest": "^24.7.1",
     "jest-dom": "^3.1.3",
+    "lint-staged": "^8.1.7",
     "prettier": "^1.17.0",
     "react-testing-library": "^7.0.0"
   }

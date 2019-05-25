@@ -1,7 +1,7 @@
 import React from 'react';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
-import { Form, Select, Text } from '../../src';
+import { Form, Select } from '../../src';
 
 afterEach(() => {
   cleanup();
@@ -125,12 +125,13 @@ test('set onChange attribute -> change input value ', async () => {
         onChange={change}
         options={[
           { value: null, name: 'Select country' },
-          { value: 'US', name: 'United States'},
-          { value: -1, name: 'Asgard', 'data-testid': 'opt-as'},
+          { value: 'US', name: 'United States' },
+          { value: -1, name: 'Asgard', 'data-testid': 'opt-as' },
         ]}
       />
     </Form>,
   );
+
   const input = getByTestId('input');
   const optAs = getByTestId('opt-as');
   fireEvent.change(input, { target: { value: optAs.value } });

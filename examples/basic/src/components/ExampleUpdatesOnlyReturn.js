@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Text } from 'react-uforms'
+import { Form, Text } from 'react-uforms';
 import Code from './Code';
 import Json from './Json';
 
 class ExampleUpdatesOnlyReturn extends Component {
-
   state = {
     values: null,
     errors: null,
@@ -34,7 +33,12 @@ const example = (
     const { code, values } = this.state;
     return (
       <div id="updates-only">
-        <h4>8. a Form option to submit values difference <a href="#updates-only" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          8. a Form option to submit values difference{' '}
+          <a href="#updates-only" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
@@ -42,13 +46,13 @@ const example = (
                 email: 'foo.bar@example.com',
                 password: '12345',
               }}
-              onSubmit={(values) => {
+              onSubmit={values => {
                 this.setState({
                   errors: null,
                   values,
-                })
+                });
               }}
-              isUpdatesOnly={true}
+              isUpdatesOnly
             >
               <label htmlFor="e1_email">Email</label>
               <Text type="text" id="e1_email" name="email" />
@@ -60,10 +64,14 @@ const example = (
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <Json value={values} />
+              </div>
+            )}
           </div>
         </div>
         <Code value={code} />
