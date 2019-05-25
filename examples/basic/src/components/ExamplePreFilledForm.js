@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Validator, Text, TextArea } from 'react-uforms';
-import Code from './Code';
-import Json from './Json';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExamplePreFilledForm extends Component {
   state = {
@@ -11,7 +11,7 @@ class ExamplePreFilledForm extends Component {
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       id: 1,
       email: 'foo.bar@example.com',
       profile: {
@@ -76,7 +76,7 @@ const example = (
         <div className="row">
           <div className="col-6">
             <Form
-              values={{
+              defaultValues={{
                 id: 1,
                 email: 'foo.bar@example.com',
                 profile: {
@@ -94,15 +94,15 @@ const example = (
                   bio: [Validator.MaxLength(200)],
                 },
               })}
-              onSubmit={values => {
+              onSubmit={formValues => {
                 this.setState({
                   errors: null,
-                  values,
+                  values: formValues,
                 });
               }}
-              onError={errors => {
+              onError={formErrors => {
                 this.setState({
-                  errors,
+                  errors: formErrors,
                   values: null,
                 });
               }}
@@ -128,7 +128,7 @@ const example = (
                 <samp>
                   onSubmit <small>log</small>
                 </samp>
-                <Json value={values} />
+                <CodeJson value={values} />
               </div>
             )}
             {errors && (
@@ -136,12 +136,12 @@ const example = (
                 <samp>
                   onError <small>log</small>
                 </samp>
-                <Json value={errors} />
+                <CodeJson value={errors} />
               </div>
             )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

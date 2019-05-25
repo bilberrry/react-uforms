@@ -235,7 +235,7 @@ h4:hover .anchor {
   width: auto;
 }
 
-.checkbox label,  .radio label {
+.checkbox label,  .radio label, .checkbox-group label {
   display: inline-block;
   width: auto;
   margin-bottom: 0;

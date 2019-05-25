@@ -14,7 +14,7 @@ class Form extends Component {
     validation: PropTypes.func,
     errorClass: PropTypes.string,
     invalidClass: PropTypes.string,
-    sendValuesDiff: PropTypes.bool,
+    diff: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -23,7 +23,7 @@ class Form extends Component {
     validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
-    sendValuesDiff: false,
+    diff: false,
   };
 
   api = {
@@ -128,6 +128,28 @@ class Form extends Component {
       const { disabled } = this.state;
       return disabled.includes(name);
     },
+    submit: () => {
+      const { validation, onError, onSubmit, defaultValues, diff } = this.props;
+      const { values } = this.state;
+      const result = {
+        count: 0,
+        errors: {},
+      };
+      this.validateForm(result, validation(this.api));
+      this.setState(
+        {
+          errors: result.errors,
+        },
+        () => {
+          if (result.count && onError) {
+            onError(result.errors, this.api);
+          } else if (!result.count) {
+            const currentValues = diff ? Helpers.getValuesDiff(defaultValues, values) : values;
+            onSubmit(_.cloneDeep(currentValues), this.api);
+          }
+        },
+      );
+    },
   };
 
   constructor(props) {
@@ -175,26 +197,7 @@ class Form extends Component {
     if (event) {
       event.preventDefault();
     }
-    const { validation, onError, onSubmit, defaultValues, sendValuesDiff } = this.props;
-    const { values } = this.state;
-    const result = {
-      count: 0,
-      errors: {},
-    };
-    this.validateForm(result, validation(this.api));
-    this.setState(
-      {
-        errors: result.errors,
-      },
-      () => {
-        if (result.count && onError) {
-          onError(result.errors, this.api);
-        } else if (!result.count) {
-          const currentValues = sendValuesDiff ? Helpers.getValuesDiff(defaultValues, values) : values;
-          onSubmit(_.cloneDeep(currentValues), this.api);
-        }
-      },
-    );
+    this.api.submit();
   };
 
   render() {
@@ -206,7 +209,7 @@ class Form extends Component {
       validation,
       errorClass,
       invalidClass,
-      sendValuesDiff,
+      diff,
       ...props
     } = this.props;
     return (

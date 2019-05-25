@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Validator, Text, Select } from 'react-uforms';
-import Code from './Code';
-import Json from './Json';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExampleDynamicForm extends Component {
   state = {
@@ -11,7 +11,7 @@ class ExampleDynamicForm extends Component {
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       id: 1,
       email: 'foo.bar@example.com',
       address: {
@@ -47,11 +47,11 @@ const example = (
           name="address.country"
           onChange={() => {
             if (getValue('address.country') !== 'US') {
-              setValue('address.state', '');
+              setValue('address.state', null);
             }
           }}
           options={[
-            { value: '', name: 'Select country' },
+            { value: null, name: 'Select country' },
             { value: 'US', name: 'United States' },
             { value: 'CA', name: 'Canada' },
             { value: 'UK', name: 'United Kingdom - coming soon', disabled: true }
@@ -64,7 +64,7 @@ const example = (
             id="state"
             name="address.state"
             options={[
-              { value: '', name: 'Select state' },
+              { value: null, name: 'Select state' },
               { value: 'WA', name: 'Washington' },
               { value: 'CA', name: 'California' },
               { value: 'OR', name: 'Oregon' }
@@ -96,7 +96,7 @@ const example = (
         <div className="row">
           <div className="col-6">
             <Form
-              values={{
+              defaultValues={{
                 id: 1,
                 email: 'foo.bar@example.com',
                 address: {
@@ -115,15 +115,15 @@ const example = (
                   city: [Validator.Required(), Validator.MaxLength(30)],
                 },
               })}
-              onSubmit={values => {
+              onSubmit={formValues => {
                 this.setState({
                   errors: null,
-                  values,
+                  values: formValues,
                 });
               }}
-              onError={errors => {
+              onError={formErrors => {
                 this.setState({
-                  errors,
+                  errors: formErrors,
                   values: null,
                 });
               }}
@@ -136,11 +136,11 @@ const example = (
                     name="address.country"
                     onChange={() => {
                       if (getValue('address.country') !== 'US') {
-                        setValue('address.state', '');
+                        setValue('address.state', null);
                       }
                     }}
                     options={[
-                      { value: '', name: 'Select country' },
+                      { value: null, name: 'Select country' },
                       { value: 'US', name: 'United States' },
                       { value: 'CA', name: 'Canada' },
                       { value: 'UK', name: 'United Kingdom - coming soon', disabled: true },
@@ -154,7 +154,7 @@ const example = (
                         id="e5_state"
                         name="address.state"
                         options={[
-                          { value: '', name: 'Select state' },
+                          { value: null, name: 'Select state' },
                           { value: 'WA', name: 'Washington' },
                           { value: 'CA', name: 'California' },
                           { value: 'OR', name: 'Oregon' },
@@ -177,7 +177,7 @@ const example = (
                 <samp>
                   onSubmit <small>log</small>
                 </samp>
-                <Json value={values} />
+                <CodeJson value={values} />
               </div>
             )}
             {errors && (
@@ -185,12 +185,12 @@ const example = (
                 <samp>
                   onError <small>log</small>
                 </samp>
-                <Json value={errors} />
+                <CodeJson value={errors} />
               </div>
             )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

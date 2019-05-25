@@ -122,7 +122,7 @@ import { Form, Text, TextArea } from 'react-uforms'
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       id: 1,
       email: 'foo.bar@example.com',
       profile: {
@@ -180,7 +180,7 @@ import { Form, Text, Select } from 'react-uforms'
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       id: 1,
       email: 'foo.bar@example.com',
       address: {
@@ -216,11 +216,11 @@ const example = (
           name="address.country"
           onChange={() => {
             if (getValue('address.country') !== 'US') {
-              setValue('address.state', '');
+              setValue('address.state', null);
             }
           }}
           options={[
-            { value: '', name: 'Select country' },
+            { value: null, name: 'Select country' },
             { value: 'US', name: 'United States' },
             { value: 'CA', name: 'Canada' },
             { value: 'UK', name: 'United Kingdom - coming soon', disabled: true }
@@ -233,7 +233,7 @@ const example = (
             id="state"
             name="address.state"
             options={[
-              { value: '', name: 'Select state' },
+              { value: null, name: 'Select state' },
               { value: 'WA', name: 'Washington' },
               { value: 'CA', name: 'California' },
               { value: 'OR', name: 'Oregon' }
@@ -300,11 +300,11 @@ const example = (
 
 ### 7. All fields
 ```jsx
-import { Form, Validator, Text, Select, TextArea, Radio, Checkbox, FieldError } from 'react-uforms'
+import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms'
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       email: 'foo.bar@example.com',
       country: 'US',
       bio: 'Travel blogger',
@@ -356,24 +356,20 @@ const example = (
       id="country"
       name="country"
       options={[
-        { value: '', name: 'Select country' },
+        { value: null, name: 'Select country' },
         { value: 'US', name: 'United States' },
         { value: 'CA', name: 'Canada' },
         { value: 'UK', name: 'United Kingdom', disabled: true }
       ]}
     />
-
-    <div className="checkbox-group">
-      <label>Gender</label>
-      <div className="checkbox">
-        <Radio name="gender" value="male" type="radio" id="male" />
-        <label htmlFor="male">Male</label>
-      </div>
-      <div className="checkbox">
-        <Radio name="gender" value="female" type="radio" id="female" />
-        <label htmlFor="female">Female</label>
-      </div>
-      <FieldError name="gender" />
+    
+    <div className="radio-group">
+      <RadioGroup name="gender">
+        <RadioGroupItem value="male" id="gender_male" />
+        <label htmlFor="gender_male">Male</label>
+        <RadioGroupItem value="female" id="gender_female" />
+        <label htmlFor="gender_female">Female</label>
+      </RadioGroup>
     </div>
 
     <label htmlFor="bio">Bio</label>
@@ -398,7 +394,7 @@ import { Form, Text } from 'react-uforms'
 
 const example = (
   <Form
-    values={{
+    defaultValues={{
         email: 'foo.bar@example.com',
         password: '12345',
     }}

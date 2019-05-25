@@ -1,4 +1,4 @@
-import Validator from '../src/components/Validator';
+import { Validator } from '../src';
 
 test('Required', () => {
   const defaultErrorMessage = 'Required';

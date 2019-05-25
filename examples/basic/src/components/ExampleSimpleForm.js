@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Text } from 'react-uforms';
-import Code from './Code';
-import Json from './Json';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExampleSimpleForm extends Component {
   state = {
     values: null,
-    errors: null,
     code: `import { Form, Text } from 'react-uforms'
 
 const example = (
@@ -35,10 +34,9 @@ const example = (
         <div className="row">
           <div className="col-6">
             <Form
-              onSubmit={values => {
+              onSubmit={formValues => {
                 this.setState({
-                  errors: null,
-                  values,
+                  values: formValues,
                 });
               }}
             >
@@ -57,12 +55,12 @@ const example = (
                 <samp>
                   onSubmit <small>log</small>
                 </samp>
-                <Json value={values} />
+                <CodeJson value={values} />
               </div>
             )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

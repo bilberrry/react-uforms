@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import { Form, Text } from 'react-uforms';
-import Code from './Code';
-import Json from './Json';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
-class ExampleUpdatesOnlyReturn extends Component {
+class ExampleValuesDiff extends Component {
   state = {
     values: null,
-    errors: null,
     code: `import { Form, Text } from 'react-uforms'
 
 const example = (
   <Form
-    values={{
+    defaultValues={{
         email: 'foo.bar@example.com',
         password: '12345',
     }}
     onSubmit={values => console.log(values)}
-    isUpdatesOnly={true}
+    diff={true}
   >
     <label htmlFor="email">Email</label>
     <Text type="text" id="email" name="email" />
@@ -34,7 +33,7 @@ const example = (
     return (
       <div id="updates-only">
         <h4>
-          8. a Form option to submit values difference{' '}
+          8. Form option to submit values difference{' '}
           <a href="#updates-only" className="anchor" aria-label="anchor" aria-hidden="true">
             #
           </a>
@@ -42,17 +41,16 @@ const example = (
         <div className="row">
           <div className="col-6">
             <Form
-              values={{
+              defaultValues={{
                 email: 'foo.bar@example.com',
                 password: '12345',
               }}
-              onSubmit={values => {
+              onSubmit={formValues => {
                 this.setState({
-                  errors: null,
-                  values,
+                  values: formValues,
                 });
               }}
-              isUpdatesOnly
+              diff
             >
               <label htmlFor="e1_email">Email</label>
               <Text type="text" id="e1_email" name="email" />
@@ -69,15 +67,15 @@ const example = (
                 <samp>
                   onSubmit <small>log</small>
                 </samp>
-                <Json value={values} />
+                <CodeJson value={values} />
               </div>
             )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }
 }
 
-export default ExampleUpdatesOnlyReturn;
+export default ExampleValuesDiff;

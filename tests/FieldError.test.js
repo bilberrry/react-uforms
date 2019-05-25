@@ -1,8 +1,7 @@
 import React from 'react';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
-import { Form, FieldError, Text } from '../src';
-import Validator from '../src/components/Validator';
+import { Form, FieldError, Text, Validator } from '../src';
 
 afterEach(() => {
   cleanup();

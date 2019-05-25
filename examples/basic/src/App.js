@@ -6,7 +6,7 @@ import ExamplePreFilledForm from './components/ExamplePreFilledForm';
 import ExampleDynamicForm from './components/ExampleDynamicForm';
 import ExampleCustomErrors from './components/ExampleCustomErrors';
 import ExampleAllFields from './components/ExampleAllFields';
-import ExampleUpdatesOnlyReturn from './components/ExampleUpdatesOnlyReturn';
+import ExampleValuesDiff from './components/ExampleValuesDiff';
 
 class App extends Component {
   render() {
@@ -14,7 +14,7 @@ class App extends Component {
       <div className="container">
         <div className="lead">
           <h1>React uForms</h1>
-          <a className="repo" href="https://github.com/summerua/react-uforms" target="_blank">
+          <a className="repo" href="https://github.com/summerua/react-uforms" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
           <p>
@@ -50,7 +50,7 @@ class App extends Component {
         <hr />
         <ExampleAllFields />
         <hr />
-        <ExampleUpdatesOnlyReturn />
+        <ExampleValuesDiff />
         <hr />
         <footer>
           <p>

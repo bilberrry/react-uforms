@@ -1,32 +1,17 @@
 import React, { Component } from 'react';
-import {
-  Form,
-  Validator,
-  Text,
-  Select,
-  TextArea,
-  RadioGroup,
-  RadioGroupItem,
-  Checkbox,
-  FieldError,
-} from 'react-uforms';
-import Code from './Code';
-import Json from './Json';
+import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExampleAllFields extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms';
-
-const radioItems = [
-  { id: 'e7_male', label: 'Male', value: 'male' },
-  { id: 'e7_female', label: 'Female', value: 'female' },
-];
+    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
     
 const example = (
   <Form
-    values={{
+    defaultValues={{
       email: 'foo.bar@example.com',
       country: 'US',
       bio: 'Travel blogger',
@@ -54,13 +39,13 @@ const example = (
         Validator.Range([1, 0]),
       ],
     })}
-    onSubmit={(values) => {
+    onSubmit={values => {
       this.setState({
         errors: null,
         values,
       })
     }}
-    onError={(errors) => {
+    onError={errors => {
       this.setState({
         errors,
         values: null,
@@ -78,7 +63,7 @@ const example = (
       id="country"
       name="country"
       options={[
-        { value: '', name: 'Select country' },
+        { value: null, name: 'Select country' },
         { value: 'US', name: 'United States' },
         { value: 'CA', name: 'Canada' },
         { value: 'UK', name: 'United Kingdom', disabled: true }
@@ -86,20 +71,11 @@ const example = (
     />
 
     <div className="radio-group">
-      <RadioGroup
-          name="gender"
-          onChange={event=>{
-            //console.log(event);
-          }}
-      >
-        <label>Gender</label>
-        {radioItems.map(({ id, label, value }) => (
-            <div key={id} className="radio">
-              <RadioGroupItem id={id} value={value} />
-              <label htmlFor={id}>{label}</label>
-            </div>
-        ))}
-        <FieldError name="gender" />
+      <RadioGroup name="gender">
+        <RadioGroupItem value="male" id="gender_male"  />
+        <label htmlFor="gender_male">Male</label>
+        <RadioGroupItem value="female" id="gender_female"  />
+        <label htmlFor="gender_female">Female</label>
       </RadioGroup>
     </div>
 
@@ -120,10 +96,7 @@ const example = (
 
   render() {
     const { code, values, errors } = this.state;
-    const radioItems = [
-      { id: 'e7_male', label: 'Male', value: 'male' },
-      { id: 'e7_female', label: 'Female', value: 'female' },
-    ];
+
     return (
       <div id="all-fields">
         <h4>
@@ -135,7 +108,7 @@ const example = (
         <div className="row">
           <div className="col-6">
             <Form
-              values={{
+              defaultValues={{
                 email: 'foo.bar@example.com',
                 country: 'US',
                 bio: 'Travel blogger',
@@ -149,15 +122,15 @@ const example = (
                 bio: [Validator.MaxLength(200)],
                 newsletter: [Validator.Required(), Validator.Range([1, 0])],
               })}
-              onSubmit={values => {
+              onSubmit={formValues => {
                 this.setState({
                   errors: null,
-                  values,
+                  values: formValues,
                 });
               }}
-              onError={errors => {
+              onError={formErrors => {
                 this.setState({
-                  errors,
+                  errors: formErrors,
                   values: null,
                 });
               }}
@@ -173,7 +146,7 @@ const example = (
                 id="e7_country"
                 name="country"
                 options={[
-                  { value: '', name: 'Select country' },
+                  { value: null, name: 'Select country' },
                   { value: 'US', name: 'United States' },
                   { value: 'CA', name: 'Canada' },
                   { value: 'UK', name: 'United Kingdom', disabled: true },
@@ -181,20 +154,11 @@ const example = (
               />
 
               <div className="radio-group">
-                <RadioGroup
-                  name="gender"
-                  onChange={event => {
-                    // console.log(event);
-                  }}
-                >
-                  <label>Gender</label>
-                  {radioItems.map(({ id, label, value }) => (
-                    <div key={id} className="radio">
-                      <RadioGroupItem id={id} value={value} />
-                      <label htmlFor={id}>{label}</label>
-                    </div>
-                  ))}
-                  <FieldError name="gender" />
+                <RadioGroup name="gender">
+                  <RadioGroupItem value="male" id="e7_gender_male" />
+                  <label htmlFor="e7_gender_male">Male</label>
+                  <RadioGroupItem value="female" id="e7_gender_female" />
+                  <label htmlFor="e7_gender_female">Female</label>
                 </RadioGroup>
               </div>
 
@@ -217,7 +181,7 @@ const example = (
                 <samp>
                   onSubmit <small>log</small>
                 </samp>
-                <Json value={values} />
+                <CodeJson value={values} />
               </div>
             )}
             {errors && (
@@ -225,12 +189,12 @@ const example = (
                 <samp>
                   onError <small>log</small>
                 </samp>
-                <Json value={errors} />
+                <CodeJson value={errors} />
               </div>
             )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

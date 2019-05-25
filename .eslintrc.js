@@ -70,6 +70,17 @@ module.exports = {
     'react/style-prop-object': 'off',
   },
 
+  overrides: [
+    {
+      files: ['examples/basic/src/**'],
+      rules: {
+        'import/no-unresolved': 'off',
+        'react/prop-types': 'off',
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
+
   settings: {
     'import/resolver': {
       node: {
