@@ -21,14 +21,17 @@ class Helpers {
     return v;
   }
 
-  static getValuesDiff(prev, current) {
+  static getValuesDiff(prev, current, maxLevel, currentLevel = 1) {
     return _.transform(current, (result, value, key) => {
       if (_.isUndefined(prev[key])) {
         // eslint-disable-next-line no-param-reassign
         result[key] = value;
       } else if (!_.isEqual(value, prev[key])) {
         // eslint-disable-next-line no-param-reassign
-        result[key] = _.isObject(value) || _.isArray(value) ? Helpers.getValuesDiff(value, prev[key]) : value;
+        result[key] =
+          (_.isObject(value) || _.isArray(value)) && (!maxLevel || (maxLevel && currentLevel < maxLevel))
+            ? Helpers.getValuesDiff(prev[key], value, maxLevel, currentLevel + 1)
+            : value;
       }
     });
   }

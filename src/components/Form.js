@@ -14,7 +14,6 @@ class Form extends Component {
     validation: PropTypes.func,
     errorClass: PropTypes.string,
     invalidClass: PropTypes.string,
-    diff: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -23,7 +22,6 @@ class Form extends Component {
     validation: () => ({}),
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
-    diff: false,
   };
 
   api = {
@@ -128,8 +126,14 @@ class Form extends Component {
       const { disabled } = this.state;
       return disabled.includes(name);
     },
+    getValuesDiff: maxLevel => {
+      const { defaultValues } = this.props;
+      const { values } = this.state;
+      return Helpers.getValuesDiff(defaultValues, values, maxLevel);
+    },
+    hasChanges: () => !!Object.keys(this.api.getValuesDiff()).length,
     submit: () => {
-      const { validation, onError, onSubmit, defaultValues, diff } = this.props;
+      const { validation, onError, onSubmit } = this.props;
       const { values } = this.state;
       const result = {
         count: 0,
@@ -144,8 +148,7 @@ class Form extends Component {
           if (result.count && onError) {
             onError(result.errors, this.api);
           } else if (!result.count) {
-            const currentValues = diff ? Helpers.getValuesDiff(defaultValues, values) : values;
-            onSubmit(_.cloneDeep(currentValues), this.api);
+            onSubmit(_.cloneDeep(values), this.api);
           }
         },
       );
@@ -201,17 +204,7 @@ class Form extends Component {
   };
 
   render() {
-    const {
-      children,
-      defaultValues,
-      onSubmit,
-      onError,
-      validation,
-      errorClass,
-      invalidClass,
-      diff,
-      ...props
-    } = this.props;
+    const { children, defaultValues, onSubmit, onError, validation, errorClass, invalidClass, ...props } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
