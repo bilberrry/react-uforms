@@ -458,6 +458,21 @@ const example = (
 );
 ```
 
+## Upgrading from 0.3
+
+### Braking changes
+1. Renamed `values` (`Form` attribute) to `defaultValues`;
+```diff
+<Form
+-  values={...}
++  defaultValues={...}
+...
+```
+2. Migrated to strong `===` comparison for checked/selected values;
+3. Added type support for `Select` / `Radio` / `RadioGroup` values;
+4. Refactored/fixed all validators;
+5. Deleted `isUpdatesOnly` (`Form` attribute). Use [getValuesDiff()](http://react-uforms.d3v.me#values-diff-example) instead.
+
 ## Authors
 
 * **Bohdan Protsiuk** - [summerua](https://github.com/summerua)
