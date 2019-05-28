@@ -21,7 +21,7 @@ npm install react-uforms --save
 
 ### 1. Simple example
 ```jsx
-import { Form, Text } from 'react-uforms'
+import { Form, Text } from 'react-uforms';
 
 const example = (
   <Form onSubmit={values => console.log(values)}>
@@ -39,7 +39,7 @@ const example = (
 
 ### 2. Validation
 ```jsx
-import { Form, Text } from 'react-uforms'
+import { Form, Text } from 'react-uforms';
     
 const example = (
   <Form
@@ -74,7 +74,7 @@ const example = (
 
 ### 3. Custom validation
 ```jsx
-import { Form, Text } from 'react-uforms'
+import { Form, Text } from 'react-uforms';
     
 const example = (
   <Form
@@ -121,7 +121,7 @@ const example = (
 
 ### 4. Pre-filled form
 ```jsx
-import { Form, Text, TextArea } from 'react-uforms'
+import { Form, Text, TextArea } from 'react-uforms';
     
 const example = (
   <Form
@@ -179,7 +179,7 @@ const example = (
 
 ### 5. Dynamic form
 ```jsx
-import { Form, Text, Select } from 'react-uforms'
+import { Form, Text, Select, Validator } from 'react-uforms';
     
 const example = (
   <Form
@@ -198,10 +198,10 @@ const example = (
           Validator.Required(),
           Validator.Range(['US', 'CA']),
         ],
-        state: [
-          ...(getValue('address.country') === 'US' ? [Validator.Required()] : []),
-          Validator.Range(['WA', 'OR', 'CA']),
-        ],
+        state:
+          getValue('address.country') === 'US'
+            ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])]
+            : [],
         city: [
           Validator.Required(),
           Validator.MaxLength(30),
@@ -211,7 +211,7 @@ const example = (
     onSubmit={values => console.log(values)}
     onError={errors => console.log(errors)}
   >
-    {({ getValue, setValue }) => (
+    {({ getValue, setValue, hasChanges }) => (
       <Fragment>
         <label htmlFor="country">Country</label>
         <Select
@@ -247,7 +247,9 @@ const example = (
         <label htmlFor="city">City</label>
         <Text type="text" id="city" name="address.city" />
 
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!hasChanges()}>
+          Submit
+        </button>
       </Fragment>
     )}
   </Form>
@@ -257,7 +259,7 @@ const example = (
 
 ### 6. Errors customization
 ```jsx
-import { Form, Text, FieldError } from 'react-uforms'
+import { Form, Text, FieldError } from 'react-uforms';
     
 const example = (
   <Form
@@ -303,7 +305,7 @@ const example = (
 
 ### 7. All fields
 ```jsx
-import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox, FieldError } from 'react-uforms'
+import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
     
 const example = (
   <Form
@@ -335,18 +337,8 @@ const example = (
         Validator.Range([1, 0]),
       ],
     })}
-    onSubmit={(values) => {
-      this.setState({
-        errors: null,
-        values,
-      })
-    }}
-    onError={(errors) => {
-      this.setState({
-        errors,
-        values: null,
-      })
-    }}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text id="email" name="email" disabled={true} />
@@ -365,51 +357,102 @@ const example = (
         { value: 'UK', name: 'United Kingdom', disabled: true }
       ]}
     />
-    
-    <div className="radio-group">
-      <RadioGroup name="gender">
-        <RadioGroupItem value="male" id="gender_male" />
-        <label htmlFor="gender_male">Male</label>
-        <RadioGroupItem value="female" id="gender_female" />
-        <label htmlFor="gender_female">Female</label>
-      </RadioGroup>
-    </div>
+
+      <div className="radio-group">
+        <RadioGroup name="gender">
+          <div className="radio">
+            <RadioGroupItem value="male" id="e7_gender_male" />
+            <label htmlFor="e7_gender_male">Male</label>
+          </div>
+          <div className="radio">
+            <RadioGroupItem value="female" id="e7_gender_female" />
+            <label htmlFor="e7_gender_female">Female</label>
+          </div>
+        </RadioGroup>
+      </div>
 
     <label htmlFor="bio">Bio</label>
-    <TextArea id="bio" name="bio" />
+    <TextArea id="bio" name="bio" emptyValue={null} />
 
-    <div className="radio-group">
-      <div className="radio">
+    <div className="checkbox-group">
+      <div className="checkbox">
         <Checkbox name="newsletter" onValue={1} offValue={0} id="newsletter" />
         <label htmlFor="newsletter">Receive Weekly Updates</label>
       </div>
     </div>
+    
+    <button type="submit">Submit</button>
+  </Form>
+);
+```
+[Demo](http://react-uforms.d3v.me#values-diff-example)
+
+### 8. Get values difference
+```jsx
+import { Form, Text, TextArea, Validator } from 'react-uforms';
+
+const example = (
+  <Form
+    defaultValues={{
+      id: 1,
+      email: 'foo.bar@example.com',
+      profile: {
+        firstName: 'Foo',
+        lastName: 'Bar',
+        bio: 'Travel blogger',
+      },
+      createdAt: '2018-04-25T20:36:02+00:00',
+    }}
+    validation={() => ({
+      email: [Validator.Required(), Validator.Email()],
+      profile: {
+        firstName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+        lastName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+        bio: [Validator.MaxLength(200)],
+      },
+    })}
+    onSubmit={(values, { getValuesDiff }) => console.log(getValuesDiff())}
+    onError={errors => console.log(errors)}
+  >
+    <label htmlFor="email">Email</label>
+    <Text type="text" id="email" name="email" />
+
+    <label htmlFor="firstName">First Name</label>
+    <Text type="text" id="firstName" name="profile.firstName" />
+
+    <label htmlFor="lastName">Last Name</label>
+    <Text type="text" id="lastName" name="profile.lastName" />
+
+    <label htmlFor="bio">Bio</label>
+    <TextArea id="bio" name="profile.bio" />
 
     <button type="submit">Submit</button>
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#all-fields)
+[Demo](http://react-uforms.d3v.me#custom-field-example)
 
-### 8. A Form option to submit values difference
+### 9. Custom field
 ```jsx
-import { Form, Text } from 'react-uforms'
+import { Form, CustomField } from 'react-uforms';
 
 const example = (
   <Form
-    defaultValues={{
-        email: 'foo.bar@example.com',
-        password: '12345',
-    }}
     onSubmit={values => console.log(values)}
-    isUpdatesOnly={true}
   >
-    <label htmlFor="email">Email</label>
-    <Text type="text" id="email" name="email" />
-    
-    <label htmlFor="password">Password</label>
-    <Text type="password" id="password" name="password" />
-    
+    <CustomField name="utc_date">
+      {({ setValue }) => (
+        <input
+          type="date"
+          onChange={e => {
+            e.preventDefault();
+            const { value } = e.target;
+            setValue(value ? new Date(value).toUTCString() : null);
+          }}
+        />
+      )}
+    </CustomField>
+
     <button type="submit">Submit</button>
   </Form>
 );
