@@ -7,6 +7,7 @@ import ExampleDynamicForm from './components/ExampleDynamicForm';
 import ExampleCustomErrors from './components/ExampleCustomErrors';
 import ExampleAllFields from './components/ExampleAllFields';
 import ExampleValuesDiff from './components/ExampleValuesDiff';
+import ExampleCustomField from './components/ExampleCustomField';
 
 class App extends Component {
   render() {
@@ -51,6 +52,8 @@ class App extends Component {
         <ExampleAllFields />
         <hr />
         <ExampleValuesDiff />
+        <hr />
+        <ExampleCustomField />
         <hr />
         <footer>
           <p>

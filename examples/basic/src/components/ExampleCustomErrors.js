@@ -7,7 +7,7 @@ class ExampleCustomErrors extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Text, FieldError } from 'react-uforms'
+    code: `import { Form, Text, FieldError } from 'react-uforms';
     
 const example = (
   <Form

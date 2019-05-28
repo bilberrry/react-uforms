@@ -7,7 +7,7 @@ class ExamplePreFilledForm extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Text, TextArea } from 'react-uforms'
+    code: `import { Form, Text, TextArea } from 'react-uforms';
     
 const example = (
   <Form

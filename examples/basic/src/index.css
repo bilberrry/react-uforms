@@ -215,8 +215,12 @@ h4:hover .anchor {
   display: inline-block;
 }
 
-*:disabled {
+input:disabled, select:disabled, textarea:disabled {
   background-color: #e9ecef;
+}
+
+button:disabled {
+  opacity: .65;
 }
 
 .add-some-error-class {
@@ -235,7 +239,7 @@ h4:hover .anchor {
   width: auto;
 }
 
-.checkbox label,  .radio label, .checkbox-group label {
+.checkbox label,  .radio label {
   display: inline-block;
   width: auto;
   margin-bottom: 0;

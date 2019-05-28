@@ -7,7 +7,7 @@ class ExampleValidation extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Text } from 'react-uforms'
+    code: `import { Form, Text } from 'react-uforms';
     
 const example = (
   <Form

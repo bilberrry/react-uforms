@@ -7,7 +7,15 @@ class ExampleAllFields extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
+    code: `import { 
+  Form,
+  Validator,
+  Text,
+  Select,
+  TextArea,
+  RadioGroup,
+  RadioGroupItem,
+  Checkbox } from 'react-uforms';
     
 const example = (
   <Form
@@ -39,18 +47,8 @@ const example = (
         Validator.Range([1, 0]),
       ],
     })}
-    onSubmit={values => {
-      this.setState({
-        errors: null,
-        values,
-      })
-    }}
-    onError={errors => {
-      this.setState({
-        errors,
-        values: null,
-      })
-    }}
+    onSubmit={values => console.log(values)}
+    onError={errors => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text id="email" name="email" disabled={true} />
@@ -70,17 +68,21 @@ const example = (
       ]}
     />
 
-    <div className="radio-group">
-      <RadioGroup name="gender">
-        <RadioGroupItem value="male" id="gender_male"  />
-        <label htmlFor="gender_male">Male</label>
-        <RadioGroupItem value="female" id="gender_female"  />
-        <label htmlFor="gender_female">Female</label>
-      </RadioGroup>
-    </div>
+      <div className="radio-group">
+        <RadioGroup name="gender">
+          <div className="radio">
+            <RadioGroupItem value="male" id="e7_gender_male" />
+            <label htmlFor="e7_gender_male">Male</label>
+          </div>
+          <div className="radio">
+            <RadioGroupItem value="female" id="e7_gender_female" />
+            <label htmlFor="e7_gender_female">Female</label>
+          </div>
+        </RadioGroup>
+      </div>
 
     <label htmlFor="bio">Bio</label>
-    <TextArea id="bio" name="bio" />
+    <TextArea id="bio" name="bio" emptyValue={null} />
 
     <div className="checkbox-group">
       <div className="checkbox">
@@ -155,15 +157,19 @@ const example = (
 
               <div className="radio-group">
                 <RadioGroup name="gender">
-                  <RadioGroupItem value="male" id="e7_gender_male" />
-                  <label htmlFor="e7_gender_male">Male</label>
-                  <RadioGroupItem value="female" id="e7_gender_female" />
-                  <label htmlFor="e7_gender_female">Female</label>
+                  <div className="radio">
+                    <RadioGroupItem value="male" id="e7_gender_male" />
+                    <label htmlFor="e7_gender_male">Male</label>
+                  </div>
+                  <div className="radio">
+                    <RadioGroupItem value="female" id="e7_gender_female" />
+                    <label htmlFor="e7_gender_female">Female</label>
+                  </div>
                 </RadioGroup>
               </div>
 
               <label htmlFor="e7_bio">Bio</label>
-              <TextArea id="e7_bio" name="bio" />
+              <TextArea id="e7_bio" name="bio" emptyValue={null} />
 
               <div className="checkbox-group">
                 <div className="checkbox">

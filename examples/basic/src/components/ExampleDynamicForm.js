@@ -7,7 +7,7 @@ class ExampleDynamicForm extends Component {
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Text, Select } from 'react-uforms'
+    code: `import { Form, Text, Select, Validator } from 'react-uforms'
     
 const example = (
   <Form
@@ -26,10 +26,10 @@ const example = (
           Validator.Required(),
           Validator.Range(['US', 'CA']),
         ],
-        state: [
-          ...(getValue('address.country') === 'US' ? [Validator.Required()] : []),
-          Validator.Range(['WA', 'OR', 'CA']),
-        ],
+        state:
+          getValue('address.country') === 'US'
+            ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])]
+            : [],
         city: [
           Validator.Required(),
           Validator.MaxLength(30),
@@ -39,7 +39,7 @@ const example = (
     onSubmit={values => console.log(values)}
     onError={errors => console.log(errors)}
   >
-    {({ getValue, setValue }) => (
+    {({ getValue, setValue, hasChanges }) => (
       <Fragment>
         <label htmlFor="country">Country</label>
         <Select
@@ -75,7 +75,9 @@ const example = (
         <label htmlFor="city">City</label>
         <Text type="text" id="city" name="address.city" />
 
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!hasChanges()}>
+          Submit
+        </button>
       </Fragment>
     )}
   </Form>
@@ -108,10 +110,10 @@ const example = (
               validation={({ getValue }) => ({
                 address: {
                   country: [Validator.Required(), Validator.Range(['US', 'CA'])],
-                  state: [
-                    ...(getValue('address.country') === 'US' ? [Validator.Required()] : []),
-                    Validator.Range(['WA', 'OR', 'CA']),
-                  ],
+                  state:
+                    getValue('address.country') === 'US'
+                      ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])]
+                      : [],
                   city: [Validator.Required(), Validator.MaxLength(30)],
                 },
               })}
@@ -128,7 +130,7 @@ const example = (
                 });
               }}
             >
-              {({ getValue, setValue }) => (
+              {({ getValue, setValue, hasChanges }) => (
                 <Fragment>
                   <label htmlFor="e5_country">Country</label>
                   <Select
@@ -166,7 +168,9 @@ const example = (
                   <label htmlFor="e5_city">City</label>
                   <Text type="text" id="e5_city" name="address.city" />
 
-                  <button type="submit">Submit</button>
+                  <button type="submit" disabled={!hasChanges()}>
+                    Submit
+                  </button>
                 </Fragment>
               )}
             </Form>

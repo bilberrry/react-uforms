@@ -6,7 +6,7 @@ import CodeJson from './CodeJson';
 class ExampleSimpleForm extends Component {
   state = {
     values: null,
-    code: `import { Form, Text } from 'react-uforms'
+    code: `import { Form, Text } from 'react-uforms';
 
 const example = (
   <Form onSubmit={values => console.log(values)}>
