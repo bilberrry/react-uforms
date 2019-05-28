@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import 'jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from 'react-testing-library';
-import { Form, Text } from '../src';
+import { FieldError, Form, Text, Validator } from '../src';
 
 afterEach(() => {
   cleanup();
@@ -131,4 +131,57 @@ test('change input -> unsure hasChanges is true ', () => {
   expect(button).toHaveAttribute('disabled');
   fireEvent.change(input, { target: { value: 'Bill' } });
   expect(button).not.toHaveAttribute('disabled');
+});
+
+test('set onError -> submit', () => {
+  const onError = jest.fn();
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required()],
+    },
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} onError={onError} validation={validation} data-testid="form">
+      <Text name="profile.firstName" />
+    </Form>,
+  );
+  const form = getByTestId('form');
+  fireEvent.submit(form);
+  expect(onError).toHaveBeenCalledWith({ profile: { firstName: ['Required'] } }, expect.any(Object));
+});
+
+test('set errorClass -> submit', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required()],
+    },
+  });
+  const errorClass = 'foo';
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation} data-testid="form" errorClass={errorClass}>
+      <Text name="profile.firstName" />
+      <FieldError name="profile.firstName" data-testid="error" />
+    </Form>,
+  );
+  const form = getByTestId('form');
+  fireEvent.submit(form);
+  expect(getByTestId('error')).toHaveClass(errorClass);
+});
+
+test('set invalidClass -> submit', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required()],
+    },
+  });
+  const invalidClass = 'foo';
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation} data-testid="form" invalidClass={invalidClass}>
+      <Text name="profile.firstName" data-testid="input" />
+    </Form>,
+  );
+  const form = getByTestId('form');
+  const input = getByTestId('input');
+  fireEvent.submit(form);
+  expect(input).toHaveClass(invalidClass);
 });
