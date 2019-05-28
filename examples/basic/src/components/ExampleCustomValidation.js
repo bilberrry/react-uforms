@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Form, Validator, Text } from 'react-uforms'
-import Code from './Code';
-import Json from './Json';
+import { Form, Validator, Text } from 'react-uforms';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExampleCustomValidation extends Component {
-
   state = {
     values: null,
     errors: null,
-    code: `import { Form, Text } from 'react-uforms'
+    code: `import { Form, Text } from 'react-uforms';
     
 const example = (
   <Form
@@ -57,15 +56,17 @@ const example = (
 
     return (
       <div id="custom-validation">
-        <h4>3. Custom validation <a href="#custom-validation" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          3. Custom validation{' '}
+          <a href="#custom-validation" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
               validation={({ getValue }) => ({
-                email: [
-                  Validator.Required(),
-                  Validator.Email(),
-                ],
+                email: [Validator.Required(), Validator.Email()],
                 password: [
                   Validator.Required(),
                   Validator.MinLength(6),
@@ -76,25 +77,25 @@ const example = (
                 ],
                 password2: [
                   Validator.Required(),
-                  (value) => {
+                  value => {
                     if (getValue('password') !== value) {
-                      return 'Retype password is not equal.'
+                      return 'Retype password is not equal.';
                     }
                     return true;
                   },
-                ]
+                ],
               })}
-              onSubmit={(values) => {
+              onSubmit={formValues => {
                 this.setState({
                   errors: null,
-                  values,
-                })
+                  values: formValues,
+                });
               }}
-              onError={(errors) => {
+              onError={formErrors => {
                 this.setState({
-                  errors,
+                  errors: formErrors,
                   values: null,
-                })
+                });
               }}
             >
               <label htmlFor="e3_email">Email</label>
@@ -110,17 +111,25 @@ const example = (
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
-            {errors && <div>
-              <samp>onError <small>log</small></samp>
-              <Json value={errors} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <CodeJson value={values} />
+              </div>
+            )}
+            {errors && (
+              <div>
+                <samp>
+                  onError <small>log</small>
+                </samp>
+                <CodeJson value={errors} />
+              </div>
+            )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

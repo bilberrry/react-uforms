@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { Form, Text } from 'react-uforms'
-import Code from './Code';
-import Json from './Json';
+import { Form, Text } from 'react-uforms';
+import CodeJsx from './CodeJsx';
+import CodeJson from './CodeJson';
 
 class ExampleSimpleForm extends Component {
-
   state = {
     values: null,
-    errors: null,
-    code: `import { Form, Text } from 'react-uforms'
+    code: `import { Form, Text } from 'react-uforms';
 
 const example = (
   <Form onSubmit={values => console.log(values)}>
@@ -27,15 +25,19 @@ const example = (
     const { code, values } = this.state;
     return (
       <div id="simple-example">
-        <h4>1. Simple form <a href="#simple-example" className="anchor" aria-label="anchor" aria-hidden="true">#</a></h4>
+        <h4>
+          1. Simple form{' '}
+          <a href="#simple-example" className="anchor" aria-label="anchor" aria-hidden="true">
+            #
+          </a>
+        </h4>
         <div className="row">
           <div className="col-6">
             <Form
-              onSubmit={(values) => {
+              onSubmit={formValues => {
                 this.setState({
-                  errors: null,
-                  values,
-                })
+                  values: formValues,
+                });
               }}
             >
               <label htmlFor="e1_email">Email</label>
@@ -48,13 +50,17 @@ const example = (
             </Form>
           </div>
           <div className="col-4">
-            {values && <div>
-              <samp>onSubmit <small>log</small></samp>
-              <Json value={values} />
-            </div>}
+            {values && (
+              <div>
+                <samp>
+                  onSubmit <small>log</small>
+                </samp>
+                <CodeJson value={values} />
+              </div>
+            )}
           </div>
         </div>
-        <Code value={code} />
+        <CodeJsx value={code} />
       </div>
     );
   }

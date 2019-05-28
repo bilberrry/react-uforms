@@ -215,8 +215,12 @@ h4:hover .anchor {
   display: inline-block;
 }
 
-*:disabled {
+input:disabled, select:disabled, textarea:disabled {
   background-color: #e9ecef;
+}
+
+button:disabled {
+  opacity: .65;
 }
 
 .add-some-error-class {

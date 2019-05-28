@@ -10,6 +10,7 @@ import Radio from './components/fields/Radio';
 import Select from './components/fields/Select';
 import Text from './components/fields/Text';
 import TextArea from './components/fields/TextArea';
+import CustomField from './components/fields/CustomField';
 
 export {
   Form,
@@ -23,4 +24,5 @@ export {
   Text,
   TextArea,
   Field,
-}
+  CustomField,
+};

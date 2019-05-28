@@ -1,63 +1,45 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Field from '../Field';
+import Helpers from '../Helpers';
 
-class Radio extends Component {
-  static propTypes = {
-    getValue: PropTypes.func.isRequired,
-    setValue: PropTypes.func.isRequired,
-    setTouched: PropTypes.func.isRequired,
-    onBlur: PropTypes.func,
-    onChange: PropTypes.func,
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]).isRequired,
-  };
+const Radio = ({ getValue, setValue, setTouched, onBlur, onChange, value, ...props }) => (
+  <input
+    {...props}
+    value={Helpers.valueToJson(getValue())}
+    checked={value === getValue()}
+    type="radio"
+    onChange={event => {
+      event.persist();
+      setValue(value, () => {
+        if (onChange) {
+          onChange(event);
+        }
+      });
+    }}
+    onBlur={event => {
+      event.persist();
+      setTouched(() => {
+        if (onBlur) {
+          onBlur(event);
+        }
+      });
+    }}
+  />
+);
 
-  static defaultProps = {
-    type: 'text',
-  };
+Radio.propTypes = {
+  getValue: PropTypes.func.isRequired,
+  setValue: PropTypes.func.isRequired,
+  setTouched: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onChange: PropTypes.func,
+  onBlur: PropTypes.func,
+};
 
-  render() {
-    const {
-      getValue,
-      setValue,
-      setTouched,
-      onBlur,
-      onChange,
-      value,
-      ...props
-    } = this.props;
-
-    return (
-      <input
-        {...props}
-        value={value}
-        checked={value == getValue()}
-        type="radio"
-        onChange={event => {
-          if (!event.target.checked) {
-            return;
-          }
-          event.persist();
-          setValue(event.target.value, () => {
-            if (onChange) {
-              onChange(event);
-            }
-          });
-        }}
-        onBlur={event => {
-          event.persist();
-          setTouched(() => {
-            if (onBlur) {
-              onBlur(event);
-            }
-          });
-        }}
-      />
-    );
-  }
-}
+Radio.defaultProps = {
+  onChange: undefined,
+  onBlur: undefined,
+};
 
 export default Field(Radio, { hideError: true });

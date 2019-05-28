@@ -1,0 +1,7 @@
+coverage/**
+node_modules/**
+lib/**
+examples/basic/node_modules/**
+examples/basic/build/**
+examples/basic/coverage/**
+!.eslintrc.js

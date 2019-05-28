@@ -1,37 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
 import * as PropTypes from 'prop-types';
-import { RadioGroupContext } from '../FormContext';
+import { ContextRadioGroup } from '../FormContext';
+import Helpers from '../Helpers';
 
-export default class RadioGroupItem extends Component {
-    static propTypes = {
-        value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        onChange: PropTypes.func,
-        onBlur: PropTypes.func,
-    };
+const RadioGroupItem = ({ value, onBlur, ...props }) => (
+  <ContextRadioGroup.Consumer>
+    {({ name, getValue, setTouched, onChange }) => (
+      <input
+        {...props}
+        name={name}
+        value={Helpers.valueToJson(value)}
+        checked={value === getValue(name)}
+        type="radio"
+        onChange={onChange}
+        onBlur={event => {
+          event.persist();
+          setTouched(() => {
+            if (onBlur) {
+              onBlur(event);
+            }
+          });
+        }}
+      />
+    )}
+  </ContextRadioGroup.Consumer>
+);
 
-    static defaultProps = {
-        onChange: () => {},
-        onBlur: () => {},
-    };
+RadioGroupItem.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onBlur: PropTypes.func,
+};
 
-    render() {
-        const {value, ...props} = this.props;
-        return (
-            <RadioGroupContext.Consumer>
-                {({ name, getValue, onChange, onBlur }) => {
-                    return (
-                        <input
-                            {...props}
-                            name={name}
-                            type="radio"
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            value={value}
-                            checked={value == getValue(name)}
-                        />
-                    )
-                }}
-            </RadioGroupContext.Consumer>
-        );
-    }
-}
+RadioGroupItem.defaultProps = {
+  onBlur: undefined,
+};
+
+export default RadioGroupItem;

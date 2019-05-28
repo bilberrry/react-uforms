@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "0.3.2",
+  "version": "1.0.1",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -20,13 +20,31 @@
   "files": [
     "lib"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "ignore": [
+      "package.json"
+    ],
+    "linters": {
+      "*.{js,jsx}": [
+        "eslint",
+        "git add --force"
+      ]
+    }
+  },
   "scripts": {
-    "lint": "eslint src",
-    "lintfix": "eslint src --fix",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
     "clean": "rm -rf lib && mkdir lib",
     "build": "babel src  --out-dir lib",
     "start": "yarn run build --watch",
-    "test": "jest tests"
+    "test": "jest tests --verbose",
+    "test-coverage": "yarn run test --coverage"
   },
   "peerDependencies": {
     "react": "^16.6.3"
@@ -38,21 +56,32 @@
     "react-dom": "^16.6.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
-    "@babel/cli": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
-    "eslint": "^5.9.0",
-    "eslint-config-standard-react": "^7.0.2",
+    "babel-eslint": "^9.0.0",
+    "babel-jest": "^24.7.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-import-resolver-node": "^0.3.2",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.5.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.11.1",
-    "jest": "^23.6.0"
+    "eslint-plugin-unicorn": "^6.0.1",
+    "husky": "^2.3.0",
+    "jest": "^24.7.1",
+    "jest-dom": "^3.1.3",
+    "lint-staged": "^8.1.7",
+    "prettier": "^1.17.0",
+    "react-testing-library": "^7.0.0"
   }
 }
