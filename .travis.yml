@@ -5,10 +5,13 @@ node_js:
   - 10
 cache:
   yarn: true
+  directories:
+    - node_modules
 install:
   - yarn global add codecov
+  - yarn
 script:
-  - yarn run lint
-  - yarn run test-coverage
-  - yarn run build
+  - yarn lint
+  - yarn test-coverage
+  - yarn build
   - codecov
