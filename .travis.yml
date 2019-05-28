@@ -7,7 +7,10 @@ cache:
   yarn: true
   directories:
     - node_modules
+install:
+  - yarn global add codecov
 script:
   - yarn lint
   - yarn test-coverage
+  - codecov
   - yarn build

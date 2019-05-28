@@ -1,5 +1,7 @@
 # React uForms
 [![npm version](https://badge.fury.io/js/react-uforms.svg)](https://badge.fury.io/js/react-uforms)
+[![build status](https://travis-ci.org/summerua/react-uforms.svg?branch=dev)](https://travis-ci.org/summerua/react-uforms)
+![NPM](https://img.shields.io/npm/l/react-uforms.svg)
 
 Simple and elegant forms for your React application. React uForms based on [Context API](https://reactjs.org/docs/context.html) (React v16.6 or higher).
 
