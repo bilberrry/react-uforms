@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/summerua/react-uforms/branch/master/graph/badge.svg)](https://codecov.io/gh/summerua/react-uforms)
 ![NPM](https://img.shields.io/npm/l/react-uforms.svg)
 
-Simple and elegant forms for your React application. React uForms based on [Context API](https://reactjs.org/docs/context.html) (React v16.6 or higher).
+Simple and elegant forms for your React application.
 
 ### Installation
 Using Yarn
@@ -439,15 +439,18 @@ import { Form, CustomField } from 'react-uforms';
 const example = (
   <Form
     onSubmit={values => console.log(values)}
+    defaultValues={{
+      timestamp: 1562457600,
+    }}
   >
-    <CustomField name="utc_date">
-      {({ setValue }) => (
+    <CustomField name="timestamp">
+      {({ setValue, getValue }) => (
         <input
           type="date"
+          value={new Date(+getValue() * 1000).toISOString().split('T')[0]}
           onChange={e => {
-            e.preventDefault();
             const { value } = e.target;
-            setValue(value ? new Date(value).toUTCString() : null);
+            setValue(value ? Math.round(+new Date(value) / 1000) : null);
           }}
         />
       )}
