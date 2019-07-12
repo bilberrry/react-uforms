@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, CustomField } from 'react-uforms';
-import CodeJsx from './CodeJsx';
-import CodeJson from './CodeJson';
+import BaseExample from './BaseExample';
 
-class ExampleCustomField extends Component {
-  state = {
-    values: null,
-    code: `import { Form, CustomField } from 'react-uforms';
+const code = `import { Form, CustomField } from 'react-uforms';
 
 const example = (
   <Form
     onSubmit={values => console.log(values)}
+    defaultValues={{
+      timestamp: 1562457600,
+    }}
   >
-    <CustomField name="utc_date">
-      {({ setValue }) => (
+    <CustomField name="timestamp">
+      {({ setValue, getValue }) => (
         <input
           type="date"
+          value={new Date(+getValue() * 1000).toISOString().split('T')[0]}
           onChange={e => {
-            e.preventDefault();
             const { value } = e.target;
-            setValue(value ? new Date(value).toUTCString() : null);
+            setValue(value ? Math.round(+new Date(value) / 1000) : null);
           }}
         />
       )}
@@ -27,59 +26,34 @@ const example = (
 
     <button type="submit">Submit</button>
   </Form>
-);`,
-  };
+);`;
 
-  render() {
-    const { code, values } = this.state;
-    return (
-      <div id="custom-field-example">
-        <h4>
-          9. Custom field{' '}
-          <a href="#custom-field-example" className="anchor" aria-label="anchor" aria-hidden="true">
-            #
-          </a>
-        </h4>
-        <div className="row">
-          <div className="col-6">
-            <Form
-              onSubmit={formValues => {
-                this.setState({
-                  values: formValues,
-                });
+const ExampleCustomField = ({ id }) => (
+  <BaseExample title="Custom field" id={id} code={code}>
+    {({ onSubmit }) => (
+      <Form
+        onSubmit={onSubmit}
+        defaultValues={{
+          timestamp: 1562457600,
+        }}
+      >
+        <CustomField name="timestamp">
+          {({ setValue, getValue }) => (
+            <input
+              type="date"
+              value={new Date(+getValue() * 1000).toISOString().split('T')[0]}
+              onChange={e => {
+                const { value } = e.target;
+                setValue(value ? Math.round(+new Date(value) / 1000) : null);
               }}
-            >
-              <CustomField name="utc_date">
-                {({ setValue }) => (
-                  <input
-                    type="date"
-                    onChange={e => {
-                      e.preventDefault();
-                      const { value } = e.target;
-                      setValue(value ? new Date(value).toUTCString() : null);
-                    }}
-                  />
-                )}
-              </CustomField>
+            />
+          )}
+        </CustomField>
 
-              <button type="submit">Submit</button>
-            </Form>
-          </div>
-          <div className="col-4">
-            {values && (
-              <div>
-                <samp>
-                  onSubmit <small>log</small>
-                </samp>
-                <CodeJson value={values} />
-              </div>
-            )}
-          </div>
-        </div>
-        <CodeJsx value={code} />
-      </div>
-    );
-  }
-}
+        <button type="submit">Submit</button>
+      </Form>
+    )}
+  </BaseExample>
+);
 
 export default ExampleCustomField;

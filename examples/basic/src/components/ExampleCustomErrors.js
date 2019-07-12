@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Validator, Text, FieldError } from 'react-uforms';
-import CodeJsx from './CodeJsx';
-import CodeJson from './CodeJson';
+import BaseExample from './BaseExample';
 
-class ExampleCustomErrors extends Component {
-  state = {
-    values: null,
-    errors: null,
-    code: `import { Form, Text, FieldError } from 'react-uforms';
+const code = `import { Form, Text, FieldError } from 'react-uforms';
     
 const example = (
   <Form
@@ -47,84 +42,41 @@ const example = (
 
     <button type="submit">Submit</button>
   </Form>
-);`,
-  };
+);`;
 
-  render() {
-    const { code, values, errors } = this.state;
+const ExampleCustomErrors = ({ id }) => (
+  <BaseExample title="Errors customization" id={id} code={code}>
+    {({ onError, onSubmit }) => (
+      <Form
+        validation={() => ({
+          email: [Validator.Required(), Validator.Email()],
+          profile: {
+            firstName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+            lastName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
+          },
+        })}
+        errorClass="your-error-class"
+        invalidClass="your-invalid-input-class"
+        onSubmit={onSubmit}
+        onError={onError}
+      >
+        <label htmlFor="e6_email">Email</label>
+        <Text type="text" id="e6_email" name="email" hideError />
+        <strong>
+          <FieldError name="email" />
+        </strong>
 
-    return (
-      <div id="errors-customization">
-        <h4>
-          6. Errors customization{' '}
-          <a href="#errors-customization" className="anchor" aria-label="anchor" aria-hidden="true">
-            #
-          </a>
-        </h4>
-        <div className="row">
-          <div className="col-6">
-            <Form
-              validation={() => ({
-                email: [Validator.Required(), Validator.Email()],
-                profile: {
-                  firstName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
-                  lastName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
-                },
-              })}
-              errorClass="your-error-class"
-              invalidClass="your-invalid-input-class"
-              onSubmit={formValues => {
-                this.setState({
-                  errors: null,
-                  values: formValues,
-                });
-              }}
-              onError={formErrors => {
-                this.setState({
-                  errors: formErrors,
-                  values: null,
-                });
-              }}
-            >
-              <label htmlFor="e6_email">Email</label>
-              <Text type="text" id="e6_email" name="email" hideError />
-              <strong>
-                <FieldError name="email" />
-              </strong>
+        <label htmlFor="e6_firstName">First Name</label>
+        <Text type="text" id="e6_firstName" name="profile.firstName" hideError />
+        <FieldError name="profile.firstName" className="add-some-error-class" />
 
-              <label htmlFor="e6_firstName">First Name</label>
-              <Text type="text" id="e6_firstName" name="profile.firstName" hideError />
-              <FieldError name="profile.firstName" className="add-some-error-class" />
+        <label htmlFor="e6_lastName">Last Name</label>
+        <Text type="text" id="e6_lastName" name="profile.lastName" />
 
-              <label htmlFor="e6_lastName">Last Name</label>
-              <Text type="text" id="e6_lastName" name="profile.lastName" />
-
-              <button type="submit">Submit</button>
-            </Form>
-          </div>
-          <div className="col-4">
-            {values && (
-              <div>
-                <samp>
-                  onSubmit <small>log</small>
-                </samp>
-                <CodeJson value={values} />
-              </div>
-            )}
-            {errors && (
-              <div>
-                <samp>
-                  onError <small>log</small>
-                </samp>
-                <CodeJson value={errors} />
-              </div>
-            )}
-          </div>
-        </div>
-        <CodeJsx value={code} />
-      </div>
-    );
-  }
-}
+        <button type="submit">Submit</button>
+      </Form>
+    )}
+  </BaseExample>
+);
 
 export default ExampleCustomErrors;

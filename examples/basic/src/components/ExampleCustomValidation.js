@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Validator, Text } from 'react-uforms';
-import CodeJsx from './CodeJsx';
-import CodeJson from './CodeJson';
+import BaseExample from './BaseExample';
 
-class ExampleCustomValidation extends Component {
-  state = {
-    values: null,
-    errors: null,
-    code: `import { Form, Text } from 'react-uforms';
+const code = `import { Form, Text } from 'react-uforms';
     
 const example = (
   <Form
@@ -48,91 +43,48 @@ const example = (
   
     <button type="submit">Submit</button>
   </Form>
-);`,
-  };
+);`;
 
-  render() {
-    const { code, values, errors } = this.state;
+const ExampleCustomValidation = ({ id }) => (
+  <BaseExample title="Custom validation" id={id} code={code}>
+    {({ onError, onSubmit }) => (
+      <Form
+        validation={({ getValue }) => ({
+          email: [Validator.Required(), Validator.Email()],
+          password: [
+            Validator.Required(),
+            Validator.MinLength(6),
+            Validator.MaxLength(32),
+            Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
+            Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
+            Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
+          ],
+          password2: [
+            Validator.Required(),
+            value => {
+              if (getValue('password') !== value) {
+                return 'Retype password is not equal.';
+              }
+              return true;
+            },
+          ],
+        })}
+        onSubmit={onSubmit}
+        onError={onError}
+      >
+        <label htmlFor="e3_email">Email</label>
+        <Text type="text" id="e3_email" name="email" />
 
-    return (
-      <div id="custom-validation">
-        <h4>
-          3. Custom validation{' '}
-          <a href="#custom-validation" className="anchor" aria-label="anchor" aria-hidden="true">
-            #
-          </a>
-        </h4>
-        <div className="row">
-          <div className="col-6">
-            <Form
-              validation={({ getValue }) => ({
-                email: [Validator.Required(), Validator.Email()],
-                password: [
-                  Validator.Required(),
-                  Validator.MinLength(6),
-                  Validator.MaxLength(32),
-                  Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
-                  Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
-                  Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
-                ],
-                password2: [
-                  Validator.Required(),
-                  value => {
-                    if (getValue('password') !== value) {
-                      return 'Retype password is not equal.';
-                    }
-                    return true;
-                  },
-                ],
-              })}
-              onSubmit={formValues => {
-                this.setState({
-                  errors: null,
-                  values: formValues,
-                });
-              }}
-              onError={formErrors => {
-                this.setState({
-                  errors: formErrors,
-                  values: null,
-                });
-              }}
-            >
-              <label htmlFor="e3_email">Email</label>
-              <Text type="text" id="e3_email" name="email" />
+        <label htmlFor="e3_password">Password</label>
+        <Text type="password" id="e3_password" name="password" />
 
-              <label htmlFor="e3_password">Password</label>
-              <Text type="password" id="e3_password" name="password" />
+        <label htmlFor="e3_password2">Retype Password</label>
+        <Text type="password" id="e3_password2" name="password2" />
 
-              <label htmlFor="e3_password2">Retype Password</label>
-              <Text type="password" id="e3_password2" name="password2" />
-
-              <button type="submit">Submit</button>
-            </Form>
-          </div>
-          <div className="col-4">
-            {values && (
-              <div>
-                <samp>
-                  onSubmit <small>log</small>
-                </samp>
-                <CodeJson value={values} />
-              </div>
-            )}
-            {errors && (
-              <div>
-                <samp>
-                  onError <small>log</small>
-                </samp>
-                <CodeJson value={errors} />
-              </div>
-            )}
-          </div>
-        </div>
-        <CodeJsx value={code} />
-      </div>
-    );
-  }
-}
+        <button type="submit">Submit</button>
+      </Form>
+    )}
+  </BaseExample>
+);
 
 export default ExampleCustomValidation;

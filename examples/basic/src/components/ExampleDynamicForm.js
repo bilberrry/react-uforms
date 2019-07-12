@@ -1,13 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Form, Validator, Text, Select } from 'react-uforms';
-import CodeJsx from './CodeJsx';
-import CodeJson from './CodeJson';
+import BaseExample from './BaseExample';
 
-class ExampleDynamicForm extends Component {
-  state = {
-    values: null,
-    errors: null,
-    code: `import { Form, Text, Select, Validator } from 'react-uforms'
+const code = `import { Form, Text, Select, Validator } from 'react-uforms'
     
 const example = (
   <Form
@@ -81,123 +76,78 @@ const example = (
       </Fragment>
     )}
   </Form>
-);`,
-  };
+);`;
 
-  render() {
-    const { code, values, errors } = this.state;
-
-    return (
-      <div id="dynamic-form">
-        <h4>
-          5. Dynamic form{' '}
-          <a href="#dynamic-form" className="anchor" aria-label="anchor" aria-hidden="true">
-            #
-          </a>
-        </h4>
-        <div className="row">
-          <div className="col-6">
-            <Form
-              defaultValues={{
-                id: 1,
-                email: 'foo.bar@example.com',
-                address: {
-                  country: 'US',
-                  state: 'WA',
-                  city: 'Seattle',
-                },
+const ExampleDynamicForm = ({ id }) => (
+  <BaseExample title="Dynamic form" id={id} code={code}>
+    {({ onError, onSubmit }) => (
+      <Form
+        defaultValues={{
+          id: 1,
+          email: 'foo.bar@example.com',
+          address: {
+            country: 'US',
+            state: 'WA',
+            city: 'Seattle',
+          },
+        }}
+        validation={({ getValue }) => ({
+          address: {
+            country: [Validator.Required(), Validator.Range(['US', 'CA'])],
+            state:
+              getValue('address.country') === 'US' ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])] : [],
+            city: [Validator.Required(), Validator.MaxLength(30)],
+          },
+        })}
+        onSubmit={onSubmit}
+        onError={onError}
+      >
+        {({ getValue, setValue, hasChanges }) => (
+          <Fragment>
+            <label htmlFor="e5_country">Country</label>
+            <Select
+              id="e5_country"
+              name="address.country"
+              onChange={() => {
+                if (getValue('address.country') !== 'US') {
+                  setValue('address.state', null);
+                }
               }}
-              validation={({ getValue }) => ({
-                address: {
-                  country: [Validator.Required(), Validator.Range(['US', 'CA'])],
-                  state:
-                    getValue('address.country') === 'US'
-                      ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])]
-                      : [],
-                  city: [Validator.Required(), Validator.MaxLength(30)],
-                },
-              })}
-              onSubmit={formValues => {
-                this.setState({
-                  errors: null,
-                  values: formValues,
-                });
-              }}
-              onError={formErrors => {
-                this.setState({
-                  errors: formErrors,
-                  values: null,
-                });
-              }}
-            >
-              {({ getValue, setValue, hasChanges }) => (
-                <Fragment>
-                  <label htmlFor="e5_country">Country</label>
-                  <Select
-                    id="e5_country"
-                    name="address.country"
-                    onChange={() => {
-                      if (getValue('address.country') !== 'US') {
-                        setValue('address.state', null);
-                      }
-                    }}
-                    options={[
-                      { value: null, name: 'Select country' },
-                      { value: 'US', name: 'United States' },
-                      { value: 'CA', name: 'Canada' },
-                      { value: 'UK', name: 'United Kingdom - coming soon', disabled: true },
-                    ]}
-                  />
+              options={[
+                { value: null, name: 'Select country' },
+                { value: 'US', name: 'United States' },
+                { value: 'CA', name: 'Canada' },
+                { value: 'UK', name: 'United Kingdom - coming soon', disabled: true },
+              ]}
+            />
 
-                  {getValue('address.country') === 'US' && (
-                    <Fragment>
-                      <label htmlFor="e5_state">State</label>
-                      <Select
-                        id="e5_state"
-                        name="address.state"
-                        options={[
-                          { value: null, name: 'Select state' },
-                          { value: 'WA', name: 'Washington' },
-                          { value: 'CA', name: 'California' },
-                          { value: 'OR', name: 'Oregon' },
-                        ]}
-                      />
-                    </Fragment>
-                  )}
-
-                  <label htmlFor="e5_city">City</label>
-                  <Text type="text" id="e5_city" name="address.city" />
-
-                  <button type="submit" disabled={!hasChanges()}>
-                    Submit
-                  </button>
-                </Fragment>
-              )}
-            </Form>
-          </div>
-          <div className="col-4">
-            {values && (
-              <div>
-                <samp>
-                  onSubmit <small>log</small>
-                </samp>
-                <CodeJson value={values} />
-              </div>
+            {getValue('address.country') === 'US' && (
+              <Fragment>
+                <label htmlFor="e5_state">State</label>
+                <Select
+                  id="e5_state"
+                  name="address.state"
+                  options={[
+                    { value: null, name: 'Select state' },
+                    { value: 'WA', name: 'Washington' },
+                    { value: 'CA', name: 'California' },
+                    { value: 'OR', name: 'Oregon' },
+                  ]}
+                />
+              </Fragment>
             )}
-            {errors && (
-              <div>
-                <samp>
-                  onError <small>log</small>
-                </samp>
-                <CodeJson value={errors} />
-              </div>
-            )}
-          </div>
-        </div>
-        <CodeJsx value={code} />
-      </div>
-    );
-  }
-}
+
+            <label htmlFor="e5_city">City</label>
+            <Text type="text" id="e5_city" name="address.city" />
+
+            <button type="submit" disabled={!hasChanges()}>
+              Submit
+            </button>
+          </Fragment>
+        )}
+      </Form>
+    )}
+  </BaseExample>
+);
 
 export default ExampleDynamicForm;
