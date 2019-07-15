@@ -17,7 +17,7 @@ class App extends Component {
         <div className="row">
           <div className="col-md-9">
             <div className="header">
-              <h1>React uForms</h1>
+              <h1>react-uforms</h1>
               <span className="d-block d-md-none nav-mobile">
                 <Menu />
               </span>
