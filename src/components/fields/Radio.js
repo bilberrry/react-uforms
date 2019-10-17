@@ -32,7 +32,7 @@ Radio.propTypes = {
   getValue: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
   setTouched: PropTypes.func.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
 };
@@ -40,6 +40,7 @@ Radio.propTypes = {
 Radio.defaultProps = {
   onChange: undefined,
   onBlur: undefined,
+  value: null,
 };
 
 export default Field(Radio, { hideError: true });

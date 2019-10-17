@@ -44,7 +44,7 @@ Select.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       disabled: PropTypes.bool,
     }),
   ).isRequired,

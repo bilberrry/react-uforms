@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -11,6 +11,7 @@
     "react forms"
   ],
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "homepage": "http://react-uforms.d3v.me/",
   "repository": "https://github.com/summerua/react-uforms.git",
   "author": {
@@ -42,19 +43,19 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "clean": "rm -rf lib && mkdir lib",
-    "build": "babel src  --out-dir lib",
+    "build": "babel src  --out-dir lib && cp src/index.d.ts lib",
     "start": "yarn run build --watch",
     "test": "jest tests --verbose",
     "test-coverage": "yarn run test --coverage"
   },
   "peerDependencies": {
-    "react": "^16.6.3"
+    "react": "^16.9.0"
   },
   "dependencies": {
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -65,6 +66,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "@types/react": "^16.9.9",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^24.7.1",

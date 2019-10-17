@@ -27,12 +27,13 @@ const RadioGroupItem = ({ value, onBlur, ...props }) => (
 );
 
 RadioGroupItem.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onBlur: PropTypes.func,
 };
 
 RadioGroupItem.defaultProps = {
   onBlur: undefined,
+  value: null,
 };
 
 export default RadioGroupItem;

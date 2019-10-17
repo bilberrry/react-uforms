@@ -5,3 +5,4 @@ examples/basic/node_modules/**
 examples/basic/build/**
 examples/basic/coverage/**
 !.eslintrc.js
+**/*.d.ts
