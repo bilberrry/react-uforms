@@ -1,9 +1,17 @@
+const isEmpty = value =>
+  // Check if undefined
+  typeof value === 'undefined' ||
+  // Check if null
+  value === null ||
+  // Check is empty String
+  ((typeof value === 'string' || value instanceof String) && value === '') ||
+  // Check if empty Array
+  (Array.isArray(value) && value.length === 0) ||
+  // Check if empty Object
+  (typeof value === 'object' && Object.keys(value).length === 0);
+
 const Required = (message = 'Required') => value => {
-  if (
-    !(value || value === 0) ||
-    (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (Array.isArray(value) && value.length === 0)
-  ) {
+  if (isEmpty(value)) {
     return message;
   }
 
@@ -11,6 +19,10 @@ const Required = (message = 'Required') => value => {
 };
 
 const MinLength = (min, message = `Minimum ${min} characters`) => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (!(typeof value === 'string' || value instanceof String) || value.toString().length < min) {
     return message;
   }
@@ -19,6 +31,10 @@ const MinLength = (min, message = `Minimum ${min} characters`) => value => {
 };
 
 const MaxLength = (max, message = `Maximum ${max} characters`) => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (!(typeof value === 'string' || value instanceof String) || value.toString().length > max) {
     return message;
   }
@@ -27,6 +43,10 @@ const MaxLength = (max, message = `Maximum ${max} characters`) => value => {
 };
 
 const Numeric = (message = 'Not valid number') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String || Number(value) === value) ||
     !/^-?\d+(\.\d+)?$/.test(value.toString())
@@ -38,6 +58,10 @@ const Numeric = (message = 'Not valid number') => value => {
 };
 
 const IntegerNumber = (message = 'Not valid integer number') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String || Number(value) === value) ||
     !/^-?\d+$/.test(value.toString())
@@ -49,6 +73,10 @@ const IntegerNumber = (message = 'Not valid integer number') => value => {
 };
 
 const FloatNumber = (message = 'Not valid float number') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String || Number(value) === value) ||
     !/^-?\d+\.\d+$/.test(value.toString())
@@ -60,6 +88,10 @@ const FloatNumber = (message = 'Not valid float number') => value => {
 };
 
 const Min = (min, message = `Minimum ${min}`) => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String || Number(value) === value) ||
     !/^-?\d+(\.\d+)?$/.test(value.toString()) ||
@@ -72,6 +104,10 @@ const Min = (min, message = `Minimum ${min}`) => value => {
 };
 
 const Max = (max, message = `Maximum ${max}`) => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String || Number(value) === value) ||
     !/^-?\d+(\.\d+)?$/.test(value.toString()) ||
@@ -84,6 +120,10 @@ const Max = (max, message = `Maximum ${max}`) => value => {
 };
 
 const Range = (range, message = 'Not valid') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (!range.includes(value)) {
     return message;
   }
@@ -92,6 +132,10 @@ const Range = (range, message = 'Not valid') => value => {
 };
 
 const Email = (message = 'Not valid email address') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (
     !(typeof value === 'string' || value instanceof String) ||
     // RFC 5322
@@ -107,6 +151,10 @@ const Email = (message = 'Not valid email address') => value => {
 };
 
 const Preg = (regexp, message = 'Not valid') => value => {
+  if (isEmpty(value)) {
+    return true;
+  }
+
   if (!(typeof value === 'string' || value instanceof String) || !regexp.test(value)) {
     return message;
   }

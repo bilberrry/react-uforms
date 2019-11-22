@@ -7,7 +7,7 @@ test('Required', () => {
   const validateMessage = Validator.Required(customErrorMessage);
 
   expect(validate(true)).toBe(true);
-  expect(validate(false)).toBe(defaultErrorMessage);
+  expect(validate(false)).toBe(true);
   expect(validate(null)).toBe(defaultErrorMessage);
   expect(validate(undefined)).toBe(defaultErrorMessage);
   expect(validate([])).toBe(defaultErrorMessage);
@@ -31,11 +31,11 @@ test('MinLength', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate('foo')).toBe(true);
   expect(validate('fo')).toBe(defaultErrorMessage);
@@ -52,10 +52,10 @@ test('MaxLength', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
   expect(validate('')).toBe(true);
 
   expect(validate('fo')).toBe(true);
@@ -73,11 +73,11 @@ test('Numeric', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate(10)).toBe(true);
   expect(validate(0)).toBe(true);
@@ -101,11 +101,11 @@ test('IntegerNumber', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate(10)).toBe(true);
   expect(validate(0)).toBe(true);
@@ -129,11 +129,11 @@ test('FloatNumber', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate(10)).toBe(defaultErrorMessage);
   expect(validate(0)).toBe(defaultErrorMessage);
@@ -157,11 +157,11 @@ test('Min', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate(-0.009)).toBe(true);
   expect(validate(-0.011)).toBe(defaultErrorMessage);
@@ -178,11 +178,11 @@ test('Max', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate(-0.009)).toBe(defaultErrorMessage);
   expect(validate(-0.011)).toBe(true);
@@ -199,11 +199,11 @@ test('Email', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate('Test.Test@example.com')).toBe(true);
   expect(validate('Test.Test@example.c!m')).toBe(defaultErrorMessage);
@@ -219,11 +219,11 @@ test('Preg', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate('foo Bar')).toBe(true);
   expect(validate('foo bar')).toBe(defaultErrorMessage);
@@ -239,11 +239,11 @@ test('Range', () => {
 
   expect(validate(true)).toBe(defaultErrorMessage);
   expect(validate(false)).toBe(defaultErrorMessage);
-  expect(validate(null)).toBe(defaultErrorMessage);
-  expect(validate(undefined)).toBe(defaultErrorMessage);
-  expect(validate([])).toBe(defaultErrorMessage);
-  expect(validate({})).toBe(defaultErrorMessage);
-  expect(validate('')).toBe(defaultErrorMessage);
+  expect(validate(null)).toBe(true);
+  expect(validate(undefined)).toBe(true);
+  expect(validate([])).toBe(true);
+  expect(validate({})).toBe(true);
+  expect(validate('')).toBe(true);
 
   expect(validate('US')).toBe(true);
   expect(validate('us')).toBe(defaultErrorMessage);
