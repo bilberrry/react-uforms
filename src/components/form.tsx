@@ -228,7 +228,7 @@ class Form extends React.Component<FormProps, FormState> {
       const { disabled } = this.state;
       return disabled.includes(name);
     },
-    getValuesDiff: (maxLevel = 1): ValuesInterface => {
+    getValuesDiff: (maxLevel): ValuesInterface => {
       const { defaultValues } = this.props;
       const { values } = this.state;
       return getValuesDiff(defaultValues, values, maxLevel);

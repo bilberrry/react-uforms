@@ -26,7 +26,7 @@ test('change input value -> submit form', () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('input');
-  expect(input.getAttribute('value')).toBe('');
+  expect(input).toHaveValue('');
   fireEvent.change(input, { target: { value: 'John' } });
   fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
@@ -55,7 +55,7 @@ test('set default values -> change input value -> submit form', () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('input');
-  expect(input.getAttribute('value')).toBe('John');
+  expect(input).toHaveValue('John');
   fireEvent.change(input, { target: { value: 'Bill' } });
   fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(
@@ -86,7 +86,7 @@ test('set emptyValue attribute -> change input value -> submit form', () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('input');
-  expect(input.getAttribute('value')).toBe('John');
+  expect(input).toHaveValue('John');
   fireEvent.change(input, { target: { value: '' } });
   fireEvent.submit(form);
   expect(submit).toHaveBeenCalledWith(

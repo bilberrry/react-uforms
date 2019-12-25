@@ -21,7 +21,7 @@ export const jsonToValue = (json: string): ValueType => {
   return v;
 };
 
-export const getValuesDiff = (prev: any, current: any, maxLevel: number, currentLevel = 1): any => {
+export const getValuesDiff = (prev: any, current: any, maxLevel?: number, currentLevel = 1): any => {
   return _.transform(current, (result: any, value: any, key: string) => {
     if (prev[key] === undefined) {
       result[key] = value;
