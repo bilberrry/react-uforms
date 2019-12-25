@@ -1,6 +1,21 @@
-.idea
-lib
+# dependencies
 node_modules
-npm-debug.log
-yarn-error.log
+
+# testing
+coverage
+
+# Dist Lib
+lib
+dist
+
+# misc
 .DS_Store
+.env*
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.idea

@@ -1,91 +1,25 @@
 module.exports = {
-  parser: 'babel-eslint',
-
+  parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [
-    'airbnb',
-    'plugin:react/recommended',
-    'plugin:unicorn/recommended',
-    'prettier',
-    'prettier/react',
-    'prettier/unicorn',
-    'plugin:jest/recommended',
+    'plugin:@typescript-eslint/recommended', // Uses the recommended rules from @typescript-eslint/eslint-plugin
+    'plugin:prettier/recommended',
+    'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
   ],
-
-  plugins: ['react', 'prettier', 'unicorn', 'jest'],
-
-  globals: {
-    __DEV__: true,
-  },
-
-  env: {
-    browser: true,
-    es6: true,
-    node: true,
-    'jest/globals': true,
-  },
-
-  rules: {
-    'import/no-extraneous-dependencies': ['error', { packageDir: '.' }],
-    'no-console': [
-      'error',
-      {
-        allow: ['warn', 'error', 'info'],
-      },
-    ],
-    'no-underscore-dangle': [
-      'error',
-      {
-        allow: ['__typename'],
-      },
-    ],
-    'prefer-destructuring': [
-      'error',
-      {
-        VariableDeclarator: {
-          array: false,
-          object: true,
-        },
-        AssignmentExpression: {
-          array: false,
-          object: false,
-        },
-      },
-      {
-        enforceForRenamedProperties: false,
-      },
-    ],
-
-    'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
-    'react/prefer-stateless-function': 'off',
-    'prettier/prettier': 'error',
-    camelcase: 'off',
-    'unicorn/filename-case': 'off',
-    'jsx-a11y/click-events-have-key-events': 'off',
-    'jsx-a11y/anchor-is-valid': 'off',
-    'jsx-a11y/label-has-associated-control': 'off',
-    'jsx-a11y/label-has-for': 'off',
-    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-    'react/no-did-update-set-state': 'off',
-    'max-len': ['error', { code: 120, ignoreUrls: true }],
-    'react/style-prop-object': 'off',
-  },
-
-  overrides: [
-    {
-      files: ['examples/basic/src/**'],
-      rules: {
-        'import/no-unresolved': 'off',
-        'react/prop-types': 'off',
-        'import/no-extraneous-dependencies': 'off',
-      },
+  parserOptions: {
+    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
+    ecmaFeatures: {
+      jsx: true, // Allows for the parsing of JSX
     },
-  ],
-
+  },
+  rules: {
+    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'react/prop-types': 'off',
+  },
   settings: {
-    'import/resolver': {
-      node: {
-        moduleDirectory: ['node_modules', 'src'],
-      },
+    react: {
+      version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
     },
   },
 };
