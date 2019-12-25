@@ -30,7 +30,7 @@
     "build:ts": "babel src --out-dir dist --extensions \".ts,.tsx\"",
     "build": "yarn clean && yarn build:ts && yarn build:declaration",
     "start": "yarn build:ts --watch",
-    "test": "ts-jest tests --verbose",
+    "test": "jest",
     "test-coverage": "yarn test --coverage"
   },
   "peerDependencies": {
@@ -44,7 +44,9 @@
   "devDependencies": {
     "@babel/cli": "^7.7.4",
     "@babel/core": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "@babel/preset-typescript": "^7.7.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",

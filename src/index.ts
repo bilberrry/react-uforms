@@ -6,7 +6,7 @@ import Field from './components/field';
 import Checkbox from './components/fields/checkbox';
 import RadioGroup from './components/fields/radio-group';
 import RadioGroupItem from './components/fields/radio-group-item';
-import Radio from './components/fields/Radio';
+import Radio from './components/fields/radio';
 import Select from './components/fields/select';
 import Text from './components/fields/text';
 import TextArea from './components/fields/text-area';
