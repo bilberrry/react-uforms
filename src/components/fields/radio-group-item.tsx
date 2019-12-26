@@ -5,6 +5,7 @@ import { valueToJson } from '../helpers';
 export interface RadioGroupItemProps {
   value?: string | number | boolean | {} | null;
   onBlur?: (event: React.FocusEvent) => void;
+  [key: string]: any;
 }
 
 const RadioGroupItem: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props }) => (

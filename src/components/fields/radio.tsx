@@ -6,6 +6,7 @@ export interface RadioProps {
   value?: string | number | boolean | {} | null;
   onChange?: (event: React.ChangeEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
+  [key: string]: any;
 }
 
 const Radio: React.FC<RadioProps & FieldPassedProps> = ({

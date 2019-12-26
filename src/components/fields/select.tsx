@@ -13,6 +13,7 @@ export interface SelectProps {
   onChange?: (event: React.ChangeEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
   options: OptionProps[];
+  [key: string]: any;
 }
 
 const Select: React.FC<SelectProps & FieldPassedProps> = ({

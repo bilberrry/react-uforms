@@ -6,6 +6,7 @@ export interface CheckboxProps {
   offValue: string | number | boolean | null | {};
   onChange?: (event: React.ChangeEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
+  [key: string]: any;
 }
 
 const Checkbox: React.FC<CheckboxProps & FieldPassedProps> = ({

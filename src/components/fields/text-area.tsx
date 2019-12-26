@@ -3,9 +3,10 @@ import Field, { FieldPassedProps } from '../field';
 import { valueToString } from '../helpers';
 
 export interface TextAreaProps {
-  emptyValue: string | null;
+  emptyValue?: string | null;
   onChange?: (event: React.ChangeEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
+  [key: string]: any;
 }
 
 const TextArea: React.FC<TextAreaProps & FieldPassedProps> = ({
