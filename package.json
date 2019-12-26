@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "2.0.0-beta.5",
+  "version": "2.0.0-beta.7",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -11,7 +11,7 @@
     "react forms",
     "typescirpt"
   ],
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "homepage": "http://react-uforms.d3v.me/",
   "repository": "https://github.com/summerua/react-uforms.git",
