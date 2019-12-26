@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { FieldError, Form, Text, Validator } from '../src';
-import { FormApiInterface, ValuesInterface } from '../src/components/form';
+import { FormApiInterface, ValuesType } from '../src/components/form';
 
 afterEach(() => {
   cleanup();
@@ -62,7 +62,7 @@ test('set default values -> change input -> submit form -> get values difference
   };
   let diffValues = null;
   let diffValuesLevel1 = null;
-  const submit = (values: ValuesInterface, api: FormApiInterface) => {
+  const submit = (values: ValuesType, api: FormApiInterface) => {
     diffValues = api.getValuesDiff();
     diffValuesLevel1 = api.getValuesDiff(1);
   };
@@ -102,7 +102,7 @@ test('set default values -> change input -> submit form -> get values difference
 
 test('submit form -> ensure field is disabled ', () => {
   let isInputDisabled = null;
-  const submit = (values: ValuesInterface, api: FormApiInterface) => {
+  const submit = (values: ValuesType, api: FormApiInterface) => {
     isInputDisabled = api.isDisabled('profile.firstName');
   };
   const { getByTestId } = render(

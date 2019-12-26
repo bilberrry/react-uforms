@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement, ReactNode } from 'react';
+import React, { FormEvent, ReactElement } from 'react';
 import _ from 'lodash';
 import { ContextApi, ContextForm } from './form-context';
 import { getValuesDiff } from './helpers';
@@ -7,6 +7,8 @@ import { ValidatorInterface, ValueType } from './validator';
 export interface ValuesInterface {
   [key: string]: ValueType | ValuesInterface;
 }
+
+export type ValuesType = ValuesInterface | {};
 
 export type ValidationErrorType = string[];
 
@@ -34,23 +36,23 @@ export interface FormApiInterface {
   setErrors: (name: string, value: ValidationErrorType, callback?: () => void) => void;
   getErrorClass: () => string | undefined;
   getInvalidClass: () => string | undefined;
-  getAllValues: () => ValuesInterface;
+  getAllValues: () => ValuesType;
   getAllErrors: () => ValidationErrorsInterface;
   setAllErrors: (errors: ValidationErrorsInterface, callback?: () => void) => void;
-  setAllValues: (values: ValuesInterface, callback?: () => void) => void;
+  setAllValues: (values: ValuesType, callback?: () => void) => void;
   getAllDisabled: () => DisabledInterface;
   setDisabled: (name: string) => void;
   removeDisabled: (name: string) => void;
   isDisabled: (name: string) => boolean;
-  getValuesDiff: (maxLevel?: number) => ValuesInterface;
+  getValuesDiff: (maxLevel?: number) => ValuesType;
   hasChanges: () => boolean;
   submit: () => void;
 }
 
 export interface FormProps {
   children: ((api: FormApiInterface) => ReactElement) | ReactElement | ReactElement[];
-  onSubmit: (values: ValuesInterface, api: FormApiInterface) => void;
-  defaultValues?: ValuesInterface;
+  onSubmit: (values: ValuesType, api: FormApiInterface) => void;
+  defaultValues?: ValuesType;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface) => void;
   validation?: (api: FormApiInterface) => ValidationRulesInterface;
   errorClass?: string;
@@ -58,7 +60,7 @@ export interface FormProps {
 }
 
 export interface FormState {
-  values: ValuesInterface;
+  values: ValuesType;
   errors: ValidationErrorsInterface;
   disabled: DisabledInterface;
 }
@@ -181,7 +183,7 @@ class Form extends React.Component<FormProps, FormState> {
       const { invalidClass } = this.props;
       return invalidClass;
     },
-    getAllValues: (): ValuesInterface => {
+    getAllValues: (): ValuesType => {
       const { values } = this.state;
       return values;
     },
@@ -197,7 +199,7 @@ class Form extends React.Component<FormProps, FormState> {
         callback,
       );
     },
-    setAllValues: (values: ValuesInterface, callback?: () => void): void => {
+    setAllValues: (values: ValuesType, callback?: () => void): void => {
       this.setState(
         {
           values,
@@ -228,7 +230,7 @@ class Form extends React.Component<FormProps, FormState> {
       const { disabled } = this.state;
       return disabled.includes(name);
     },
-    getValuesDiff: (maxLevel): ValuesInterface => {
+    getValuesDiff: (maxLevel): ValuesType => {
       const { defaultValues } = this.props;
       const { values } = this.state;
       return getValuesDiff(defaultValues, values, maxLevel);
