@@ -1,11 +1,4 @@
-export type ValueType =
-  | boolean
-  | number
-  | string
-  | null
-  | {}
-  | Array<boolean | number | string | null | {}>
-  | undefined;
+export type ValueType = any;
 export type ValidatorInterface = (value: ValueType) => boolean | string;
 
 const isEmpty = (value: ValueType): boolean =>
