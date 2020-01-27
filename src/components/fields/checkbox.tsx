@@ -1,5 +1,5 @@
 import React from 'react';
-import Field, { FieldPassedProps } from '../field';
+import { Field, FieldPassedProps } from '../field';
 
 export interface CheckboxProps {
   onValue: string | number | boolean | null | {};
@@ -9,7 +9,7 @@ export interface CheckboxProps {
   [key: string]: any;
 }
 
-const Checkbox: React.FC<CheckboxProps & FieldPassedProps> = ({
+const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({
   getValue,
   setValue,
   setTouched,
@@ -42,4 +42,4 @@ const Checkbox: React.FC<CheckboxProps & FieldPassedProps> = ({
   />
 );
 
-export default Field(Checkbox, { hideError: true });
+export const Checkbox = Field(CheckboxComponent, { hideError: true });

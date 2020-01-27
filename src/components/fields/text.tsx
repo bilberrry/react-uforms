@@ -1,5 +1,5 @@
 import React from 'react';
-import Field, { FieldPassedProps } from '../field';
+import { Field, FieldPassedProps } from '../field';
 import { valueToString } from '../helpers';
 
 export interface TextProps {
@@ -9,7 +9,7 @@ export interface TextProps {
   [key: string]: any;
 }
 
-const Text: React.FC<TextProps & FieldPassedProps> = ({
+const TextComponent: React.FC<TextProps & FieldPassedProps> = ({
   getValue,
   setValue,
   setTouched,
@@ -41,4 +41,4 @@ const Text: React.FC<TextProps & FieldPassedProps> = ({
   />
 );
 
-export default Field(Text);
+export const Text = Field(TextComponent);

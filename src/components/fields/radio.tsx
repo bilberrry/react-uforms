@@ -1,5 +1,5 @@
 import React from 'react';
-import Field, { FieldPassedProps } from '../field';
+import { Field, FieldPassedProps } from '../field';
 import { valueToJson } from '../helpers';
 
 export interface RadioProps {
@@ -9,7 +9,7 @@ export interface RadioProps {
   [key: string]: any;
 }
 
-const Radio: React.FC<RadioProps & FieldPassedProps> = ({
+const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({
   getValue,
   setValue,
   setTouched,
@@ -42,4 +42,4 @@ const Radio: React.FC<RadioProps & FieldPassedProps> = ({
   />
 );
 
-export default Field(Radio, { hideError: true });
+export const Radio = Field(RadioComponent, { hideError: true });

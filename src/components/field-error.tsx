@@ -1,7 +1,7 @@
 import React from 'react';
 import { ContextApi, ContextForm } from './form-context';
 
-const FieldError: React.FC<{
+export const FieldError: React.FC<{
   name: string;
   className?: string;
   [key: string]: any;
@@ -25,5 +25,3 @@ const FieldError: React.FC<{
     )}
   </ContextApi.Consumer>
 );
-
-export default FieldError;

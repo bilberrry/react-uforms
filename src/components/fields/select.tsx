@@ -1,5 +1,5 @@
 import React from 'react';
-import Field, { FieldPassedProps } from '../field';
+import { Field, FieldPassedProps } from '../field';
 import { valueToJson, jsonToValue } from '../helpers';
 
 export interface OptionProps {
@@ -16,7 +16,7 @@ export interface SelectProps {
   [key: string]: any;
 }
 
-const Select: React.FC<SelectProps & FieldPassedProps> = ({
+const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({
   getValue,
   setValue,
   setTouched,
@@ -58,4 +58,4 @@ const Select: React.FC<SelectProps & FieldPassedProps> = ({
   </select>
 );
 
-export default Field(Select);
+export const Select = Field(SelectComponent);

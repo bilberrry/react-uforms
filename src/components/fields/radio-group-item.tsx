@@ -8,7 +8,7 @@ export interface RadioGroupItemProps {
   [key: string]: any;
 }
 
-const RadioGroupItem: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props }) => (
+const RadioGroupItemComponent: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props }) => (
   <ContextRadioGroup.Consumer>
     {radioApi => {
       if (!radioApi) {
@@ -38,4 +38,4 @@ const RadioGroupItem: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props
   </ContextRadioGroup.Consumer>
 );
 
-export default RadioGroupItem;
+export const RadioGroupItem = RadioGroupItemComponent;

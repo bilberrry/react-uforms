@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ReactNode } from 'react';
 import { ContextRadioGroup } from '../form-context';
-import Field, { FieldPassedProps } from '../field';
+import { Field, FieldPassedProps } from '../field';
 import { jsonToValue } from '../helpers';
 import { ValueType } from '../validator';
 
@@ -16,7 +16,7 @@ export interface RadioGroupApi {
   onChange: (event: ChangeEvent) => void;
 }
 
-const RadioGroup: React.FC<RadioGroupProps & FieldPassedProps> = ({
+const RadioGroupComponent: React.FC<RadioGroupProps & FieldPassedProps> = ({
   name,
   children,
   getValue,
@@ -43,4 +43,4 @@ const RadioGroup: React.FC<RadioGroupProps & FieldPassedProps> = ({
   return <ContextRadioGroup.Provider value={childApi}>{children}</ContextRadioGroup.Provider>;
 };
 
-export default Field(RadioGroup);
+export const RadioGroup = Field(RadioGroupComponent);

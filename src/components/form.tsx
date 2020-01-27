@@ -66,7 +66,7 @@ export interface FormState {
   disabled: DisabledInterface;
 }
 
-class Form extends React.Component<FormProps, FormState> {
+export class Form extends React.Component<FormProps, FormState> {
   static defaultProps = {
     defaultValues: {},
     onError: undefined,
@@ -275,5 +275,3 @@ class Form extends React.Component<FormProps, FormState> {
     );
   }
 }
-
-export default Form;
