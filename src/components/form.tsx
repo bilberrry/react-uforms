@@ -57,6 +57,7 @@ export interface FormProps {
   validation?: (api: FormApiInterface) => ValidationRulesInterface;
   errorClass?: string;
   invalidClass?: string;
+  [key: string]: any;
 }
 
 export interface FormState {

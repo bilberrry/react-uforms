@@ -16,6 +16,7 @@ export interface FieldPassedProps {
   getValue: () => ValueType;
   setValue: (value: ValueType, callback?: () => void) => void;
   setTouched: (callback?: () => void) => void;
+  [key: string]: any;
 }
 
 type Diff<T, U> = Pick<T, Exclude<keyof T, keyof U>>;
