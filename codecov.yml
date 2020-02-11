@@ -5,6 +5,6 @@ coverage:
   status:
     project:
       default:
-        target: 95%
+        target: 90%
         base: auto
         only_pulls: true
