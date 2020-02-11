@@ -1,7 +1,7 @@
 import React from 'react';
 import { ContextApi, ContextForm } from './form-context';
 
-export const FieldError: React.FC<{
+const FieldErrorComponent: React.FC<{
   name: string;
   className?: string;
   [key: string]: any;
@@ -25,3 +25,7 @@ export const FieldError: React.FC<{
     )}
   </ContextApi.Consumer>
 );
+
+FieldErrorComponent.displayName = 'FieldError';
+
+export const FieldError = FieldErrorComponent;

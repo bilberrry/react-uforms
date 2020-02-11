@@ -38,4 +38,6 @@ const RadioGroupItemComponent: React.FC<RadioGroupItemProps> = ({ value, onBlur,
   </ContextRadioGroup.Consumer>
 );
 
+RadioGroupItemComponent.displayName = 'RadioGroupItem';
+
 export const RadioGroupItem = RadioGroupItemComponent;

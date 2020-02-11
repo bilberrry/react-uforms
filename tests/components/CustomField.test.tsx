@@ -82,3 +82,9 @@ test('set default values -> change input value -> submit form', () => {
     expect.any(Object),
   );
 });
+
+test('without form', () => {
+  const log = jest.spyOn(global.console, 'error');
+  render(<CustomField name="profile.firstName">{() => <>Some component</>}</CustomField>);
+  expect(log).toHaveBeenCalledWith('Could not found Form API. Make sure <CustomField/> is in the <Form/>.');
+});

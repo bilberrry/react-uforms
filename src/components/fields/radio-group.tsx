@@ -43,4 +43,6 @@ const RadioGroupComponent: React.FC<RadioGroupProps & FieldPassedProps> = ({
   return <ContextRadioGroup.Provider value={childApi}>{children}</ContextRadioGroup.Provider>;
 };
 
+RadioGroupComponent.displayName = 'RadioGroup';
+
 export const RadioGroup = Field(RadioGroupComponent);

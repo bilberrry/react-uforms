@@ -51,3 +51,9 @@ test('touch input', () => {
   input.blur();
   expect(getByTestId('error')).toBeInTheDocument();
 });
+
+test('without form', () => {
+  const log = jest.spyOn(global.console, 'error');
+  render(<FieldError name="profile.firstName" data-testid="error" />);
+  expect(log).toHaveBeenCalledWith('Could not found Form API. Make sure <FieldError/> is in the <Form/>.');
+});

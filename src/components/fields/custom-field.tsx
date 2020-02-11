@@ -9,4 +9,6 @@ const CustomFieldComponent: React.FC<CustomFieldProps & FieldPassedProps> = ({ c
   <Fragment>{children(props)}</Fragment>
 );
 
+CustomFieldComponent.displayName = 'CustomField';
+
 export const CustomField = Field(CustomFieldComponent);

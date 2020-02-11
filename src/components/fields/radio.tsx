@@ -42,4 +42,6 @@ const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({
   />
 );
 
+RadioComponent.displayName = 'Radio';
+
 export const Radio = Field(RadioComponent, { hideError: true });

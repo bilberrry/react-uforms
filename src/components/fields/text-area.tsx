@@ -41,4 +41,6 @@ const TextAreaComponent: React.FC<TextAreaProps & FieldPassedProps> = ({
   />
 );
 
+TextAreaComponent.displayName = 'TextArea';
+
 export const TextArea = Field(TextAreaComponent);

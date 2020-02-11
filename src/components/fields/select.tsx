@@ -58,4 +58,6 @@ const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({
   </select>
 );
 
+SelectComponent.displayName = 'Select';
+
 export const Select = Field(SelectComponent);

@@ -41,4 +41,6 @@ const TextComponent: React.FC<TextProps & FieldPassedProps> = ({
   />
 );
 
+TextComponent.displayName = 'Text';
+
 export const Text = Field(TextComponent);

@@ -35,7 +35,10 @@ export const Field = <P extends FieldProps>(
           {() => {
             const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
             if (!api) {
-              console.error(`Could not found Form API. Make sure <${PassedComponent.displayName}/> is in the <Form/>.`);
+              console.error(
+                `Could not found Form API. Make sure <${PassedComponent.displayName ||
+                  PassedComponent.name}/> is in the <Form/>.`,
+              );
               return null;
             }
             const errors = api.getErrors(name);

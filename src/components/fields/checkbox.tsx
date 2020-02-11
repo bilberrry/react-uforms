@@ -42,4 +42,6 @@ const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({
   />
 );
 
+CheckboxComponent.displayName = 'Checkbox';
+
 export const Checkbox = Field(CheckboxComponent, { hideError: true });
