@@ -53,6 +53,7 @@ export interface FormProps {
   children: ((api: FormApiInterface) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: ValuesType, api: FormApiInterface) => void;
   defaultValues?: ValuesType;
+  onChange?: (diff: ValuesType, api: FormApiInterface) => void;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface) => void;
   validation?: (api: FormApiInterface) => ValidationRulesInterface;
   errorClass?: string;
@@ -70,6 +71,7 @@ export class Form extends React.Component<FormProps, FormState> {
   static defaultProps = {
     defaultValues: {},
     onError: undefined,
+    onChange: undefined,
     validation: undefined,
     invalidClass: 'is-invalid',
     errorClass: 'invalid-feedback',
@@ -125,7 +127,12 @@ export class Form extends React.Component<FormProps, FormState> {
 
   api: FormApiInterface = {
     setTouched: (name: string, callback?: () => void): void => {
-      const { validation } = this.props;
+      const { validation, onChange } = this.props;
+
+      if (onChange) {
+        onChange(this.api.getValuesDiff(), this.api);
+      }
+
       if (!validation) {
         if (callback) {
           callback();
@@ -263,7 +270,17 @@ export class Form extends React.Component<FormProps, FormState> {
   };
 
   render() {
-    const { children, defaultValues, onSubmit, onError, validation, errorClass, invalidClass, ...props } = this.props;
+    const {
+      children,
+      defaultValues,
+      onSubmit,
+      onError,
+      onChange,
+      validation,
+      errorClass,
+      invalidClass,
+      ...props
+    } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
