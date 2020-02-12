@@ -16,7 +16,6 @@ export interface FieldPassedProps {
   getValue: () => ValueType;
   setValue: (value: ValueType, callback?: () => void) => void;
   setTouched: (callback?: () => void) => void;
-  // [key: string]: any;
 }
 
 type Diff<T, U> = Pick<T, Exclude<keyof T, keyof U>>;
@@ -24,7 +23,7 @@ type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export const Field = <P extends FieldProps>(
   PassedComponent: React.ComponentType<P>,
-  passedProps: Partial<Diff<P, FieldPassedProps> & FieldProps> = {},
+  passedProps: Partial<P & FieldProps> = {} as const,
 ) => {
   const FieldComponent: React.FC<Diff<Optional<P, keyof typeof passedProps>, FieldPassedProps> & FieldProps> = (
     fieldProps, // Exclude<P, FieldPassedProps> & FieldPassedProps

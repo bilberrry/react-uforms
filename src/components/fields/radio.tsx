@@ -3,7 +3,7 @@ import { Field, FieldPassedProps } from '../field';
 import { valueToJson } from '../helpers';
 
 export interface RadioProps {
-  value?: string | number | boolean | {} | null;
+  value: string | number | boolean | {} | null;
   onChange?: (event: React.ChangeEvent) => void;
   onBlur?: (event: React.FocusEvent) => void;
   [key: string]: any;

@@ -135,6 +135,31 @@ test('change input -> unsure hasChanges is true ', () => {
   expect(button).not.toHaveAttribute('disabled');
 });
 
+test('change input -> unsure onChange is called ', () => {
+  const onChange = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} onChange={onChange}>
+      <Text name="profile.firstName" data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'Bill' } });
+  expect(onChange).toHaveBeenCalled();
+});
+
+test('touch input -> unsure onTouch is called ', () => {
+  const onTouch = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} onTouch={onTouch}>
+      <Text name="profile.firstName" data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  input.focus();
+  input.blur();
+  expect(onTouch).toHaveBeenCalled();
+});
+
 test('set onError -> submit', () => {
   const onError = jest.fn();
   const validation = () => ({

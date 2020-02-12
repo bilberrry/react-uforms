@@ -4,7 +4,7 @@ import { valueToJson, jsonToValue } from '../helpers';
 
 export interface OptionProps {
   name: string;
-  value?: string | number | boolean | {} | null;
+  value: string | number | boolean | {} | null;
   disabled?: boolean;
   [key: string]: any;
 }

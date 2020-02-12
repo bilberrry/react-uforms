@@ -53,7 +53,8 @@ export interface FormProps {
   children: ((api: FormApiInterface) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: ValuesType, api: FormApiInterface) => void;
   defaultValues?: ValuesType;
-  onChange?: (diff: ValuesType, api: FormApiInterface) => void;
+  onChange?: (api: FormApiInterface) => void;
+  onTouch?: (api: FormApiInterface) => void;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface) => void;
   validation?: (api: FormApiInterface) => ValidationRulesInterface;
   errorClass?: string;
@@ -127,16 +128,18 @@ export class Form extends React.Component<FormProps, FormState> {
 
   api: FormApiInterface = {
     setTouched: (name: string, callback?: () => void): void => {
-      const { validation, onChange } = this.props;
-
-      if (onChange) {
-        onChange(this.api.getValuesDiff(), this.api);
-      }
-
-      if (!validation) {
+      const { validation, onTouch } = this.props;
+      const combinedCallback = () => {
+        if (onTouch) {
+          onTouch(this.api);
+        }
         if (callback) {
           callback();
         }
+      };
+
+      if (!validation) {
+        combinedCallback();
         return;
       }
       const validators = _.get(validation(this.api), name);
@@ -148,20 +151,32 @@ export class Form extends React.Component<FormProps, FormState> {
             errors,
             values,
           };
-        }, callback);
-      } else if (callback) {
-        callback();
+        }, combinedCallback);
+      } else {
+        combinedCallback();
       }
     },
     setValue: (name: string, value: ValueType, callback?: () => void): void => {
-      this.setState(({ errors, values }) => {
-        _.set(values, name, value);
-        _.set(errors, name, []);
-        return {
-          values,
-          errors,
-        };
-      }, callback);
+      const { onChange } = this.props;
+
+      this.setState(
+        ({ errors, values }) => {
+          _.set(values, name, value);
+          _.set(errors, name, []);
+          return {
+            values,
+            errors,
+          };
+        },
+        () => {
+          if (onChange) {
+            onChange(this.api);
+          }
+          if (callback) {
+            callback();
+          }
+        },
+      );
     },
     getValue: (name: string): ValueType => {
       const { values } = this.state;
@@ -276,6 +291,7 @@ export class Form extends React.Component<FormProps, FormState> {
       onSubmit,
       onError,
       onChange,
+      onTouch,
       validation,
       errorClass,
       invalidClass,

@@ -3,7 +3,7 @@ import { ContextRadioGroup } from '../form-context';
 import { valueToJson } from '../helpers';
 
 export interface RadioGroupItemProps {
-  value?: string | number | boolean | {} | null;
+  value: string | number | boolean | {} | null;
   onBlur?: (event: React.FocusEvent) => void;
   [key: string]: any;
 }
