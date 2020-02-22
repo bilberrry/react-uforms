@@ -1,5 +1,6 @@
 # react-uforms
 [![npm version](https://badge.fury.io/js/react-uforms.svg)](https://badge.fury.io/js/react-uforms)
+![TypeScript](https://img.shields.io/npm/types/typescript)
 [![build status](https://travis-ci.org/summerua/react-uforms.svg?branch=master)](https://travis-ci.org/summerua/react-uforms)
 [![codecov](https://codecov.io/gh/summerua/react-uforms/branch/master/graph/badge.svg)](https://codecov.io/gh/summerua/react-uforms)
 ![NPM](https://img.shields.io/npm/l/react-uforms.svg)
