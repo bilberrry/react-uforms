@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { ContextApi, ContextForm } from './form-context';
+import React, { Fragment, useEffect } from 'react';
+import { ContextApi, ContextFieldGroup, ContextForm } from './form-context';
 import { ValueType } from './validator';
 
 export interface FieldProps {
@@ -30,46 +30,58 @@ export const Field = <P extends FieldProps>(
   ) => (
     <ContextApi.Consumer>
       {api => (
-        <ContextForm.Consumer>
-          {() => {
-            const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
-            if (!api) {
-              console.error(
-                `Could not found Form API. Make sure <${PassedComponent.displayName ||
-                  PassedComponent.name}/> is in the <Form/>.`,
-              );
-              return null;
-            }
-            const errors = api.getErrors(name);
-            const classNames = className ? [className] : [];
-            const errorClassName = api.getInvalidClass();
-            if (errors && errors.length > 0 && errorClassName) {
-              classNames.push(errorClassName);
-            }
-            if (disabled) {
-              api.setDisabled(name);
-            } else {
-              api.removeDisabled(name);
-            }
+        <ContextFieldGroup.Consumer>
+          {groupName => (
+            <ContextForm.Consumer>
+              {() => {
+                const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
+                if (!api) {
+                  console.error(
+                    `Could not found Form API. Make sure <${PassedComponent.displayName ||
+                      PassedComponent.name}/> is in the <Form/>.`,
+                  );
+                  return null;
+                }
+                if (groupName) {
+                  useEffect(() => {
+                    api.addFieldToGroup(groupName, name);
+                    return () => {
+                      api.removeFieldFromGroup(groupName, name);
+                    };
+                  }, [name]);
+                }
+                const errors = api.getErrors(name);
+                const classNames = className ? [className] : [];
+                const errorClassName = api.getInvalidClass();
+                if (errors && errors.length > 0 && errorClassName) {
+                  classNames.push(errorClassName);
+                }
+                if (disabled) {
+                  api.setDisabled(name);
+                } else {
+                  api.removeDisabled(name);
+                }
 
-            return (
-              <Fragment>
-                <PassedComponent
-                  {...(props as P)}
-                  name={name}
-                  disabled={disabled}
-                  className={classNames.join(' ')}
-                  getValue={() => api.getValue(name)}
-                  setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
-                  setTouched={(callback?: () => void) => api.setTouched(name, callback)}
-                />
-                {!hideError && errors && errors.length > 0 ? (
-                  <div className={api.getErrorClass()}>{Array.isArray(errors) ? errors[0] : errors}</div>
-                ) : null}
-              </Fragment>
-            );
-          }}
-        </ContextForm.Consumer>
+                return (
+                  <Fragment>
+                    <PassedComponent
+                      {...(props as P)}
+                      name={name}
+                      disabled={disabled}
+                      className={classNames.join(' ')}
+                      getValue={() => api.getValue(name)}
+                      setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
+                      setTouched={(callback?: () => void) => api.setTouched(name, callback)}
+                    />
+                    {!hideError && errors && errors.length > 0 ? (
+                      <div className={api.getErrorClass()}>{Array.isArray(errors) ? errors[0] : errors}</div>
+                    ) : null}
+                  </Fragment>
+                );
+              }}
+            </ContextForm.Consumer>
+          )}
+        </ContextFieldGroup.Consumer>
       )}
     </ContextApi.Consumer>
   );

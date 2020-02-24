@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { FieldError, Form, Text, Validator } from '../src';
-import { FormApiInterface, ValuesType } from '../src/components/form';
+import { FormApiInterface, ValuesType } from '../src';
 
 afterEach(() => {
   cleanup();
