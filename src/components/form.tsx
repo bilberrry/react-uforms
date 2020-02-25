@@ -27,7 +27,7 @@ export interface ValidationRulesInterface {
 
 export type DisabledInterface = string[];
 
-export interface FormApiInterface<Values> {
+export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
   getValue: (name: string) => ValueType;
