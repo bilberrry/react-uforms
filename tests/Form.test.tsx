@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { FieldError, Form, Text, Validator } from '../src';
-import { FormApiInterface, ValuesType } from '../src/components/form';
 
 afterEach(() => {
   cleanup();
@@ -62,12 +61,15 @@ test('set default values -> change input -> submit form -> get values difference
   };
   let diffValues = null;
   let diffValuesLevel1 = null;
-  const submit = (values: ValuesType, api: FormApiInterface) => {
-    diffValues = api.getValuesDiff();
-    diffValuesLevel1 = api.getValuesDiff(1);
-  };
   const { getByTestId } = render(
-    <Form defaultValues={defaultValues} onSubmit={submit} data-testid="form">
+    <Form
+      defaultValues={defaultValues}
+      onSubmit={(_, api) => {
+        diffValues = api.getValuesDiff();
+        diffValuesLevel1 = api.getValuesDiff(1);
+      }}
+      data-testid="form"
+    >
       <Text name="id" disabled />
       <Text name="email" data-testid="email" />
       <Text name="profile.firstName" data-testid="first-name" />
@@ -102,11 +104,13 @@ test('set default values -> change input -> submit form -> get values difference
 
 test('submit form -> ensure field is disabled ', () => {
   let isInputDisabled = null;
-  const submit = (values: ValuesType, api: FormApiInterface) => {
-    isInputDisabled = api.isDisabled('profile.firstName');
-  };
   const { getByTestId } = render(
-    <Form onSubmit={submit} data-testid="form">
+    <Form
+      onSubmit={(_, api) => {
+        isInputDisabled = api.isDisabled('profile.firstName');
+      }}
+      data-testid="form"
+    >
       <Text name="profile.firstName" data-testid="input" disabled />
     </Form>,
   );
