@@ -38,7 +38,7 @@ export interface GroupInterface {
   fields: string[];
 }
 
-export interface FormApiInterface {
+export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
   getValue: (name: string) => ValueType;
@@ -47,10 +47,10 @@ export interface FormApiInterface {
   setErrors: (name: string, value: ValidationErrorType, callback?: () => void) => void;
   getErrorClass: () => string | undefined;
   getInvalidClass: () => string | undefined;
-  getAllValues: () => ValuesType;
+  getAllValues: () => Values;
   getAllErrors: () => ValidationErrorsInterface;
   setAllErrors: (errors: ValidationErrorsInterface, callback?: () => void) => void;
-  setAllValues: (values: ValuesType, callback?: () => void) => void;
+  setAllValues: (values: Values, callback?: () => void) => void;
   getAllDisabled: () => DisabledInterface;
   setDisabled: (name: string) => void;
   removeDisabled: (name: string) => void;
@@ -64,32 +64,35 @@ export interface FormApiInterface {
   hasGroupErrors: (name: string) => boolean;
   addFieldToGroup: (groupName: string, fieldName: string) => void;
   removeFieldFromGroup: (groupName: string, fieldName: string) => void;
-  getValuesDiff: (maxLevel?: number) => ValuesType;
+  getValuesDiff: (maxLevel?: number) => Partial<Values>;
   hasChanges: () => boolean;
   submit: () => void;
 }
 
-export interface FormProps {
-  children: ((api: FormApiInterface) => ReactElement) | ReactElement | ReactElement[];
-  onSubmit: (values: ValuesType, api: FormApiInterface) => void;
-  defaultValues?: ValuesType;
-  onChange?: (api: FormApiInterface) => void;
-  onTouch?: (api: FormApiInterface) => void;
-  onError?: (errors: ValidationErrorsInterface, api: FormApiInterface) => void;
-  validation?: (api: FormApiInterface) => ValidationRulesInterface;
+export interface FormProps<Values> {
+  children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
+  onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
+  defaultValues?: Values;
+  onChange?: (api: FormApiInterface<Values>) => void;
+  onTouch?: (api: FormApiInterface<Values>) => void;
+  onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
+  validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   errorClass?: string;
   invalidClass?: string;
   [key: string]: any;
 }
 
-export interface FormState {
-  values: ValuesType;
+export interface FormState<Values extends ValuesType = ValuesType> {
+  values: Values;
   errors: ValidationErrorsInterface;
   disabled: DisabledInterface;
   groups: GroupsInterface;
 }
 
-export class Form extends React.Component<FormProps, FormState> {
+export class Form<Values extends ValuesType = ValuesType> extends React.Component<
+  FormProps<Values>,
+  FormState<Values>
+> {
   static defaultProps = {
     defaultValues: {},
     onError: undefined,
@@ -148,7 +151,7 @@ export class Form extends React.Component<FormProps, FormState> {
     this.api.submit();
   };
 
-  api: FormApiInterface = {
+  api: FormApiInterface<Values> = {
     setTouched: (name: string, callback?: () => void): void => {
       const { validation, onTouch } = this.props;
       const group = this.api.getGroupByField(name);
@@ -232,7 +235,7 @@ export class Form extends React.Component<FormProps, FormState> {
       const { invalidClass } = this.props;
       return invalidClass;
     },
-    getAllValues: (): ValuesType => {
+    getAllValues: (): Values => {
       const { values } = this.state;
       return values;
     },
@@ -248,7 +251,7 @@ export class Form extends React.Component<FormProps, FormState> {
         callback,
       );
     },
-    setAllValues: (values: ValuesType, callback?: () => void): void => {
+    setAllValues: (values: Values, callback?: () => void): void => {
       this.setState(
         {
           values,
@@ -395,7 +398,7 @@ export class Form extends React.Component<FormProps, FormState> {
         }
       }
     },
-    getValuesDiff: (maxLevel): ValuesType => {
+    getValuesDiff: (maxLevel): Partial<Values> => {
       const { defaultValues } = this.props;
       const { values } = this.state;
       return getValuesDiff(defaultValues, values, maxLevel);
