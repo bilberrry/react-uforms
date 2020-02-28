@@ -35,6 +35,7 @@ export interface GroupInterface {
   name: string;
   hasErrors: boolean;
   isTouched: boolean;
+  isActive: boolean;
   fields: string[];
 }
 
@@ -58,9 +59,10 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   getGroups: () => GroupsInterface;
   getGroup: (name: string) => GroupInterface;
   getGroupByField: (name: string) => GroupInterface | undefined;
-  addGroup: (name: string) => void;
+  upsertGroup: (name: string, params: Partial<GroupInterface>, addField?: string, removeField?: string) => void;
   removeGroup: (name: string) => void;
   setGroupTouched: (name: string) => void;
+  setGroupActive: (name: string) => void;
   hasGroupErrors: (name: string) => boolean;
   addFieldToGroup: (groupName: string, fieldName: string) => void;
   removeFieldFromGroup: (groupName: string, fieldName: string) => void;
@@ -69,7 +71,8 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   submit: () => void;
 }
 
-export interface FormProps<Values> {
+export interface FormProps<Values>
+  extends Omit<React.HTMLProps<HTMLFormElement>, 'onChange' | 'onSubmit' | 'onError' | 'defaultValues'> {
   children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
   defaultValues?: Values;
@@ -79,7 +82,6 @@ export interface FormProps<Values> {
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   errorClass?: string;
   invalidClass?: string;
-  [key: string]: any;
 }
 
 export interface FormState<Values extends ValuesType = ValuesType> {
@@ -297,106 +299,90 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         }
       }
     },
-    addGroup: (name: string) => {
-      const { groups } = this.state;
-      const { [name]: selectedGroup } = groups;
-      if (!selectedGroup) {
-        this.setState({
-          groups: {
-            ...groups,
-            [name]: {
-              name,
-              hasErrors: false,
-              isTouched: false,
-              fields: [],
-            },
-          },
-        });
-      }
-    },
-    removeGroup: (name: string) => {
-      const { groups } = this.state;
-      const { [name]: selectedGroup, ...rest } = groups;
-      if (selectedGroup) {
-        this.setState({
-          groups: rest,
-        });
-      }
-    },
-    setGroupTouched: (name: string) => {
-      const { groups } = this.state;
-      const { [name]: selectedGroup } = groups;
-      if (selectedGroup) {
-        let hasErrors = false;
-        for (const i in selectedGroup.fields) {
-          const fieldErrors = this.api.getErrors(selectedGroup.fields[i]);
-          if (fieldErrors && fieldErrors.length > 0) {
-            hasErrors = true;
-            break;
-          }
+    upsertGroup: (name: string, params: Partial<GroupInterface> = {}, addField?: string, removeField?: string) => {
+      this.setState(({ groups }) => {
+        const { [name]: selectedGroup, ...restGroups } = groups;
+        const group: GroupInterface = selectedGroup || {
+          name,
+          isActive: false,
+          hasErrors: false,
+          isTouched: false,
+          fields: [],
+        };
+        let updatedRestGroups: GroupsInterface = restGroups;
+        let updatedGroup: GroupInterface = {
+          ...group,
+          ...params,
+        };
+        if (addField) {
+          updatedGroup = {
+            ...updatedGroup,
+            fields: [...updatedGroup.fields, addField],
+          };
         }
-        this.setState({
-          groups: {
-            ...groups,
-            [name]: {
-              ...selectedGroup,
-              hasErrors,
-              isTouched: true,
-            },
-          },
-        });
-      }
-    },
-    hasGroupErrors: (name: string) => {
-      const { groups } = this.state;
-      const { [name]: selectedGroup } = groups;
-      return selectedGroup ? selectedGroup.hasErrors : false;
-    },
-    addFieldToGroup: (groupName: string, fieldName: string) => {
-      const { groups } = this.state;
-      const { [groupName]: selectedGroup, ...rest } = groups;
-      if (selectedGroup) {
-        const { fields } = selectedGroup;
-        if (!fields.includes(fieldName)) {
-          this.setState({
-            groups: {
-              ...rest,
-              [groupName]: {
-                ...selectedGroup,
-                fields: [...fields, fieldName],
+        if (removeField) {
+          updatedGroup = {
+            ...updatedGroup,
+            fields: updatedGroup.fields.filter(i => i !== removeField),
+          };
+        }
+        if (!group.isActive && updatedGroup.isActive) {
+          updatedRestGroups = Object.entries(updatedRestGroups).reduce(
+            (acc, [k, g]) => ({
+              ...acc,
+              [k]: {
+                ...g,
+                isActive: false,
               },
-            },
-          });
+            }),
+            {},
+          );
         }
-      }
-    },
-    removeFieldFromGroup: (groupName: string, fieldName: string) => {
-      const { groups } = this.state;
-      const { [groupName]: selectedGroup, ...rest } = groups;
-      if (selectedGroup) {
-        const { fields } = selectedGroup;
-        if (fields.includes(fieldName)) {
-          const filteredFields = fields.filter(i => i !== fieldName);
-          let hasErrors = false;
-          for (const i in filteredFields) {
-            const fieldErrors = this.api.getErrors(filteredFields[i]);
+        if (updatedGroup.isTouched) {
+          for (const i in updatedGroup.fields) {
+            const fieldErrors = this.api.getErrors(updatedGroup.fields[i]);
             if (fieldErrors && fieldErrors.length > 0) {
-              hasErrors = true;
+              updatedGroup = {
+                ...updatedGroup,
+                hasErrors: true,
+              };
               break;
             }
           }
-          this.setState({
-            groups: {
-              ...rest,
-              [groupName]: {
-                ...selectedGroup,
-                hasErrors,
-                fields: filteredFields,
-              },
-            },
-          });
         }
-      }
+
+        return {
+          groups: {
+            ...updatedRestGroups,
+            [name]: updatedGroup,
+          },
+        };
+      });
+    },
+    removeGroup: (name: string) => {
+      this.setState(({ groups }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { [name]: selectedGroup, ...rest } = groups;
+        return {
+          groups: rest,
+        };
+      });
+    },
+    setGroupTouched: (name: string) => {
+      this.api.upsertGroup(name, { isTouched: true });
+    },
+    setGroupActive: (name: string) => {
+      this.api.upsertGroup(name, { isActive: true });
+    },
+    hasGroupErrors: (name: string) => {
+      const group = this.api.getGroup(name);
+      return group ? group.hasErrors : false;
+    },
+    addFieldToGroup: (groupName: string, fieldName: string) => {
+      this.api.upsertGroup(groupName, {}, fieldName);
+    },
+    removeFieldFromGroup: (groupName: string, fieldName: string) => {
+      this.api.upsertGroup(groupName, {}, undefined, fieldName);
     },
     getValuesDiff: (maxLevel): Partial<Values> => {
       const { defaultValues } = this.props;

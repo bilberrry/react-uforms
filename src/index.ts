@@ -1,6 +1,7 @@
 import * as Validator from './components/validator';
 export * from './components/form';
 export * from './components/field-error';
+export * from './components/field-group';
 export * from './components/field';
 
 export * from './components/fields/checkbox';

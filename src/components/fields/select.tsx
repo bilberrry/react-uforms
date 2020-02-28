@@ -2,18 +2,13 @@ import React from 'react';
 import { Field, FieldPassedProps } from '../field';
 import { valueToJson, jsonToValue } from '../helpers';
 
-export interface OptionProps {
+export interface OptionProps extends Omit<React.HTMLProps<HTMLOptionElement>, 'value'> {
   name: string;
   value: string | number | boolean | {} | null;
-  disabled?: boolean;
-  [key: string]: any;
 }
 
-export interface SelectProps {
-  onChange?: (event: React.ChangeEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
+export interface SelectProps extends React.HTMLProps<HTMLSelectElement> {
   options: OptionProps[];
-  [key: string]: any;
 }
 
 const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({

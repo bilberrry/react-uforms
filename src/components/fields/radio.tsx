@@ -2,11 +2,8 @@ import React from 'react';
 import { Field, FieldPassedProps } from '../field';
 import { valueToJson } from '../helpers';
 
-export interface RadioProps {
+export interface RadioProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
   value: string | number | boolean | {} | null;
-  onChange?: (event: React.ChangeEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
-  [key: string]: any;
 }
 
 const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({

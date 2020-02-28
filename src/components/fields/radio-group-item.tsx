@@ -2,10 +2,8 @@ import React from 'react';
 import { ContextRadioGroup } from '../form-context';
 import { valueToJson } from '../helpers';
 
-export interface RadioGroupItemProps {
+export interface RadioGroupItemProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
   value: string | number | boolean | {} | null;
-  onBlur?: (event: React.FocusEvent) => void;
-  [key: string]: any;
 }
 
 const RadioGroupItemComponent: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props }) => (
