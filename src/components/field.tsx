@@ -30,6 +30,7 @@ export const Field = <P extends FieldProps>(
   ) => {
     const api = useContext(ContextApi);
     const groupName = useContext(ContextFieldGroup);
+    useContext(ContextForm);
     if (!api) {
       console.error(
         `Could not found Form API. Make sure <${PassedComponent.displayName ||

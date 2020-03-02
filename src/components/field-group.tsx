@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect } from 'react';
+import React, { CSSProperties, ReactNode, useContext, useEffect } from 'react';
 import { ContextApi, ContextFieldGroup } from './form-context';
 export interface FieldGroupProps extends React.HTMLProps<HTMLDivElement> {
   name: string;
@@ -20,7 +20,7 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({ name, children, defaul
   }, [name]);
   const group = api.getGroup(name);
   const isVisible = group ? group.isActive : defaultActive;
-  const newStyle = {
+  const newStyle: CSSProperties = {
     ...style,
     ...(isVisible ? {} : { visibility: 'hidden' }),
   };

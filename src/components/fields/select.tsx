@@ -5,6 +5,7 @@ import { valueToJson, jsonToValue } from '../helpers';
 export interface OptionProps extends Omit<React.HTMLProps<HTMLOptionElement>, 'value'> {
   name: string;
   value: string | number | boolean | {} | null;
+  [key: string]: any; // TODO HTMLProps bug?
 }
 
 export interface SelectProps extends React.HTMLProps<HTMLSelectElement> {

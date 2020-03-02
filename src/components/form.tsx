@@ -27,9 +27,7 @@ export interface ValidationRulesInterface {
 
 export type DisabledInterface = string[];
 
-export interface GroupsInterface {
-  [key: string]: GroupInterface;
-}
+export type GroupsInterface = Array<GroupInterface>;
 
 export interface GroupInterface {
   name: string;
@@ -57,7 +55,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   removeDisabled: (name: string) => void;
   isDisabled: (name: string) => boolean;
   getGroups: () => GroupsInterface;
-  getGroup: (name: string) => GroupInterface;
+  getGroup: (name: string) => GroupInterface | undefined;
   getGroupByField: (name: string) => GroupInterface | undefined;
   upsertGroup: (name: string, params: Partial<GroupInterface>, addField?: string, removeField?: string) => void;
   removeGroup: (name: string) => void;
@@ -111,7 +109,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       values: _.cloneDeep(defaultValues),
       errors: {},
       disabled: [],
-      groups: {},
+      groups: [],
     };
   }
 
@@ -289,7 +287,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     getGroup: (name: string) => {
       const { groups } = this.state;
-      return groups[name];
+      return groups.find(i => i.name === name);
     },
     getGroupByField: (name: string) => {
       const { groups } = this.state;
@@ -301,7 +299,8 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     upsertGroup: (name: string, params: Partial<GroupInterface> = {}, addField?: string, removeField?: string) => {
       this.setState(({ groups }) => {
-        const { [name]: selectedGroup, ...restGroups } = groups;
+        const selectedGroup = groups.find(g => g.name === name);
+        const selectedGroupIndex = groups.findIndex(g => g.name === name);
         const group: GroupInterface = selectedGroup || {
           name,
           isActive: false,
@@ -309,12 +308,12 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           isTouched: false,
           fields: [],
         };
-        let updatedRestGroups: GroupsInterface = restGroups;
+        let allGroups: GroupsInterface = groups;
         let updatedGroup: GroupInterface = {
           ...group,
           ...params,
         };
-        if (addField) {
+        if (addField && !updatedGroup.fields.find(i => i === addField)) {
           updatedGroup = {
             ...updatedGroup,
             fields: [...updatedGroup.fields, addField],
@@ -327,16 +326,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           };
         }
         if (!group.isActive && updatedGroup.isActive) {
-          updatedRestGroups = Object.entries(updatedRestGroups).reduce(
-            (acc, [k, g]) => ({
-              ...acc,
-              [k]: {
-                ...g,
-                isActive: false,
-              },
-            }),
-            {},
-          );
+          allGroups = allGroups.map(i => ({ ...i, isActive: false }));
         }
         if (updatedGroup.isTouched) {
           for (const i in updatedGroup.fields) {
@@ -350,21 +340,21 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
             }
           }
         }
+        if (selectedGroupIndex > -1) {
+          allGroups[selectedGroupIndex] = updatedGroup;
+        } else {
+          allGroups.push(updatedGroup);
+        }
 
         return {
-          groups: {
-            ...updatedRestGroups,
-            [name]: updatedGroup,
-          },
+          groups: allGroups,
         };
       });
     },
     removeGroup: (name: string) => {
       this.setState(({ groups }) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { [name]: selectedGroup, ...rest } = groups;
         return {
-          groups: rest,
+          groups: groups.filter(i => i.name !== name),
         };
       });
     },
