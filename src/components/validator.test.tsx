@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Validator } from '../src';
+import { Validator } from '../index';
 
 test('Required', () => {
   const defaultErrorMessage = 'Required';

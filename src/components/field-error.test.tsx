@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { Form, FieldError, Text, Validator } from '../src';
+import { Form, FieldError, Text, Validator } from '../index';
 
 afterEach(() => {
   cleanup();

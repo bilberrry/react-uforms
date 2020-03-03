@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { Form, TextArea } from '../../src';
+import { Form, Text } from '../../index';
 
 afterEach(() => {
   cleanup();
@@ -11,7 +11,7 @@ afterEach(() => {
 test('renders without crashing', () => {
   const { unmount } = render(
     <Form onSubmit={() => {}}>
-      <TextArea name="profile.firstName" />
+      <Text name="profile.firstName" />
     </Form>,
   );
   unmount();
@@ -21,7 +21,7 @@ test('change input value -> submit form', () => {
   const submit = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={submit} data-testid="form">
-      <TextArea name="profile.firstName" data-testid="input" />
+      <Text name="profile.firstName" data-testid="input" />
     </Form>,
   );
   const input = getByTestId('input');
@@ -50,7 +50,7 @@ test('set default values -> change input value -> submit form', () => {
   };
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
-      <TextArea name="profile.firstName" data-testid="input" />
+      <Text name="profile.firstName" data-testid="input" />
     </Form>,
   );
   const input = getByTestId('input');
@@ -81,7 +81,7 @@ test('set emptyValue attribute -> change input value -> submit form', () => {
   };
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
-      <TextArea name="profile.firstName" data-testid="input" emptyValue={null} />
+      <Text name="profile.firstName" data-testid="input" emptyValue={null} />
     </Form>,
   );
   const input = getByTestId('input');
@@ -105,7 +105,7 @@ test('set onChange attribute -> change input value ', async () => {
   const change = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={() => {}}>
-      <TextArea name="profile.firstName" onChange={change} data-testid="input" />
+      <Text name="profile.firstName" onChange={change} data-testid="input" />
     </Form>,
   );
   const input = getByTestId('input');
@@ -117,7 +117,7 @@ test('set onBlur attribute -> focus input -> blur input', () => {
   const blur = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={() => {}}>
-      <TextArea name="profile.firstName" onBlur={blur} data-testid="input" />
+      <Text name="profile.firstName" onBlur={blur} data-testid="input" />
     </Form>,
   );
   const input = getByTestId('input');

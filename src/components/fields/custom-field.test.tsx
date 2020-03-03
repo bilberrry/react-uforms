@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { Form, CustomField } from '../../src';
+import { Form, CustomField } from '../../index';
 
 afterEach(() => {
   cleanup();

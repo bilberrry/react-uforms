@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { Form, Radio } from '../../src';
+import { Form, Radio } from '../../index';
 
 afterEach(() => {
   cleanup();
