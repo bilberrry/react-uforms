@@ -2,11 +2,8 @@ import React from 'react';
 import { Field, FieldPassedProps } from '../field';
 import { valueToString } from '../helpers';
 
-export interface TextAreaProps {
+export interface TextAreaProps extends Omit<React.HTMLProps<HTMLTextAreaElement>, 'value'> {
   emptyValue?: string | null;
-  onChange?: (event: React.ChangeEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
-  [key: string]: any;
 }
 
 const TextAreaComponent: React.FC<TextAreaProps & FieldPassedProps> = ({

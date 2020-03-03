@@ -1,12 +1,9 @@
 import React from 'react';
 import { Field, FieldPassedProps } from '../field';
 
-export interface CheckboxProps {
+export interface CheckboxProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
   onValue: string | number | boolean | null | {};
   offValue: string | number | boolean | null | {};
-  onChange?: (event: React.ChangeEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
-  [key: string]: any;
 }
 
 const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({

@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement } from 'react';
+import React, { FormEvent, ReactElement, ReactNode } from 'react';
 import _ from 'lodash';
 import { ContextApi, ContextForm } from './form-context';
 import { getValuesDiff } from './helpers';
@@ -27,6 +27,16 @@ export interface ValidationRulesInterface {
 
 export type DisabledInterface = string[];
 
+export type GroupsInterface = Array<GroupInterface>;
+
+export interface GroupInterface {
+  name: string;
+  hasErrors: boolean;
+  isTouched: boolean;
+  isActive: boolean;
+  fields: string[];
+}
+
 export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
@@ -44,12 +54,23 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setDisabled: (name: string) => void;
   removeDisabled: (name: string) => void;
   isDisabled: (name: string) => boolean;
+  getGroups: () => GroupsInterface;
+  getGroup: (name: string) => GroupInterface | undefined;
+  getGroupByField: (name: string) => GroupInterface | undefined;
+  upsertGroup: (name: string, params: Partial<GroupInterface>, addField?: string, removeField?: string) => void;
+  removeGroup: (name: string) => void;
+  setGroupTouched: (name: string) => void;
+  setGroupActive: (name: string) => void;
+  hasGroupErrors: (name: string) => boolean;
+  addFieldToGroup: (groupName: string, fieldName: string) => void;
+  removeFieldFromGroup: (groupName: string, fieldName: string) => void;
   getValuesDiff: (maxLevel?: number) => Partial<Values>;
   hasChanges: () => boolean;
   submit: () => void;
 }
 
-export interface FormProps<Values> {
+export interface FormProps<Values>
+  extends Omit<React.HTMLProps<HTMLFormElement>, 'onChange' | 'onSubmit' | 'onError' | 'defaultValues'> {
   children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
   defaultValues?: Values;
@@ -59,13 +80,13 @@ export interface FormProps<Values> {
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   errorClass?: string;
   invalidClass?: string;
-  [key: string]: any;
 }
 
 export interface FormState<Values extends ValuesType = ValuesType> {
   values: Values;
   errors: ValidationErrorsInterface;
   disabled: DisabledInterface;
+  groups: GroupsInterface;
 }
 
 export class Form<Values extends ValuesType = ValuesType> extends React.Component<
@@ -88,6 +109,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       values: _.cloneDeep(defaultValues),
       errors: {},
       disabled: [],
+      groups: [],
     };
   }
 
@@ -132,12 +154,16 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
   api: FormApiInterface<Values> = {
     setTouched: (name: string, callback?: () => void): void => {
       const { validation, onTouch } = this.props;
+      const group = this.api.getGroupByField(name);
       const combinedCallback = () => {
         if (onTouch) {
           onTouch(this.api);
         }
         if (callback) {
           callback();
+        }
+        if (group && !group.isTouched) {
+          this.api.setGroupTouched(group.name);
         }
       };
 
@@ -248,13 +274,105 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       const { disabled } = this.state;
 
       if (disabled.includes(name)) {
-        const index = disabled.indexOf(name);
-        this.setState({ disabled: [...disabled.slice(0, index), ...disabled.slice(index + 1)] });
+        this.setState({ disabled: disabled.filter(i => i !== name) });
       }
     },
     isDisabled: (name: string): boolean => {
       const { disabled } = this.state;
       return disabled.includes(name);
+    },
+    getGroups: () => {
+      const { groups } = this.state;
+      return groups;
+    },
+    getGroup: (name: string) => {
+      const { groups } = this.state;
+      return groups.find(i => i.name === name);
+    },
+    getGroupByField: (name: string) => {
+      const { groups } = this.state;
+      for (const [, group] of Object.entries(groups)) {
+        if (group.fields.includes(name)) {
+          return group;
+        }
+      }
+    },
+    upsertGroup: (name: string, params: Partial<GroupInterface> = {}, addField?: string, removeField?: string) => {
+      this.setState(({ groups }) => {
+        const selectedGroup = groups.find(g => g.name === name);
+        const selectedGroupIndex = groups.findIndex(g => g.name === name);
+        const group: GroupInterface = selectedGroup || {
+          name,
+          isActive: false,
+          hasErrors: false,
+          isTouched: false,
+          fields: [],
+        };
+        let allGroups: GroupsInterface = groups;
+        let updatedGroup: GroupInterface = {
+          ...group,
+          ...params,
+        };
+        if (addField && !updatedGroup.fields.find(i => i === addField)) {
+          updatedGroup = {
+            ...updatedGroup,
+            fields: [...updatedGroup.fields, addField],
+          };
+        }
+        if (removeField) {
+          updatedGroup = {
+            ...updatedGroup,
+            fields: updatedGroup.fields.filter(i => i !== removeField),
+          };
+        }
+        if (!group.isActive && updatedGroup.isActive) {
+          allGroups = allGroups.map(i => ({ ...i, isActive: false }));
+        }
+        if (updatedGroup.isTouched) {
+          for (const i in updatedGroup.fields) {
+            const fieldErrors = this.api.getErrors(updatedGroup.fields[i]);
+            if (fieldErrors && fieldErrors.length > 0) {
+              updatedGroup = {
+                ...updatedGroup,
+                hasErrors: true,
+              };
+              break;
+            }
+          }
+        }
+        if (selectedGroupIndex > -1) {
+          allGroups[selectedGroupIndex] = updatedGroup;
+        } else {
+          allGroups.push(updatedGroup);
+        }
+
+        return {
+          groups: allGroups,
+        };
+      });
+    },
+    removeGroup: (name: string) => {
+      this.setState(({ groups }) => {
+        return {
+          groups: groups.filter(i => i.name !== name),
+        };
+      });
+    },
+    setGroupTouched: (name: string) => {
+      this.api.upsertGroup(name, { isTouched: true });
+    },
+    setGroupActive: (name: string) => {
+      this.api.upsertGroup(name, { isActive: true });
+    },
+    hasGroupErrors: (name: string) => {
+      const group = this.api.getGroup(name);
+      return group ? group.hasErrors : false;
+    },
+    addFieldToGroup: (groupName: string, fieldName: string) => {
+      this.api.upsertGroup(groupName, {}, fieldName);
+    },
+    removeFieldFromGroup: (groupName: string, fieldName: string) => {
+      this.api.upsertGroup(groupName, {}, undefined, fieldName);
     },
     getValuesDiff: (maxLevel): Partial<Values> => {
       const { defaultValues } = this.props;

@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { ContextApi, ContextForm } from './form-context';
+import React, { Fragment, useContext, useEffect } from 'react';
+import { ContextApi, ContextFieldGroup, ContextForm } from './form-context';
 import { ValueType } from './validator';
 
 export interface FieldProps {
@@ -27,52 +27,57 @@ export const Field = <P extends FieldProps>(
 ) => {
   const FieldComponent: React.FC<Diff<Optional<P, keyof typeof passedProps>, FieldPassedProps> & FieldProps> = (
     fieldProps, // Exclude<P, FieldPassedProps> & FieldPassedProps
-  ) => (
-    <ContextApi.Consumer>
-      {api => (
-        <ContextForm.Consumer>
-          {() => {
-            const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
-            if (!api) {
-              console.error(
-                `Could not found Form API. Make sure <${PassedComponent.displayName ||
-                  PassedComponent.name}/> is in the <Form/>.`,
-              );
-              return null;
-            }
-            const errors = api.getErrors(name);
-            const classNames = className ? [className] : [];
-            const errorClassName = api.getInvalidClass();
-            if (errors && errors.length > 0 && errorClassName) {
-              classNames.push(errorClassName);
-            }
-            if (disabled) {
-              api.setDisabled(name);
-            } else {
-              api.removeDisabled(name);
-            }
+  ) => {
+    const api = useContext(ContextApi);
+    const groupName = useContext(ContextFieldGroup);
+    useContext(ContextForm);
+    if (!api) {
+      console.error(
+        `Could not found Form API. Make sure <${PassedComponent.displayName ||
+          PassedComponent.name}/> is in the <Form/>.`,
+      );
+      return null;
+    }
+    const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
+    useEffect(() => {
+      if (groupName) {
+        api.addFieldToGroup(groupName, name);
+      }
+      return () => {
+        if (groupName) {
+          api.removeFieldFromGroup(groupName, name);
+        }
+      };
+    }, [name]);
+    const errors = api.getErrors(name);
+    const classNames = className ? [className] : [];
+    const errorClassName = api.getInvalidClass();
+    if (errors && errors.length > 0 && errorClassName) {
+      classNames.push(errorClassName);
+    }
+    if (disabled) {
+      api.setDisabled(name);
+    } else {
+      api.removeDisabled(name);
+    }
 
-            return (
-              <Fragment>
-                <PassedComponent
-                  {...(props as P)}
-                  name={name}
-                  disabled={disabled}
-                  className={classNames.join(' ')}
-                  getValue={() => api.getValue(name)}
-                  setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
-                  setTouched={(callback?: () => void) => api.setTouched(name, callback)}
-                />
-                {!hideError && errors && errors.length > 0 ? (
-                  <div className={api.getErrorClass()}>{Array.isArray(errors) ? errors[0] : errors}</div>
-                ) : null}
-              </Fragment>
-            );
-          }}
-        </ContextForm.Consumer>
-      )}
-    </ContextApi.Consumer>
-  );
+    return (
+      <Fragment>
+        <PassedComponent
+          {...(props as P)}
+          name={name}
+          disabled={disabled}
+          className={classNames.join(' ')}
+          getValue={() => api.getValue(name)}
+          setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
+          setTouched={(callback?: () => void) => api.setTouched(name, callback)}
+        />
+        {!hideError && errors && errors.length > 0 ? (
+          <div className={api.getErrorClass()}>{Array.isArray(errors) ? errors[0] : errors}</div>
+        ) : null}
+      </Fragment>
+    );
+  };
 
   return FieldComponent;
 };

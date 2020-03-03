@@ -2,11 +2,8 @@ import React from 'react';
 import { Field, FieldPassedProps } from '../field';
 import { valueToString } from '../helpers';
 
-export interface TextProps {
+export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
   emptyValue?: string | null;
-  onChange?: (event: React.ChangeEvent) => void;
-  onBlur?: (event: React.FocusEvent) => void;
-  [key: string]: any;
 }
 
 const TextComponent: React.FC<TextProps & FieldPassedProps> = ({
