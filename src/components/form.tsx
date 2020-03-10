@@ -61,8 +61,6 @@ const defaultClasses: ClassesInterface = {
   },
 } as const;
 
-// export type ClassesInterface = typeof defaultClasses;
-
 export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
