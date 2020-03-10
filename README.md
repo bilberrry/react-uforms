@@ -282,8 +282,12 @@ const example = (
         ],
       },
     })}
-    errorClass="your-error-class"
-    invalidClass="your-invalid-input-class"
+    classes={{
+      field: {
+        error: "your-error-class",
+        invalid: "your-invalid-input-class",
+      },
+    }}
     onSubmit={values => console.log(values)}
     onError={errors => console.log(errors)}
   >
