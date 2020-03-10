@@ -51,9 +51,9 @@ export const Field = <P extends FieldProps>(
     }, [name]);
     const errors = api.getErrors(name);
     const classNames = className ? [className] : [];
-    const errorClassName = api.getInvalidClass();
-    if (errors && errors.length > 0 && errorClassName) {
-      classNames.push(errorClassName);
+    const { invalid: invalidClassName, error: errorClassName } = api.getClasses<'field'>('field');
+    if (errors && errors.length > 0 && invalidClassName) {
+      classNames.push(invalidClassName);
     }
     if (disabled) {
       api.setDisabled(name);
@@ -73,7 +73,7 @@ export const Field = <P extends FieldProps>(
           setTouched={(callback?: () => void) => api.setTouched(name, callback)}
         />
         {!hideError && errors && errors.length > 0 ? (
-          <div className={api.getErrorClass()}>{Array.isArray(errors) ? errors[0] : errors}</div>
+          <div className={errorClassName}>{Array.isArray(errors) ? errors[0] : errors}</div>
         ) : null}
       </Fragment>
     );

@@ -37,6 +37,32 @@ export interface GroupInterface {
   fields: string[];
 }
 
+export interface ClassesInterface {
+  field: {
+    error: string;
+    invalid: string;
+  };
+  fieldGroup: {
+    active: string;
+    errors: string;
+    touched: string;
+  };
+}
+
+const defaultClasses: ClassesInterface = {
+  field: {
+    error: 'invalid-feedback',
+    invalid: 'is-invalid',
+  },
+  fieldGroup: {
+    active: 'active',
+    errors: 'is-invalid',
+    touched: 'is-touched',
+  },
+} as const;
+
+// export type ClassesInterface = typeof defaultClasses;
+
 export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
@@ -44,8 +70,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   removeValue: (name: string) => any;
   getErrors: (name: string) => ValidationErrorsInterface | ValidationErrorType;
   setErrors: (name: string, value: ValidationErrorType, callback?: () => void) => void;
-  getErrorClass: () => string | undefined;
-  getInvalidClass: () => string | undefined;
+  getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface) => ClassesInterface[T];
   getAllValues: () => Values;
   getAllErrors: () => ValidationErrorsInterface;
   setAllErrors: (errors: ValidationErrorsInterface, callback?: () => void) => void;
@@ -78,8 +103,7 @@ export interface FormProps<Values>
   onTouch?: (api: FormApiInterface<Values>) => void;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
-  errorClass?: string;
-  invalidClass?: string;
+  classes?: Partial<ClassesInterface>;
 }
 
 export interface FormState<Values extends ValuesType = ValuesType> {
@@ -98,8 +122,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     onError: undefined,
     onChange: undefined,
     validation: undefined,
-    invalidClass: 'is-invalid',
-    errorClass: 'invalid-feedback',
+    classes: defaultClasses,
   };
 
   constructor(props: any) {
@@ -227,13 +250,13 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         };
       }, callback);
     },
-    getErrorClass: (): string | undefined => {
-      const { errorClass } = this.props;
-      return errorClass;
-    },
-    getInvalidClass: (): string | undefined => {
-      const { invalidClass } = this.props;
-      return invalidClass;
+    getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface): ClassesInterface[T] => {
+      const { classes } = this.props;
+      const mergedClasses: ClassesInterface = {
+        ...defaultClasses,
+        ...(classes || {}),
+      };
+      return mergedClasses[name] as ClassesInterface[T];
     },
     getAllValues: (): Values => {
       const { values } = this.state;
@@ -406,18 +429,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
   };
 
   render() {
-    const {
-      children,
-      defaultValues,
-      onSubmit,
-      onError,
-      onChange,
-      onTouch,
-      validation,
-      errorClass,
-      invalidClass,
-      ...props
-    } = this.props;
+    const { children, defaultValues, onSubmit, onError, onChange, onTouch, validation, classes, ...props } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>

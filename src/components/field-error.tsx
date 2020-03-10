@@ -15,8 +15,13 @@ const FieldErrorComponent: React.FC<{
             return null;
           }
           const errors = api.getErrors(name);
+          const classNames = className ? [className] : [];
+          const { error: errorClassName } = api.getClasses<'field'>('field');
+          if (errorClassName) {
+            classNames.push(errorClassName);
+          }
           return errors && errors.length > 0 ? (
-            <div {...props} className={className ? `${className} ${api.getErrorClass()}` : api.getErrorClass()}>
+            <div {...props} className={classNames.join(' ')}>
               {Array.isArray(errors) ? errors[0] : errors}
             </div>
           ) : null;

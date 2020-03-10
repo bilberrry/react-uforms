@@ -190,7 +190,12 @@ test('set errorClass -> submit', () => {
   });
   const errorClass = 'foo';
   const { getByTestId } = render(
-    <Form onSubmit={() => {}} validation={validation} data-testid="form" errorClass={errorClass}>
+    <Form
+      onSubmit={() => {}}
+      validation={validation}
+      data-testid="form"
+      classes={{ field: { error: errorClass, invalid: 'is-invalid' } }}
+    >
       <Text name="profile.firstName" />
       <FieldError name="profile.firstName" data-testid="error" />
     </Form>,
@@ -208,7 +213,12 @@ test('set invalidClass -> submit', () => {
   });
   const invalidClass = 'foo';
   const { getByTestId } = render(
-    <Form onSubmit={() => {}} validation={validation} data-testid="form" invalidClass={invalidClass}>
+    <Form
+      onSubmit={() => {}}
+      validation={validation}
+      data-testid="form"
+      classes={{ field: { error: 'is-error', invalid: invalidClass } }}
+    >
       <Text name="profile.firstName" data-testid="input" />
     </Form>,
   );
