@@ -37,6 +37,30 @@ export interface GroupInterface {
   fields: string[];
 }
 
+export interface ClassesInterface {
+  field: {
+    error: string;
+    invalid: string;
+  };
+  fieldGroup: {
+    active: string;
+    errors: string;
+    touched: string;
+  };
+}
+
+const defaultClasses: ClassesInterface = {
+  field: {
+    error: 'invalid-feedback',
+    invalid: 'is-invalid',
+  },
+  fieldGroup: {
+    active: 'active',
+    errors: 'is-invalid',
+    touched: 'is-touched',
+  },
+} as const;
+
 export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setTouched: (name: string, callback?: () => void) => void;
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
@@ -44,8 +68,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   removeValue: (name: string) => any;
   getErrors: (name: string) => ValidationErrorsInterface | ValidationErrorType;
   setErrors: (name: string, value: ValidationErrorType, callback?: () => void) => void;
-  getErrorClass: () => string | undefined;
-  getInvalidClass: () => string | undefined;
+  getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface) => ClassesInterface[T];
   getAllValues: () => Values;
   getAllErrors: () => ValidationErrorsInterface;
   setAllErrors: (errors: ValidationErrorsInterface, callback?: () => void) => void;
@@ -78,7 +101,10 @@ export interface FormProps<Values>
   onTouch?: (api: FormApiInterface<Values>) => void;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
+  classes?: Partial<ClassesInterface>;
+  /** @deprecated use classes instead */
   errorClass?: string;
+  /** @deprecated use classes instead */
   invalidClass?: string;
 }
 
@@ -98,15 +124,22 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     onError: undefined,
     onChange: undefined,
     validation: undefined,
-    invalidClass: 'is-invalid',
-    errorClass: 'invalid-feedback',
+    classes: defaultClasses,
+    invalidClass: undefined,
+    errorClass: undefined,
   };
 
-  constructor(props: any) {
+  constructor(props: FormProps<Values>) {
     super(props);
-    const { defaultValues } = props;
+    const { defaultValues, invalidClass, errorClass } = props;
+    if (invalidClass) {
+      console.warn('`invalidClass` is deprecated, use `classes` instead');
+    }
+    if (errorClass) {
+      console.warn('`errorClass` is deprecated, use `classes` instead');
+    }
     this.state = {
-      values: _.cloneDeep(defaultValues),
+      values: _.cloneDeep(defaultValues) as Values,
       errors: {},
       disabled: [],
       groups: [],
@@ -227,13 +260,21 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         };
       }, callback);
     },
-    getErrorClass: (): string | undefined => {
-      const { errorClass } = this.props;
-      return errorClass;
-    },
-    getInvalidClass: (): string | undefined => {
-      const { invalidClass } = this.props;
-      return invalidClass;
+    getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface): ClassesInterface[T] => {
+      const { classes, errorClass, invalidClass } = this.props;
+      const mergedClasses: ClassesInterface = {
+        ...defaultClasses,
+        ...(classes || {}),
+      };
+      // TODO delete it in v.3
+      if (errorClass) {
+        mergedClasses.field.error = errorClass;
+      }
+      // TODO delete it in v.3
+      if (invalidClass) {
+        mergedClasses.field.invalid = invalidClass;
+      }
+      return mergedClasses[name] as ClassesInterface[T];
     },
     getAllValues: (): Values => {
       const { values } = this.state;
@@ -414,8 +455,9 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       onChange,
       onTouch,
       validation,
-      errorClass,
+      classes,
       invalidClass,
+      errorClass,
       ...props
     } = this.props;
     return (
