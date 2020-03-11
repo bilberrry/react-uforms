@@ -102,6 +102,10 @@ export interface FormProps<Values>
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   classes?: Partial<ClassesInterface>;
+  /** @deprecated use classes instead */
+  errorClass?: string;
+  /** @deprecated use classes instead */
+  invalidClass?: string;
 }
 
 export interface FormState<Values extends ValuesType = ValuesType> {
@@ -121,13 +125,21 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     onChange: undefined,
     validation: undefined,
     classes: defaultClasses,
+    invalidClass: undefined,
+    errorClass: undefined,
   };
 
-  constructor(props: any) {
+  constructor(props: FormProps<Values>) {
     super(props);
-    const { defaultValues } = props;
+    const { defaultValues, invalidClass, errorClass } = props;
+    if (invalidClass) {
+      console.warn('`invalidClass` is deprecated, use `classes` instead');
+    }
+    if (errorClass) {
+      console.warn('`errorClass` is deprecated, use `classes` instead');
+    }
     this.state = {
-      values: _.cloneDeep(defaultValues),
+      values: _.cloneDeep(defaultValues) as Values,
       errors: {},
       disabled: [],
       groups: [],
@@ -249,11 +261,19 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       }, callback);
     },
     getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface): ClassesInterface[T] => {
-      const { classes } = this.props;
+      const { classes, errorClass, invalidClass } = this.props;
       const mergedClasses: ClassesInterface = {
         ...defaultClasses,
         ...(classes || {}),
       };
+      // TODO delete it in v.3
+      if (errorClass) {
+        mergedClasses.field.error = errorClass;
+      }
+      // TODO delete it in v.3
+      if (invalidClass) {
+        mergedClasses.field.invalid = invalidClass;
+      }
       return mergedClasses[name] as ClassesInterface[T];
     },
     getAllValues: (): Values => {
@@ -427,7 +447,19 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
   };
 
   render() {
-    const { children, defaultValues, onSubmit, onError, onChange, onTouch, validation, classes, ...props } = this.props;
+    const {
+      children,
+      defaultValues,
+      onSubmit,
+      onError,
+      onChange,
+      onTouch,
+      validation,
+      classes,
+      invalidClass,
+      errorClass,
+      ...props
+    } = this.props;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
