@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import { ContextApi, ContextForm } from './form-context';
 import { GroupInterface } from './form';
 
-export interface FieldGroupsProps extends Omit<React.HTMLProps<HTMLUListElement>, 'children'> {
+export interface FieldGroupNavProps extends Omit<React.HTMLProps<HTMLUListElement>, 'children'> {
   onClickGroup?: (group: GroupInterface) => void;
   children?: undefined;
 }
 
-const FieldGroupsComponent: React.FC<FieldGroupsProps> = ({ onClickGroup, ...props }) => {
+const FieldGroupsComponent: React.FC<FieldGroupNavProps> = ({ onClickGroup, ...props }) => {
   const api = useContext(ContextApi);
   useContext(ContextForm);
   if (!api) {
