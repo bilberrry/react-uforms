@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup } from '@testing-library/react';
-import { Form, Text, Validator, FieldGroup, FormApiInterface, FieldGroups } from '../index';
+import { Form, Text, Validator, FieldGroup, FieldGroupNav } from '../index';
 
 afterEach(() => {
   cleanup();
@@ -11,7 +11,7 @@ afterEach(() => {
 test('renders without crashing', () => {
   const { unmount } = render(
     <Form onSubmit={() => {}}>
-      <FieldGroups />
+      <FieldGroupNav />
       <FieldGroup name="group1">
         <Text name="profile.firstName" />
       </FieldGroup>
@@ -29,7 +29,7 @@ const renderForm = () => {
   return render(
     <Form onSubmit={() => {}} validation={validation} data-testid="form">
       <>
-        <FieldGroups data-testid="groups" />
+        <FieldGroupNav data-testid="groups" />
         <FieldGroup name="group1">
           <Text name="profile.firstName" data-testid="inputFirstName" />
           <Text name="profile.middleName" data-testid="inputMiddleName" />

@@ -41,4 +41,4 @@ const FieldGroupsComponent: React.FC<FieldGroupsProps> = ({ onClickGroup, ...pro
 
 FieldGroupsComponent.displayName = 'FieldGroups';
 
-export const FieldGroups = FieldGroupsComponent;
+export const FieldGroupNav = FieldGroupsComponent;
