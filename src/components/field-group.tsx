@@ -22,7 +22,7 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({ name, children, defaul
   const isVisible = group ? group.isActive : defaultActive;
   const newStyle: CSSProperties = {
     ...style,
-    ...(isVisible ? {} : { visibility: 'hidden' }),
+    ...(isVisible ? {} : { display: 'none' }),
   };
   return (
     <ContextFieldGroup.Provider value={name}>
