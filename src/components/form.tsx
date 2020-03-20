@@ -370,16 +370,18 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           allGroups = allGroups.map(i => ({ ...i, isActive: false }));
         }
         if (updatedGroup.isTouched) {
+          let hasErrors = false;
           for (const i in updatedGroup.fields) {
             const fieldErrors = this.api.getErrors(updatedGroup.fields[i]);
             if (fieldErrors && fieldErrors.length > 0) {
-              updatedGroup = {
-                ...updatedGroup,
-                hasErrors: true,
-              };
+              hasErrors = true;
               break;
             }
           }
+          updatedGroup = {
+            ...updatedGroup,
+            hasErrors,
+          };
         }
         if (selectedGroupIndex > -1) {
           allGroups[selectedGroupIndex] = updatedGroup;
