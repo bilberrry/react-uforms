@@ -24,7 +24,7 @@ const FieldGroupsComponent: React.FC<FieldGroupNavProps> = ({ onClickGroup, ...p
           className={classNames({
             [errors]: group.hasErrors,
             [active]: group.isActive,
-            [touched]: group.isActive,
+            [touched]: group.isTouched,
           })}
           onClick={() => {
             if (onClickGroup) {
