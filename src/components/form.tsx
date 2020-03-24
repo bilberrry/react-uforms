@@ -198,7 +198,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         if (callback) {
           callback();
         }
-        if (group && !group.isTouched) {
+        if (group) {
           this.api.setGroupTouched(group.name);
         }
       };
