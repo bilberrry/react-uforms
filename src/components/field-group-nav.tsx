@@ -15,7 +15,7 @@ const FieldGroupsComponent: React.FC<FieldGroupNavProps> = ({ onClickGroup, ...p
     console.error(`Could not found Form API. Make sure <FieldGroups/> is in the <Form/>.`);
     return null;
   }
-  const { errors, active, touched } = api.getClasses<'fieldGroup'>('fieldGroup');
+  const { errors, active, touched, completed } = api.getClasses<'fieldGroup'>('fieldGroup');
   return (
     <ul {...props}>
       {api.getGroups().map(group => (
@@ -25,6 +25,7 @@ const FieldGroupsComponent: React.FC<FieldGroupNavProps> = ({ onClickGroup, ...p
             [errors]: group.hasErrors,
             [active]: group.isActive,
             [touched]: group.isTouched,
+            [completed]: group.isCompleted,
           })}
           onClick={() => {
             if (onClickGroup) {

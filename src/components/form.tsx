@@ -34,6 +34,7 @@ export interface GroupInterface {
   hasErrors: boolean;
   isTouched: boolean;
   isActive: boolean;
+  isCompleted: boolean;
   fields: string[];
 }
 
@@ -46,6 +47,7 @@ export interface ClassesInterface {
     active: string;
     errors: string;
     touched: string;
+    completed: string;
   };
 }
 
@@ -58,6 +60,7 @@ const defaultClasses: ClassesInterface = {
     active: 'active',
     errors: 'is-invalid',
     touched: 'is-touched',
+    completed: 'is-completed',
   },
 } as const;
 
@@ -347,6 +350,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           isActive: false,
           hasErrors: false,
           isTouched: false,
+          isCompleted: false,
           fields: [],
         };
         let allGroups: GroupsInterface = groups;
@@ -381,6 +385,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           updatedGroup = {
             ...updatedGroup,
             hasErrors,
+            isCompleted: !hasErrors,
           };
         }
         if (selectedGroupIndex > -1) {
