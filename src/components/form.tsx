@@ -69,6 +69,8 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   setValue: (name: string, value: ValueType, callback?: () => void) => void;
   getValue: (name: string) => ValueType;
   removeValue: (name: string) => any;
+  getValidator: (name: string) => ValidatorInterface[] | void;
+  validate: (name: string) => ValidationErrorType | void;
   getErrors: (name: string) => ValidationErrorsInterface | ValidationErrorType;
   setErrors: (name: string, value: ValidationErrorType, callback?: () => void) => void;
   getClasses: <T extends keyof ClassesInterface>(name: keyof ClassesInterface) => ClassesInterface[T];
@@ -251,6 +253,19 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       const { values } = this.state;
       return _.omit(values, name);
     },
+    getValidator: (name: string): ValidatorInterface[] | void => {
+      const { validation } = this.props;
+      if (validation) {
+        return _.get(validation(this.api), name) as ValidatorInterface[];
+      }
+    },
+    validate: (name: string): ValidationErrorType | void => {
+      const validator = this.api.getValidator(name);
+      const value = this.api.getValue(name);
+      if (validator) {
+        return this.validateValue(validator, value);
+      }
+    },
     getErrors: (name: string): ValidationErrorsInterface | ValidationErrorType => {
       const { errors } = this.state;
       return _.get(errors, name);
@@ -376,7 +391,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         if (updatedGroup.isTouched) {
           let hasErrors = false;
           for (const i in updatedGroup.fields) {
-            const fieldErrors = this.api.getErrors(updatedGroup.fields[i]);
+            const fieldErrors = this.api.validate(updatedGroup.fields[i]);
             if (fieldErrors && fieldErrors.length > 0) {
               hasErrors = true;
               break;

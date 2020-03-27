@@ -97,7 +97,7 @@ test('touch group', () => {
   });
 });
 
-test('check errors', () => {
+test('check errors - touch field with validator', () => {
   let formApi: null | FormApiInterface = null;
   const getByTestId = renderForm(api => {
     formApi = api;
@@ -105,6 +105,22 @@ test('check errors', () => {
   const inputFirstName = getByTestId('inputFirstName');
   inputFirstName.focus();
   inputFirstName.blur();
+  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+    hasErrors: false,
+  });
+  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+    hasErrors: true,
+  });
+});
+
+test('check errors - touch field without validator', () => {
+  let formApi: null | FormApiInterface = null;
+  const getByTestId = renderForm(api => {
+    formApi = api;
+  });
+  const inputMiddleName = getByTestId('inputMiddleName');
+  inputMiddleName.focus();
+  inputMiddleName.blur();
   expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
     hasErrors: false,
   });
