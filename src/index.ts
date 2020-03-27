@@ -13,5 +13,6 @@ export * from './components/fields/select';
 export * from './components/fields/text';
 export * from './components/fields/text-area';
 export * from './components/fields/custom-field';
+export * from './components/form-context';
 
 export { Validator };
