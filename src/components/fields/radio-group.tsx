@@ -20,6 +20,7 @@ const RadioGroupComponent: React.FC<RadioGroupProps & FieldPassedProps> = ({
   name,
   children,
   getValue,
+  getErrors,
   setValue,
   setTouched,
   onChange,

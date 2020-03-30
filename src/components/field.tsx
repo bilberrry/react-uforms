@@ -1,6 +1,7 @@
 import React, { Fragment, useContext, useEffect } from 'react';
 import { ContextApi, ContextFieldGroup, ContextForm } from './form-context';
 import { ValueType } from './validator';
+import { ValidationErrorType } from './form';
 
 export interface FieldProps {
   name: string;
@@ -14,6 +15,7 @@ export interface FieldPassedProps {
   disabled: boolean;
   className: string;
   getValue: () => ValueType;
+  getErrors: () => ValidationErrorType;
   setValue: (value: ValueType, callback?: () => void) => void;
   setTouched: (callback?: () => void) => void;
 }
@@ -49,16 +51,18 @@ export const Field = <P extends FieldProps>(
         }
       };
     }, [name]);
+    useEffect(() => {
+      if (disabled) {
+        api.setDisabled(name);
+      } else {
+        api.removeDisabled(name);
+      }
+    }, [disabled]);
     const errors = api.getErrors(name);
     const classNames = className ? [className] : [];
     const { invalid: invalidClassName, error: errorClassName } = api.getClasses<'field'>('field');
     if (errors && errors.length > 0 && invalidClassName) {
       classNames.push(invalidClassName);
-    }
-    if (disabled) {
-      api.setDisabled(name);
-    } else {
-      api.removeDisabled(name);
     }
 
     return (
@@ -69,6 +73,7 @@ export const Field = <P extends FieldProps>(
           disabled={disabled}
           className={classNames.join(' ')}
           getValue={() => api.getValue(name)}
+          getErrors={() => api.getErrors(name)}
           setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
           setTouched={(callback?: () => void) => api.setTouched(name, callback)}
         />

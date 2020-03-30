@@ -8,6 +8,7 @@ export interface CheckboxProps extends Omit<React.HTMLProps<HTMLInputElement>, '
 
 const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({
   getValue,
+  getErrors,
   setValue,
   setTouched,
   onBlur,

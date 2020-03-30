@@ -14,6 +14,7 @@ export interface SelectProps extends React.HTMLProps<HTMLSelectElement> {
 
 const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({
   getValue,
+  getErrors,
   setValue,
   setTouched,
   options,

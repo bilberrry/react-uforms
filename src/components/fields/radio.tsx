@@ -8,6 +8,7 @@ export interface RadioProps extends Omit<React.HTMLProps<HTMLInputElement>, 'val
 
 const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({
   getValue,
+  getErrors,
   setValue,
   setTouched,
   onBlur,

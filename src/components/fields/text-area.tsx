@@ -8,6 +8,7 @@ export interface TextAreaProps extends Omit<React.HTMLProps<HTMLTextAreaElement>
 
 const TextAreaComponent: React.FC<TextAreaProps & FieldPassedProps> = ({
   getValue,
+  getErrors,
   setValue,
   setTouched,
   onBlur,

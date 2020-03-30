@@ -8,6 +8,7 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
 
 const TextComponent: React.FC<TextProps & FieldPassedProps> = ({
   getValue,
+  getErrors,
   setValue,
   setTouched,
   onBlur,

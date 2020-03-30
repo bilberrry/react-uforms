@@ -323,18 +323,20 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       return disabled;
     },
     setDisabled: (name: string): void => {
-      const { disabled } = this.state;
-
-      if (!disabled.includes(name)) {
-        this.setState({ disabled: [...disabled, name] });
-      }
+      this.setState(({ disabled }) => {
+        if (!disabled.includes(name)) {
+          return { disabled: [...disabled, name] };
+        }
+        return { disabled };
+      });
     },
     removeDisabled: (name: string): void => {
-      const { disabled } = this.state;
-
-      if (disabled.includes(name)) {
-        this.setState({ disabled: disabled.filter(i => i !== name) });
-      }
+      this.setState(({ disabled }) => {
+        if (disabled.includes(name)) {
+          return { disabled: disabled.filter(i => i !== name) };
+        }
+        return { disabled };
+      });
     },
     isDisabled: (name: string): boolean => {
       const { disabled } = this.state;
