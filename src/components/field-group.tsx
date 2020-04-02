@@ -4,9 +4,17 @@ export interface FieldGroupProps extends React.HTMLProps<HTMLDivElement> {
   name: string;
   defaultActive?: boolean;
   children: ReactNode;
+  renderOnActive?: boolean;
 }
 
-const FieldGroupComponent: React.FC<FieldGroupProps> = ({ name, children, defaultActive, style, ...props }) => {
+const FieldGroupComponent: React.FC<FieldGroupProps> = ({
+  name,
+  children,
+  defaultActive,
+  style,
+  renderOnActive,
+  ...props
+}) => {
   const api = useContext(ContextApi);
   if (!api) {
     console.error(`Could not found Form API. Make sure <FieldGroup/> is in the <Form/>.`);
@@ -26,8 +34,8 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({ name, children, defaul
   };
   return (
     <ContextFieldGroup.Provider value={name}>
-      <div style={newStyle} {...props}>
-        {children}
+      <div style={renderOnActive ? style : newStyle} {...props}>
+        {renderOnActive && !isVisible ? null : children}
       </div>
     </ContextFieldGroup.Provider>
   );
