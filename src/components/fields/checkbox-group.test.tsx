@@ -170,3 +170,15 @@ test('set onBlur attribute -> focus input -> blur input', () => {
   expect(inputCompany).not.toHaveFocus();
   expect(blurCompany).toHaveBeenCalled();
 });
+
+test('without form', () => {
+  const log = jest.spyOn(global.console, 'error');
+  render(
+    <CheckboxGroup name="profile.subscription">
+      <CheckboxGroupItem value="news" data-testid="input-news" />
+      <CheckboxGroupItem value="updates" data-testid="input-updates" />
+      <CheckboxGroupItem value="company" data-testid="input-company" />
+    </CheckboxGroup>,
+  );
+  expect(log).toHaveBeenCalledWith('Could not found Form API. Make sure <CheckboxGroup/> is in the <Form/>.');
+});
