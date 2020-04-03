@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { Form, RadioGroup, RadioGroupItem } from '../../index';
+import { CheckboxGroup, CheckboxGroupItem, Form, RadioGroup, RadioGroupItem } from '../../index';
 
 afterEach(() => {
   cleanup();
@@ -138,4 +138,15 @@ test('set onBlur attribute -> focus input -> blur input', () => {
   expect(inputFemale).toHaveFocus();
   inputFemale.blur();
   expect(blurFemale).toHaveBeenCalled();
+});
+
+test('without form', () => {
+  const log = jest.spyOn(global.console, 'error');
+  render(
+    <RadioGroup name="profile.gender">
+      <RadioGroupItem value="male" data-testid="input-male" />
+      <RadioGroupItem value="female" data-testid="input-female" />
+    </RadioGroup>,
+  );
+  expect(log).toHaveBeenCalledWith('Could not found Form API. Make sure <RadioGroup/> is in the <Form/>.');
 });

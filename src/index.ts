@@ -6,6 +6,8 @@ export * from './components/field-group-nav';
 export * from './components/field';
 
 export * from './components/fields/checkbox';
+export * from './components/fields/checkbox-group';
+export * from './components/fields/checkbox-group-item';
 export * from './components/fields/radio-group';
 export * from './components/fields/radio-group-item';
 export * from './components/fields/radio';
