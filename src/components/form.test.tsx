@@ -263,3 +263,71 @@ test('set deprecated invalidClass -> submit', () => {
   fireEvent.submit(form);
   expect(input).toHaveClass(invalidClass);
 });
+
+test('div form: renders without crashing', () => {
+  const { unmount } = render(
+    <Form onSubmit={() => {}} element="div">
+      <div />
+    </Form>,
+  );
+  unmount();
+});
+
+test('div form: set default values -> change input -> submit form -> get values difference', () => {
+  const defaultValues = {
+    id: 2,
+    email: 'foo@example.com',
+    profile: {
+      firstName: 'John',
+      lastName: 'Brown',
+      bio: 'Travel Blogger',
+    },
+    createdAt: '2018-04-25T20:36:02+00:00',
+  };
+  let diffValues = null;
+  let diffValuesLevel1 = null;
+  const { getByTestId } = render(
+    <Form
+      defaultValues={defaultValues}
+      onSubmit={(_, api) => {
+        diffValues = api.getValuesDiff();
+        diffValuesLevel1 = api.getValuesDiff(1);
+      }}
+      data-testid="form"
+    >
+      {api => (
+        <Fragment>
+          <Text name="id" disabled />
+          <Text name="email" data-testid="email" />
+          <Text name="profile.firstName" data-testid="first-name" />
+          <Text name="profile.lastName" />
+          <button type="button" onClick={() => api.submit()} data-testid="button" />
+        </Fragment>
+      )}
+    </Form>,
+  );
+  const submit = getByTestId('button');
+  const email = getByTestId('email');
+  const firstName = getByTestId('first-name');
+  fireEvent.click(submit);
+  expect(diffValues).toEqual({});
+  fireEvent.change(email, { target: { value: 'bar@example.com' } });
+  fireEvent.click(submit);
+  expect(diffValues).toEqual({ email: 'bar@example.com' });
+  fireEvent.change(firstName, { target: { value: 'Bill' } });
+  fireEvent.click(submit);
+  expect(diffValues).toEqual({
+    email: 'bar@example.com',
+    profile: {
+      firstName: 'Bill',
+    },
+  });
+  expect(diffValuesLevel1).toEqual({
+    email: 'bar@example.com',
+    profile: {
+      firstName: 'Bill',
+      lastName: 'Brown',
+      bio: 'Travel Blogger',
+    },
+  });
+});

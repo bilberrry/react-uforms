@@ -98,7 +98,10 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
 }
 
 export interface FormProps<Values>
-  extends Omit<React.HTMLProps<HTMLFormElement>, 'onChange' | 'onSubmit' | 'onError' | 'defaultValues'> {
+  extends Omit<
+    React.HTMLProps<HTMLFormElement & HTMLDivElement>,
+    'onChange' | 'onSubmit' | 'onError' | 'defaultValues'
+  > {
   children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
   defaultValues?: Values;
@@ -107,6 +110,7 @@ export interface FormProps<Values>
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   classes?: Partial<ClassesInterface>;
+  element?: 'form' | 'div';
   /** @deprecated use classes instead */
   errorClass?: string;
   /** @deprecated use classes instead */
@@ -132,6 +136,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     classes: defaultClasses,
     invalidClass: undefined,
     errorClass: undefined,
+    element: 'form',
   };
 
   constructor(props: FormProps<Values>) {
@@ -482,14 +487,20 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       classes,
       invalidClass,
       errorClass,
+      element,
       ...props
     } = this.props;
+    const childrenComponent = typeof children === 'function' ? children(this.api) : children;
     return (
       <ContextApi.Provider value={this.api}>
         <ContextForm.Provider value={this.state}>
-          <form {...props} onSubmit={this.onSubmit}>
-            {typeof children === 'function' ? children(this.api) : children}
-          </form>
+          {element === 'div' ? (
+            <div {...props}>{childrenComponent}</div>
+          ) : (
+            <form {...props} onSubmit={this.onSubmit}>
+              {childrenComponent}
+            </form>
+          )}
         </ContextForm.Provider>
       </ContextApi.Provider>
     );
