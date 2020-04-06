@@ -5,6 +5,7 @@ export interface FieldGroupProps extends React.HTMLProps<HTMLDivElement> {
   defaultActive?: boolean;
   children: ReactNode;
   renderOnActive?: boolean;
+  touchOnActive?: boolean;
 }
 
 const FieldGroupComponent: React.FC<FieldGroupProps> = ({
@@ -13,6 +14,7 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({
   defaultActive,
   style,
   renderOnActive,
+  touchOnActive,
   ...props
 }) => {
   const api = useContext(ContextApi);
@@ -21,7 +23,7 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({
     return null;
   }
   useEffect(() => {
-    api.upsertGroup(name, { isActive: !!defaultActive });
+    api.upsertGroup(name, { isActive: !!defaultActive, isTouched: !!touchOnActive });
     return () => {
       api.removeGroup(name);
     };
