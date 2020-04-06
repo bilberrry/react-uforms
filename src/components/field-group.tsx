@@ -14,7 +14,6 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({
   defaultActive,
   style,
   renderOnActive,
-  touchOnActive,
   ...props
 }) => {
   const api = useContext(ContextApi);
@@ -23,7 +22,7 @@ const FieldGroupComponent: React.FC<FieldGroupProps> = ({
     return null;
   }
   useEffect(() => {
-    api.upsertGroup(name, { isActive: !!defaultActive, isTouched: !!touchOnActive });
+    api.upsertGroup(name, { isActive: !!defaultActive });
     return () => {
       api.removeGroup(name);
     };

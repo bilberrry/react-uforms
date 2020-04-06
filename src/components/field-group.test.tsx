@@ -65,7 +65,7 @@ test('get groups', () => {
       name: 'group2',
       hasErrors: false,
       isTouched: false,
-      isCompleted: false,
+      isCompleted: true,
       isActive: true,
       fields: ['profile.lastName'],
     },

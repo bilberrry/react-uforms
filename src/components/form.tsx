@@ -395,7 +395,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         if (!group.isActive && updatedGroup.isActive) {
           allGroups = allGroups.map(i => ({ ...i, isActive: false }));
         }
-        if (updatedGroup.isTouched) {
+        if (updatedGroup.isTouched || updatedGroup.isActive) {
           let hasErrors = false;
           for (const i in updatedGroup.fields) {
             const fieldErrors = this.api.validate(updatedGroup.fields[i]);
