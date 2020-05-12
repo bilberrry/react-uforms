@@ -150,6 +150,7 @@ test('change input -> unsure onChange is called ', () => {
   const input = getByTestId('input');
   fireEvent.change(input, { target: { value: 'Bill' } });
   expect(onChange).toHaveBeenCalled();
+  expect(onChange.mock.calls[0][1]).toBe('profile.firstName');
 });
 
 test('touch input -> unsure onTouch is called ', () => {
