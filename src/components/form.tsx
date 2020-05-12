@@ -105,7 +105,7 @@ export interface FormProps<Values>
   children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
   defaultValues?: Values;
-  onChange?: (api: FormApiInterface<Values>) => void;
+  onChange?: (api: FormApiInterface<Values>, changedField: string) => void;
   onTouch?: (api: FormApiInterface<Values>) => void;
   onError?: (errors: ValidationErrorsInterface, api: FormApiInterface<Values>) => void;
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
@@ -242,7 +242,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         },
         () => {
           if (onChange) {
-            onChange(this.api);
+            onChange(this.api, name);
           }
           if (callback) {
             callback();
