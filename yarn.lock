@@ -1194,6 +1194,14 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/react@^16.8.19":
+  version "16.9.34"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.34.tgz#f7d5e331c468f53affed17a8a4d488cd44ea9349"
+  integrity sha512-8AJlYMOfPe1KGLKyHpflCg5z46n0b5DbRfqDksxBLBTUpB75ypDBAO9eCUcjNwE6LCUslwTz00yyG/X9gaVtow==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
@@ -2888,6 +2896,11 @@ ignore@^5.1.1:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.4.tgz#84b7b3dbe64552b6ef0eca99f6743dbec6d97adf"
   integrity sha512-MzbUSahkTW1u7JpKKjY7LCARd1fU5W2rLdxlM4kdkayuCwZImjkpluF9CM1aLewYJguPDqewLam18Y6AU69A8A==
+
+immer@^3.1.2:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-3.3.0.tgz#ee7cf3a248d5dd2d4eedfbe7dfc1e9be8c72041d"
+  integrity sha512-vlWRjnZqoTHuEjadquVHK3GxsXe1gNoATffLEA8Qbrdd++Xb+wHEFiWtwAKTscMBoi1AsvEMXhYRzAXA8Ex9FQ==
 
 import-fresh@^2.0.0:
   version "2.0.0"
@@ -4618,6 +4631,11 @@ react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
 
+react-tracked@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-tracked/-/react-tracked-1.4.2.tgz#ff5940ab367a18da285729865465842cb927a9bf"
+  integrity sha512-Rjc8tdXPP6peuyph2wTBAQVm/7K0EH1uEmxcWCF072o9Z42mI72YZtTY0KnUB6iT6xEBM/ri35GzhgC/pxNTRg==
+
 react@^16.12.0:
   version "16.13.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.0.tgz#d046eabcdf64e457bbeed1e792e235e1b9934cf7"
@@ -5644,6 +5662,19 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
+
+use-methods@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/use-methods/-/use-methods-0.5.1.tgz#13fcb98169657b55287572514601a88e2d7112bc"
+  integrity sha512-caewH7PPti0FAruT/AA6tsSd23+MrIPg+UN2nPlNf/DBZfRnMGkFvJu6Pqqn5Y6gWqOIZyL3pakUof414eK0QA==
+  dependencies:
+    "@types/react" "^16.8.19"
+    immer "^3.1.2"
+
+use-reducer-async@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/use-reducer-async/-/use-reducer-async-2.0.1.tgz#260bf141f6f0cfcefe4a777519bf5fcedced278d"
+  integrity sha512-bO0+d658kP4vD6wahKqcsf+bl5YzJZbrQYsssxOtvLAkqsclmQcjpkp9BoRKSdIL1j3ZzszvzQ/GeXQeD1x/Rw==
 
 use@^3.1.0:
   version "3.1.1"
