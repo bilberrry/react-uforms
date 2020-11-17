@@ -42,7 +42,10 @@
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "react-tracked": "^1.4.2",
+    "use-methods": "^0.5.1",
+    "use-reducer-async": "^2.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
