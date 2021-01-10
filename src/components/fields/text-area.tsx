@@ -19,7 +19,7 @@ const TextAreaComponent: React.FC<TextAreaProps & FieldPassedProps> = ({
   <textarea
     {...props}
     value={valueToString(getValue())}
-    onChange={event => {
+    onChange={(event) => {
       event.persist();
       const value = event.target.value === '' ? emptyValue : event.target.value;
       setValue(value, () => {
@@ -28,7 +28,7 @@ const TextAreaComponent: React.FC<TextAreaProps & FieldPassedProps> = ({
         }
       });
     }}
-    onBlur={event => {
+    onBlur={(event) => {
       event.persist();
       setTouched(() => {
         if (onBlur) {

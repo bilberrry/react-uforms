@@ -8,7 +8,7 @@ export interface RadioGroupItemProps extends Omit<React.HTMLProps<HTMLInputEleme
 
 const RadioGroupItemComponent: React.FC<RadioGroupItemProps> = ({ value, onBlur, ...props }) => (
   <ContextRadioGroup.Consumer>
-    {radioApi => {
+    {(radioApi) => {
       if (!radioApi) {
         console.error('Could not found Radio Group API. Make sure <RadioGroupItem/> is in the <RadioGroup/>.');
         return null;
@@ -22,7 +22,7 @@ const RadioGroupItemComponent: React.FC<RadioGroupItemProps> = ({ value, onBlur,
           checked={value === getValue()}
           type="radio"
           onChange={onChange}
-          onBlur={event => {
+          onBlur={(event) => {
             event.persist();
             setTouched(() => {
               if (onBlur) {

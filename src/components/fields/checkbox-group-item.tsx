@@ -8,7 +8,7 @@ export interface CheckboxGroupItemProps extends Omit<React.HTMLProps<HTMLInputEl
 
 const CheckboxGroupItemComponent: React.FC<CheckboxGroupItemProps> = ({ value, onBlur, ...props }) => (
   <ContextCheckboxGroup.Consumer>
-    {checkboxApi => {
+    {(checkboxApi) => {
       if (!checkboxApi) {
         console.error('Could not found Checkbox Group API. Make sure <CheckboxGroupItem/> is in the <CheckboxGroup/>.');
         return null;
@@ -24,7 +24,7 @@ const CheckboxGroupItemComponent: React.FC<CheckboxGroupItemProps> = ({ value, o
           checked={checked.length > 0 && getValue().includes(value)}
           type="checkbox"
           onChange={onChange}
-          onBlur={event => {
+          onBlur={(event) => {
             event.persist();
             setTouched(() => {
               if (onBlur) {

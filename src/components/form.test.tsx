@@ -295,7 +295,7 @@ test('div form: set default values -> change input -> submit form -> get values 
       }}
       data-testid="form"
     >
-      {api => (
+      {(api) => (
         <Fragment>
           <Text name="id" disabled />
           <Text name="email" data-testid="email" />

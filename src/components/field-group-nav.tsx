@@ -18,7 +18,7 @@ const FieldGroupsComponent: React.FC<FieldGroupNavProps> = ({ onClickGroup, ...p
   const { errors, active, touched, completed } = api.getClasses<'fieldGroup'>('fieldGroup');
   return (
     <ul {...props}>
-      {api.getGroups().map(group => (
+      {api.getGroups().map((group) => (
         <li
           key={group.name}
           className={classNames({

@@ -7,7 +7,7 @@ const FieldErrorComponent: React.FC<{
   [key: string]: any;
 }> = ({ name, className, ...props }) => (
   <ContextApi.Consumer>
-    {api => (
+    {(api) => (
       <ContextForm.Consumer>
         {() => {
           if (!api) {

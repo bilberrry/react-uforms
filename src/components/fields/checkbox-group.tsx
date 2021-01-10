@@ -29,7 +29,7 @@ const CheckboxGroupComponent: React.FC<CheckboxGroupProps & FieldPassedProps> = 
     name,
     getValue,
     setTouched,
-    onChange: event => {
+    onChange: (event) => {
       event.persist();
       const rawValue = event.currentTarget.getAttribute('value');
       const value = rawValue ? jsonToValue(rawValue) : null;

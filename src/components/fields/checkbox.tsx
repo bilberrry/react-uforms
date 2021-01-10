@@ -21,7 +21,7 @@ const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({
     {...props}
     checked={onValue === getValue()}
     type="checkbox"
-    onChange={event => {
+    onChange={(event) => {
       event.persist();
       setValue(event.target.checked ? onValue : offValue, () => {
         if (onChange) {
@@ -29,7 +29,7 @@ const CheckboxComponent: React.FC<CheckboxProps & FieldPassedProps> = ({
         }
       });
     }}
-    onBlur={event => {
+    onBlur={(event) => {
       event.persist();
       setTouched(() => {
         if (onBlur) {

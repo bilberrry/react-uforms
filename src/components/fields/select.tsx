@@ -25,7 +25,7 @@ const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({
   <select
     {...props}
     value={valueToJson(getValue())}
-    onChange={event => {
+    onChange={(event) => {
       event.persist();
       const { target } = event;
       const isNull = !target.options[target.selectedIndex].hasAttribute('value');
@@ -35,7 +35,7 @@ const SelectComponent: React.FC<SelectProps & FieldPassedProps> = ({
         }
       });
     }}
-    onBlur={event => {
+    onBlur={(event) => {
       event.persist();
       setTouched(() => {
         if (onBlur) {

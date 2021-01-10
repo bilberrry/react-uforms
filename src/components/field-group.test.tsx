@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from 'react';
+import React, { useState } from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup } from '@testing-library/react';
 import { Form, Text, Validator, FieldGroup, FormApiInterface } from '../index';
@@ -19,6 +19,31 @@ test('renders without crashing', () => {
   unmount();
 });
 
+const BaseForm: React.FC<any> = () => {
+  const [isHidden, hideGroup] = useState(false);
+  return (
+    <div>
+      {!isHidden && (
+        <FieldGroup name="group1">
+          <Text name="profile.firstName" data-testid="inputFirstName" />
+          <Text name="profile.middleName" data-testid="inputMiddleName" />
+        </FieldGroup>
+      )}
+      <FieldGroup name="group2" defaultActive={true}>
+        <Text name="profile.lastName" data-testid="inputLastName" />
+      </FieldGroup>
+      <button
+        onClick={() => {
+          hideGroup(true);
+        }}
+        data-testid="hideButton"
+      >
+        button
+      </button>
+    </div>
+  );
+};
+
 const renderForm = (resolve: (api: FormApiInterface) => void) => {
   const validation = () => ({
     profile: {
@@ -27,19 +52,9 @@ const renderForm = (resolve: (api: FormApiInterface) => void) => {
   });
   const { getByTestId } = render(
     <Form onSubmit={() => {}} validation={validation} data-testid="form">
-      {api => {
+      {(api) => {
         resolve(api);
-        return (
-          <>
-            <FieldGroup name="group1">
-              <Text name="profile.firstName" data-testid="inputFirstName" />
-              <Text name="profile.middleName" data-testid="inputMiddleName" />
-            </FieldGroup>
-            <FieldGroup name="group2" defaultActive={true}>
-              <Text name="profile.lastName" data-testid="inputLastName" />
-            </FieldGroup>
-          </>
-        );
+        return <BaseForm />;
       }}
     </Form>,
   );
@@ -48,7 +63,7 @@ const renderForm = (resolve: (api: FormApiInterface) => void) => {
 
 test('get groups', () => {
   let formApi: null | FormApiInterface = null;
-  renderForm(api => {
+  renderForm((api) => {
     formApi = api;
   });
   expect(formApi).not.toBeNull();
@@ -72,9 +87,29 @@ test('get groups', () => {
   ]);
 });
 
+test('unmount group', async () => {
+  let formApi: null | FormApiInterface = null;
+  const getByTestId = renderForm((api) => {
+    formApi = api;
+  });
+  const hideButton = getByTestId('hideButton');
+  hideButton.click();
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  expect(((formApi as unknown) as FormApiInterface).getGroups()).toEqual([
+    {
+      name: 'group2',
+      hasErrors: false,
+      isTouched: false,
+      isCompleted: true,
+      isActive: true,
+      fields: ['profile.lastName'],
+    },
+  ]);
+});
+
 test('touch group', () => {
   let formApi: null | FormApiInterface = null;
-  const getByTestId = renderForm(api => {
+  const getByTestId = renderForm((api) => {
     formApi = api;
   });
   const inputLastName = getByTestId('inputLastName');
@@ -99,7 +134,7 @@ test('touch group', () => {
 
 test('check errors - touch field with validator', () => {
   let formApi: null | FormApiInterface = null;
-  const getByTestId = renderForm(api => {
+  const getByTestId = renderForm((api) => {
     formApi = api;
   });
   const inputFirstName = getByTestId('inputFirstName');
@@ -115,7 +150,7 @@ test('check errors - touch field with validator', () => {
 
 test('check errors - touch field without validator', () => {
   let formApi: null | FormApiInterface = null;
-  const getByTestId = renderForm(api => {
+  const getByTestId = renderForm((api) => {
     formApi = api;
   });
   const inputMiddleName = getByTestId('inputMiddleName');
@@ -131,7 +166,7 @@ test('check errors - touch field without validator', () => {
 
 test('set active', () => {
   let formApi: null | FormApiInterface = null;
-  renderForm(api => {
+  renderForm((api) => {
     formApi = api;
   });
   ((formApi as unknown) as FormApiInterface).setGroupActive('group1');

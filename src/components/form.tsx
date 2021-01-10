@@ -159,7 +159,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
   validateValue = (validators: ValidatorInterface[], value: ValueType): string[] => {
     const errors: string[] = [];
 
-    validators.forEach(v => {
+    validators.forEach((v) => {
       const result = v(value);
       if (typeof result === 'string') {
         errors.push(result);
@@ -170,7 +170,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
   };
 
   validateForm = (result: ValidationResultInterface, obj: ValidationRulesInterface, path: string[] = []): void => {
-    Object.keys(obj).forEach(i => {
+    Object.keys(obj).forEach((i) => {
       const currentPath: string[] = [...path, i];
       const validator = obj[i];
       if (Array.isArray(validator)) {
@@ -338,7 +338,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     removeDisabled: (name: string): void => {
       this.setState(({ disabled }) => {
         if (disabled.includes(name)) {
-          return { disabled: disabled.filter(i => i !== name) };
+          return { disabled: disabled.filter((i) => i !== name) };
         }
         return { disabled };
       });
@@ -353,7 +353,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     getGroup: (name: string) => {
       const { groups } = this.state;
-      return groups.find(i => i.name === name);
+      return groups.find((i) => i.name === name);
     },
     getGroupByField: (name: string) => {
       const { groups } = this.state;
@@ -365,8 +365,13 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     upsertGroup: (name: string, params: Partial<GroupInterface> = {}, addField?: string, removeField?: string) => {
       this.setState(({ groups }) => {
-        const selectedGroup = groups.find(g => g.name === name);
-        const selectedGroupIndex = groups.findIndex(g => g.name === name);
+        const selectedGroup = groups.find((g) => g.name === name);
+        if (!selectedGroup && !addField && removeField) {
+          return {
+            groups,
+          };
+        }
+        const selectedGroupIndex = groups.findIndex((g) => g.name === name);
         const group: GroupInterface = selectedGroup || {
           name,
           isActive: false,
@@ -380,7 +385,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           ...group,
           ...params,
         };
-        if (addField && !updatedGroup.fields.find(i => i === addField)) {
+        if (addField && !updatedGroup.fields.find((i) => i === addField)) {
           updatedGroup = {
             ...updatedGroup,
             fields: [...updatedGroup.fields, addField],
@@ -389,11 +394,11 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         if (removeField) {
           updatedGroup = {
             ...updatedGroup,
-            fields: updatedGroup.fields.filter(i => i !== removeField),
+            fields: updatedGroup.fields.filter((i) => i !== removeField),
           };
         }
         if (!group.isActive && updatedGroup.isActive) {
-          allGroups = allGroups.map(i => ({ ...i, isActive: false }));
+          allGroups = allGroups.map((i) => ({ ...i, isActive: false }));
         }
         if (updatedGroup.isTouched || updatedGroup.isActive) {
           let hasErrors = false;
@@ -424,7 +429,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     removeGroup: (name: string) => {
       this.setState(({ groups }) => {
         return {
-          groups: groups.filter(i => i.name !== name),
+          groups: groups.filter((i) => i.name !== name),
         };
       });
     },

@@ -35,8 +35,9 @@ export const Field = <P extends FieldProps>(
     useContext(ContextForm);
     if (!api) {
       console.error(
-        `Could not found Form API. Make sure <${PassedComponent.displayName ||
-          PassedComponent.name}/> is in the <Form/>.`,
+        `Could not found Form API. Make sure <${
+          PassedComponent.displayName || PassedComponent.name
+        }/> is in the <Form/>.`,
       );
       return null;
     }

@@ -21,7 +21,7 @@ const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({
     value={valueToJson(getValue())}
     checked={value === getValue()}
     type="radio"
-    onChange={event => {
+    onChange={(event) => {
       event.persist();
       setValue(value, () => {
         if (onChange) {
@@ -29,7 +29,7 @@ const RadioComponent: React.FC<RadioProps & FieldPassedProps> = ({
         }
       });
     }}
-    onBlur={event => {
+    onBlur={(event) => {
       event.persist();
       setTouched(() => {
         if (onBlur) {
