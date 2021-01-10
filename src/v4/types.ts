@@ -17,6 +17,7 @@ export interface FieldInterface {
   isDisabled: boolean;
   isTouched: boolean;
   isValid: boolean;
+  isMounted: boolean;
   value: any;
   setters: FieldSetterInterface[];
   getters: FieldGetterInterface[];
@@ -25,7 +26,6 @@ export interface FieldInterface {
 }
 
 export interface FormStateInterface {
-  defaultValidators: {};
   defaultValues: {};
   fields: FieldInterface[];
   isValidating: boolean;
