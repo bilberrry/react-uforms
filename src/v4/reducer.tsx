@@ -3,7 +3,6 @@ import { createContainer } from 'react-tracked';
 import { FieldInterface, FormStateInterface } from './types';
 
 const initialState: FormStateInterface = {
-  defaultValidators: {},
   defaultValues: {},
   fields: [],
   isValidating: false,
@@ -17,7 +16,6 @@ type Action =
   | { type: 'SET_VALIDATING'; value: boolean }
   | { type: 'SET_TOUCHED'; value: boolean }
   | { type: 'SET_VALID'; value: boolean }
-  | { type: 'SET_DEFAULT_VALIDATORS'; validators: any }
   | { type: 'SET_DEFAULT_VALUES'; values: any }
   | { type: 'RESET' };
 
@@ -65,11 +63,6 @@ const reducer: Reducer<FormStateInterface, Action> = (state, action) => {
       return {
         ...state,
         isValid: action.value,
-      };
-    case 'SET_DEFAULT_VALIDATORS':
-      return {
-        ...state,
-        defaultValidators: action.validators,
       };
     case 'SET_DEFAULT_VALUES':
       return {

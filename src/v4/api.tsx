@@ -3,44 +3,46 @@ import { FieldErrorType, FieldInterface } from './types';
 import _ from 'lodash';
 
 const fieldApi = (state, dispatch) => (fieldId: string) => {
-  const getField = (fieldId: string): FieldInterface | undefined =>
-    state.fields.find(counter => counter.id === fieldId);
-  const createField = (fieldId): FieldInterface => ({
+  const getField = (): FieldInterface | undefined => state.fields.find(counter => counter.id === fieldId);
+  const createField = (): FieldInterface => ({
     id: fieldId,
     isValidating: false,
     isDisabled: false,
     isTouched: false,
     isValid: true,
+    isMounted: false,
     value: _.get(state.defaultValues, fieldId),
     setters: [],
     getters: [],
-    validators: [..._.get(state.defaultValidators, fieldId)],
+    validators: [],
     errors: [],
   });
-  const getOrCreateField = (fieldId: string): FieldInterface => {
-    const field = getField(fieldId);
+  const getOrCreateField = (): FieldInterface => {
+    const field = getField();
     if (!field) {
-      return createField(fieldId);
+      return createField();
     }
     return field;
   };
   const api = {
     /* ========= Setter ========= */
     mountSetter(setterId: string): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.setters.push({
         id: setterId,
       });
+      field.isMounted = true;
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     unmountSetter(setterId: string): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.setters = field.setters.filter(setter => setter.id !== setterId);
+      field.isMounted = field.setters > 0;
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     /* ========= Getter ========= */
     mountGetter(getterId: string, callback: (value: any) => void) {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.getters.push({
         id: getterId,
         callback,
@@ -48,21 +50,21 @@ const fieldApi = (state, dispatch) => (fieldId: string) => {
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     unmountGetter(getterId: string): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.setters = field.getters.filter(getter => getter.id !== getterId);
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     /* ========= Field ========= */
     getObject(): FieldInterface | undefined {
-      return getField(fieldId);
+      return getField();
     },
     /* ========= Field Value ========= */
     getValue(): any {
-      const field = getField(fieldId);
+      const field = getField();
       return field?.value;
     },
     setValue(value: any): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.value = value;
       dispatch({ type: 'UPSERT_FIELD', field });
       // field.getters.forEach(getter => {
@@ -71,38 +73,38 @@ const fieldApi = (state, dispatch) => (fieldId: string) => {
     },
     /* ========= Field Errors ========= */
     getErrors(): any {
-      const field = getField(fieldId);
+      const field = getField();
       return field?.errors;
     },
     addError(error: FieldErrorType): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.errors = [...field.errors, error];
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     setErrors(errors: Array<FieldErrorType>): void {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       field.errors = [...errors];
       dispatch({ type: 'UPSERT_FIELD', field });
     },
     /* ========= Field Disabled ========= */
     isDisabled(): boolean {
-      const field = getField(fieldId);
+      const field = getField();
       return !!field?.isDisabled;
     },
     isTouched(): boolean {
-      const field = getField(fieldId);
+      const field = getField();
       return !!field?.isTouched;
     },
     isValid(): boolean {
-      const field = getField(fieldId);
+      const field = getField();
       return !!field?.isValid;
     },
     isValidating(): boolean {
-      const field = getField(fieldId);
+      const field = getField();
       return !!field?.isValidating;
     },
     async validate(): Promise<boolean> {
-      const field = getOrCreateField(fieldId);
+      const field = getOrCreateField();
       dispatch({ type: 'MERGE_FIELD', id: field.id, data: { isValidating: true } });
       const errors = [];
       for (let i = 0; i < field.validators.length; i++) {
@@ -131,11 +133,22 @@ export const useFormApi = () => {
 
   const api = {
     getField: fieldApi(state, dispatch),
-    setDefaultValues: (values: any) => {
+    setDefaultValues(values: any): void {
       dispatch({ type: 'SET_DEFAULT_VALUES', values });
     },
-    setDefaultValidators: (validators: any) => {
-      dispatch({ type: 'SET_DEFAULT_VALIDATORS', validators });
+    async validate(): Promise<boolean> {
+      const { fields } = state;
+      for (let i = 0; i < fields.length; i++) {
+        dispatch({ type: 'MERGE_FIELD', id: field.id, data: { isValidating: true } });
+        const errors = [];
+        for (let i = 0; i < field.validators.length; i++) {
+          const message = await field.validators[i].callback(field.value);
+          if (message && typeof message === 'string') {
+            errors.push(message);
+          }
+        }
+        dispatch({ type: 'MERGE_FIELD', id: field.id, data: { isValidating: false, errors } });
+      }
     },
   };
 
