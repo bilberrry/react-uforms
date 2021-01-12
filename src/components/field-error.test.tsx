@@ -52,6 +52,40 @@ test('touch input', () => {
   expect(getByTestId('error')).toBeInTheDocument();
 });
 
+test('change input', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required(), Validator.MinLength(3)],
+    },
+  });
+  const { getByTestId, queryByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation}>
+      <Text name="profile.firstName" data-testid="input" />
+      <FieldError name="profile.firstName" data-testid="error" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'J' } });
+  expect(queryByTestId('error')).not.toBeInTheDocument();
+});
+
+test('change input with validateOnChange option', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required(), Validator.MinLength(3)],
+    },
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation}>
+      <Text name="profile.firstName" data-testid="input" validateOnChange={true} />
+      <FieldError name="profile.firstName" data-testid="error" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'J' } });
+  expect(getByTestId('error')).toBeInTheDocument();
+});
+
 test('without form', () => {
   const log = jest.spyOn(global.console, 'error');
   render(<FieldError name="profile.firstName" data-testid="error" />);

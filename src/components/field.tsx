@@ -8,6 +8,7 @@ export interface FieldProps {
   className?: string;
   hideError?: boolean;
   disabled?: boolean;
+  validateOnChange?: boolean;
 }
 
 export interface FieldPassedProps {
@@ -41,7 +42,7 @@ export const Field = <P extends FieldProps>(
       );
       return null;
     }
-    const { name, className, hideError, disabled, ...props } = { ...fieldProps, ...passedProps };
+    const { name, className, hideError, disabled, validateOnChange, ...props } = { ...fieldProps, ...passedProps };
     useEffect(() => {
       if (groupName) {
         api.addFieldToGroup(groupName, name);
@@ -75,7 +76,15 @@ export const Field = <P extends FieldProps>(
           className={classNames.join(' ')}
           getValue={() => api.getValue(name)}
           getErrors={() => api.getErrors(name)}
-          setValue={(value: ValueType, callback?: () => void) => api.setValue(name, value, callback)}
+          setValue={(value: ValueType, callback?: () => void) => {
+            return api.setValue(name, value, () => {
+              if (validateOnChange) {
+                api.setTouched(name, callback);
+              } else if (callback) {
+                callback();
+              }
+            });
+          }}
           setTouched={(callback?: () => void) => api.setTouched(name, callback)}
         />
         {!hideError && errors && errors.length > 0 ? (
