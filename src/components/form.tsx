@@ -94,6 +94,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   removeFieldFromGroup: (groupName: string, fieldName: string) => void;
   getValuesDiff: (maxLevel?: number) => Partial<Values>;
   hasChanges: () => boolean;
+  isValidationOnChange: () => boolean;
   submit: () => void;
 }
 
@@ -111,6 +112,7 @@ export interface FormProps<Values>
   validation?: (api: FormApiInterface<Values>) => ValidationRulesInterface;
   classes?: Partial<ClassesInterface>;
   element?: 'form' | 'div';
+  validateOnChange?: boolean;
   /** @deprecated use classes instead */
   errorClass?: string;
   /** @deprecated use classes instead */
@@ -137,6 +139,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     invalidClass: undefined,
     errorClass: undefined,
     element: 'form',
+    validateOnChange: false,
   };
 
   constructor(props: FormProps<Values>) {
@@ -455,6 +458,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       return getValuesDiff(defaultValues, values, maxLevel);
     },
     hasChanges: (): boolean => !!Object.keys(this.api.getValuesDiff()).length,
+    isValidationOnChange: (): boolean => !!this.props.validateOnChange,
     submit: (): void => {
       const { validation, onError, onSubmit } = this.props;
       const { values } = this.state;
@@ -493,6 +497,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       invalidClass,
       errorClass,
       element,
+      validateOnChange,
       ...props
     } = this.props;
     const childrenComponent = typeof children === 'function' ? children(this.api) : children;

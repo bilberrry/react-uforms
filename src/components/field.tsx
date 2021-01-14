@@ -78,7 +78,8 @@ export const Field = <P extends FieldProps>(
           getErrors={() => api.getErrors(name)}
           setValue={(value: ValueType, callback?: () => void) => {
             return api.setValue(name, value, () => {
-              if (validateOnChange) {
+              const touch = typeof validateOnChange === 'undefined' ? api.isValidationOnChange() : validateOnChange;
+              if (touch) {
                 api.setTouched(name, callback);
               } else if (callback) {
                 callback();

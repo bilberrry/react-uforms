@@ -69,7 +69,7 @@ test('change input', () => {
   expect(queryByTestId('error')).not.toBeInTheDocument();
 });
 
-test('change input with validateOnChange option', () => {
+test('change input – input validateOnChange is on', () => {
   const validation = () => ({
     profile: {
       firstName: [Validator.Required(), Validator.MinLength(3)],
@@ -84,6 +84,40 @@ test('change input with validateOnChange option', () => {
   const input = getByTestId('input');
   fireEvent.change(input, { target: { value: 'J' } });
   expect(getByTestId('error')).toBeInTheDocument();
+});
+
+test('change input – form validateOnChange is on', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required(), Validator.MinLength(3)],
+    },
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation} validateOnChange={true}>
+      <Text name="profile.firstName" data-testid="input" />
+      <FieldError name="profile.firstName" data-testid="error" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'J' } });
+  expect(getByTestId('error')).toBeInTheDocument();
+});
+
+test('change input – form validateOnChange is on - input validateOnChange is off', () => {
+  const validation = () => ({
+    profile: {
+      firstName: [Validator.Required(), Validator.MinLength(3)],
+    },
+  });
+  const { getByTestId, queryByTestId } = render(
+    <Form onSubmit={() => {}} validation={validation} validateOnChange={true}>
+      <Text name="profile.firstName" data-testid="input" validateOnChange={false} />
+      <FieldError name="profile.firstName" data-testid="error" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'J' } });
+  expect(queryByTestId('error')).not.toBeInTheDocument();
 });
 
 test('without form', () => {
