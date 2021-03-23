@@ -2,8 +2,7 @@
 import React, { Fragment } from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, cleanup, fireEvent } from '@testing-library/react';
-import { FieldError, Form, Text, Validator } from '../index';
-import { FormApiInterface, ValuesType } from '../index';
+import { FieldError, Form, FormApiInterface, Text, Validator } from '../index';
 
 afterEach(() => {
   cleanup();
@@ -329,5 +328,69 @@ test('div form: set default values -> change input -> submit form -> get values 
       lastName: 'Brown',
       bio: 'Travel Blogger',
     },
+  });
+});
+
+const renderForm = (resolve: (api: FormApiInterface) => void) => {
+  const submit = jest.fn();
+  const validation = () => ({
+    email: [Validator.Required()],
+    profile: {
+      firstName: [Validator.Required()],
+    },
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={submit} validation={validation} data-testid="form">
+      {(api) => {
+        resolve(api);
+        return (
+          <Fragment>
+            <Text name="email" data-testid="email" />
+            <Text name="profile.firstName" data-testid="first-name" />
+          </Fragment>
+        );
+      }}
+    </Form>,
+  );
+  return { getByTestId, submit };
+};
+
+test('set default values -> validate form silently', () => {
+  let formApi: null | FormApiInterface = null;
+  const { getByTestId, submit } = renderForm((api) => {
+    formApi = api;
+  });
+
+  expect(formApi).not.toBeNull();
+  const result1 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  expect(submit).not.toHaveBeenCalled();
+  expect(result1).toEqual({
+    count: 2,
+    errors: {
+      email: ['Required'],
+      profile: {
+        firstName: ['Required'],
+      },
+    },
+  });
+
+  const firstName = getByTestId('first-name');
+  fireEvent.change(firstName, { target: { value: 'Bill' } });
+  const result2 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  expect(submit).not.toHaveBeenCalled();
+  expect(result2).toEqual({
+    count: 1,
+    errors: {
+      email: ['Required'],
+    },
+  });
+
+  const email = getByTestId('email');
+  fireEvent.change(email, { target: { value: 'foo@example.com' } });
+  const result3 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  expect(submit).not.toHaveBeenCalled();
+  expect(result3).toEqual({
+    count: 0,
+    errors: {},
   });
 });

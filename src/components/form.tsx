@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement, ReactNode } from 'react';
+import React, { FormEvent, ReactElement } from 'react';
 import _ from 'lodash';
 import { ContextApi, ContextForm } from './form-context';
 import { getValuesDiff } from './helpers';
@@ -96,6 +96,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
   hasChanges: () => boolean;
   isValidationOnChange: () => boolean;
   submit: () => void;
+  validateForm: (silent: boolean) => ValidationResultInterface;
 }
 
 export interface FormProps<Values>
@@ -460,15 +461,9 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     hasChanges: (): boolean => !!Object.keys(this.api.getValuesDiff()).length,
     isValidationOnChange: (): boolean => !!this.props.validateOnChange,
     submit: (): void => {
-      const { validation, onError, onSubmit } = this.props;
+      const { onSubmit, onError } = this.props;
       const { values } = this.state;
-      const result: ValidationResultInterface = {
-        count: 0,
-        errors: {},
-      };
-      if (validation) {
-        this.validateForm(result, validation(this.api));
-      }
+      const result = this.api.validateForm(true);
       this.setState(
         {
           errors: result.errors,
@@ -481,6 +476,24 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           }
         },
       );
+    },
+    validateForm: (silent = false): ValidationResultInterface => {
+      const { validation } = this.props;
+      const result: ValidationResultInterface = {
+        count: 0,
+        errors: {},
+      };
+      if (validation) {
+        this.validateForm(result, validation(this.api), []);
+      }
+
+      if (!silent) {
+        this.setState({
+          errors: result.errors,
+        });
+      }
+
+      return result;
     },
   };
 
