@@ -212,7 +212,7 @@ const example = (
     onSubmit={values => console.log(values)}
     onError={errors => console.log(errors)}
   >
-    {({ getValue, setValue, hasChanges }) => (
+    {({ getValue, setValue, isChanged }) => (
       <Fragment>
         <label htmlFor="country">Country</label>
         <Select
@@ -248,7 +248,7 @@ const example = (
         <label htmlFor="city">City</label>
         <Text type="text" id="city" name="address.city" />
 
-        <button type="submit" disabled={!hasChanges()}>
+        <button type="submit" disabled={!isChanged()}>
           Submit
         </button>
       </Fragment>
