@@ -12,7 +12,7 @@ import {
   FieldTouchEventInterface,
   FieldChangeEventInterface,
   ValidationType,
-  FieldClasses,
+  ValidatorsType,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
@@ -175,6 +175,13 @@ export const createFormStore = <Values,>() =>
         setField(field.id, { value });
         const event = new CustomEvent<FieldChangeEventInterface>('fieldChange', { detail: { id: field.id, value } });
         get().formRef?.current?.dispatchEvent(event);
+      },
+      /* ========= Field Validators ========= */
+      getValidators(): ValidatorsType {
+        return field.validators;
+      },
+      setValidators(validators: ValidatorsType): void {
+        setField(field.id, { validators });
       },
       /* ========= Field Errors ========= */
       getErrors(): FieldErrorType[] {

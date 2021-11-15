@@ -80,6 +80,8 @@ export interface FieldApiInterface {
   setErrors: (errors: Array<FieldErrorType>) => void;
   getInputClassName: (existedClassName?: string) => string;
   getErrorClassName: (existedClassName?: string) => string;
+  getValidators: () => ValidatorsType;
+  setValidators: (validators: ValidatorsType) => void;
   isDisabled: () => boolean;
   setDisabled: (value: boolean) => void;
   isTouched: () => boolean;
@@ -116,4 +118,11 @@ export interface FieldPassedProps {
   name: string;
   disabled?: boolean;
   hideError?: boolean;
+  validators?: ValidatorsType;
+}
+
+export interface FieldProps {
+  autoCreate?: boolean;
+  disabled?: boolean;
+  validators?: ValidatorsType;
 }

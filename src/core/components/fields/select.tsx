@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useField } from '../../hooks';
 import { jsonToValue, valueToJson } from '../../helpers';
 import { FieldPassedProps } from '../../types';
@@ -8,22 +8,21 @@ import { FieldPassedProps } from '../../types';
 export interface OptionProps extends Omit<React.HTMLProps<HTMLOptionElement>, 'value'> {
   name: string;
   value: string | number | boolean | Record<string, unknown> | null;
-  // [key: string]: any; // TODO HTMLProps bug?
+  [key: string]: any; // TODO HTMLProps bug?
 }
 
 export interface SelectProps extends React.HTMLProps<HTMLSelectElement> {
+  emptyValue?: string | null;
   options: OptionProps[];
 }
 
 const SelectComponent = React.forwardRef<HTMLSelectElement, SelectProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, emptyValue = '', className, options, ...props }) => {
-    const [value, setValue, { setDisabled, getInputClassName, setTouched }] = useField(name);
-    useEffect(() => {
-      setDisabled(!!disabled);
-    }, [disabled]);
+  ({ name, disabled, onBlur, onChange, emptyValue = '', className, options, validators, ...props }, ref) => {
+    const [value, setValue, { getInputClassName, setTouched }] = useField(name, { disabled, validators });
     return (
       <select
         {...props}
+        ref={ref}
         value={valueToJson(value)}
         className={getInputClassName(className)}
         onChange={(event) => {
@@ -58,4 +57,4 @@ const SelectComponent = React.forwardRef<HTMLSelectElement, SelectProps & FieldP
 
 SelectComponent.displayName = 'Select';
 
-export const Text = SelectComponent;
+export const Select = SelectComponent;
