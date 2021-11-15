@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useField } from '../../hooks';
 import { stringToValue, valueToString } from '../../helpers';
 import { FieldPassedProps } from '../../types';
@@ -8,11 +8,11 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
 }
 
 const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, emptyValue = '', className, ...props }, ref) => {
-    const [value, setValue, { setDisabled, getInputClassName, setTouched }] = useField(name);
-    useEffect(() => {
-      setDisabled(!!disabled);
-    }, [disabled]);
+  ({ name, disabled, onBlur, onChange, emptyValue = '', className, validators, ...props }, ref) => {
+    const [value, setValue, { getInputClassName, setTouched }] = useField(name, {
+      disabled,
+      validators,
+    });
     return (
       <input
         {...props}
