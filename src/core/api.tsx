@@ -12,7 +12,7 @@ import {
   FieldTouchEventInterface,
   FieldChangeEventInterface,
   ValidationType,
-  ValidatorsType,
+  ValidatorsType, FieldErrorsType,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
@@ -45,7 +45,6 @@ export const createFormStore = <Values,>() =>
           isDisabled: false,
           isTouched: false,
           isValid: true,
-          isMounted: false,
           value: oGet(get().defaultValues, fieldId),
           validators: [],
           errors: [],
@@ -184,13 +183,13 @@ export const createFormStore = <Values,>() =>
         setField(field.id, { validators });
       },
       /* ========= Field Errors ========= */
-      getErrors(): FieldErrorType[] {
+      getErrors(): FieldErrorsType {
         return field.errors;
       },
       addError(error: FieldErrorType): void {
         setField(field.id, { errors: [...field.errors, error] });
       },
-      setErrors(errors: Array<FieldErrorType>): void {
+      setErrors(errors: FieldErrorsType): void {
         setField(field.id, { errors });
       },
       /* ========= Field Disabled ========= */
@@ -204,9 +203,8 @@ export const createFormStore = <Values,>() =>
         return !!field?.isTouched;
       },
       setTouched(): void {
-        setField(field.id, { isTouched: true });
         if (!get().isTouched) {
-          set({ isTouched: true });
+          setField(field.id, { isTouched: true });
         }
         const event = new CustomEvent<FieldTouchEventInterface>('fieldTouch', { detail: { id: field.id } });
         get().formRef?.current?.dispatchEvent(event);
@@ -236,6 +234,7 @@ export const createFormStore = <Values,>() =>
         return classNames.join(' ');
       },
       async validate(): Promise<boolean> {
+        // TODO check if Promise exist
         setField(field.id, { isValidating: true });
         const errors: string[] = [];
         const validators = [...field.validators, ...(oGet(get().validation, field.id) || [])];
@@ -244,6 +243,7 @@ export const createFormStore = <Values,>() =>
           const message = await validator(field.value);
           if (message && typeof message === 'string') {
             errors.push(message);
+            setField(field.id, { errors });
             break;
           }
         }
