@@ -22,7 +22,6 @@ export interface FieldInterface {
   isDisabled: boolean;
   isTouched: boolean;
   isValid: boolean;
-  isMounted: boolean;
   value: FieldValueType;
   validators: ValidatorsType;
   errors: FieldErrorsType;
@@ -75,9 +74,9 @@ export interface FieldApiInterface {
   getObject: () => FieldInterface;
   getValue: () => FieldValueType;
   setValue: (value: FieldValueType) => void;
-  getErrors: () => FieldErrorType[];
+  getErrors: () => FieldErrorsType;
   addError: (error: FieldErrorType) => void;
-  setErrors: (errors: Array<FieldErrorType>) => void;
+  setErrors: (errors: FieldErrorsType) => void;
   getInputClassName: (existedClassName?: string) => string;
   getErrorClassName: (existedClassName?: string) => string;
   getValidators: () => ValidatorsType;

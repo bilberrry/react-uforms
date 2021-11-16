@@ -37,3 +37,5 @@ export const getValuesDiff = (prev: any, current: any, maxLevel?: number, curren
     }
   });
 };
+
+export const isPromise = (value: any): boolean => Boolean(value && typeof value?.then === 'function');

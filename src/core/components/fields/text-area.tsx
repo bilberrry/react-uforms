@@ -4,11 +4,11 @@ import { stringToValue, valueToString } from '../../helpers';
 import { FieldPassedProps } from '../../types';
 import { FieldErrors } from './field-errors';
 
-export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
+export interface TextAreaProps extends Omit<React.HTMLProps<HTMLTextAreaElement>, 'value'> {
   emptyValue?: string | null;
 }
 
-const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassedProps>(
+const TextAreaComponent = React.forwardRef<HTMLTextAreaElement, TextAreaProps & FieldPassedProps>(
   ({ name, disabled, onBlur, onChange, emptyValue = '', className, validators, hideError, ...props }, ref) => {
     const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
       disabled,
@@ -16,7 +16,7 @@ const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassed
     });
     return (
       <>
-        <input
+        <textarea
           {...props}
           ref={ref}
           value={valueToString(value, emptyValue)}
@@ -44,6 +44,6 @@ const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassed
   },
 );
 
-TextComponent.displayName = 'Text';
+TextAreaComponent.displayName = 'TextArea';
 
-export const Text = TextComponent;
+export const TextArea = TextAreaComponent;
