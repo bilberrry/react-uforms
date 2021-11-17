@@ -12,7 +12,8 @@ import {
   FieldTouchEventInterface,
   FieldChangeEventInterface,
   ValidationType,
-  ValidatorsType, FieldErrorsType,
+  ValidatorsType,
+  FieldErrorsType,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
@@ -45,7 +46,7 @@ export const createFormStore = <Values,>() =>
           isDisabled: false,
           isTouched: false,
           isValid: true,
-          value: oGet(get().defaultValues, fieldId),
+          value: oGet(get().form.defaultValues, fieldId),
           validators: [],
           errors: [],
         };
@@ -55,35 +56,38 @@ export const createFormStore = <Values,>() =>
     };
     const formApi: FormApiInterface<Values> = {
       setDefaultValues(defaultValues): void {
-        set({ defaultValues });
+        set({ form: { ...get().form, defaultValues } });
       },
       getDefaultValues(): Values {
-        return get().defaultValues;
+        return get().form.defaultValues;
       },
       setClasses(classes: ClassesInterface): void {
-        set({ classes });
+        set({ form: { ...get().form, classes } });
       },
       getClasses(): ClassesInterface {
-        return get().classes;
+        return get().form.classes;
       },
       setValidation(validation: ValidationType): void {
-        set({ validation });
+        set({ form: { ...get().form, validation } });
       },
       getValidation(): ValidationType {
-        return get().validation;
+        return get().form.validation;
       },
       setFormRef(formRef: RefObject<HTMLFormElement> | null): void {
-        set({ formRef });
+        set({ form: { ...get().form, formRef } });
       },
       getFormRef(): RefObject<HTMLFormElement> | null {
-        return get().formRef;
+        return get().form.formRef;
       },
       submit(): void {
         const event = new Event('submit', { cancelable: true, bubbles: true });
-        get().formRef?.current?.dispatchEvent(event);
+        get().form.formRef?.current?.dispatchEvent(event);
       },
       getValues(): Values {
-        const { fields, defaultValues } = get();
+        const {
+          fields,
+          form: { defaultValues },
+        } = get();
         const values = JSON.parse(JSON.stringify(defaultValues));
         for (let i = 0; i < fields.length; i++) {
           oSet(values, fields[i].id, fields[i].value);
@@ -93,12 +97,12 @@ export const createFormStore = <Values,>() =>
       async validate(): Promise<boolean> {
         const { fields } = get();
         let isValid = true;
-        set({ isValidating: true });
+        set({ form: { ...get().form, isValidating: true } });
         for (let i = 0; i < fields.length; i++) {
           const field = fields[i];
           setField(field.id, { isValidating: true });
           const errors: string[] = [];
-          const validators = [...field.validators, ...(oGet(get().validation, field.id) || [])];
+          const validators = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
           for (let i = 0; i < validators.length; i++) {
             // TODO Promise All?
             const validator = validators[i];
@@ -113,7 +117,7 @@ export const createFormStore = <Values,>() =>
           }
           setField(field.id, { isValidating: false, errors });
         }
-        set({ isValidating: false });
+        set({ form: { ...get().form, isValidating: false } });
 
         return isValid;
       },
@@ -145,19 +149,24 @@ export const createFormStore = <Values,>() =>
         }
       },
       isTouched(): boolean {
-        return get().isTouched;
+        return get().form.isTouched;
       },
       isValid(): boolean {
-        return get().isValid;
+        return get().form.isValid;
       },
       setChanged(value: boolean): void {
-        set({ isChanged: value });
+        set({
+          form: {
+            ...get().form,
+            isChanged: value,
+          },
+        });
       },
       isChanged(): boolean {
-        return get().isChanged;
+        return get().form.isChanged;
       },
       isValidating(): boolean {
-        return get().isValidating;
+        return get().form.isValidating;
       },
       getField,
     };
@@ -173,7 +182,7 @@ export const createFormStore = <Values,>() =>
       setValue(value: FieldValueType): void {
         setField(field.id, { value });
         const event = new CustomEvent<FieldChangeEventInterface>('fieldChange', { detail: { id: field.id, value } });
-        get().formRef?.current?.dispatchEvent(event);
+        get().form.formRef?.current?.dispatchEvent(event);
       },
       /* ========= Field Validators ========= */
       getValidators(): ValidatorsType {
@@ -203,11 +212,11 @@ export const createFormStore = <Values,>() =>
         return !!field?.isTouched;
       },
       setTouched(): void {
-        if (!get().isTouched) {
+        if (!get().form.isTouched) {
           setField(field.id, { isTouched: true });
         }
         const event = new CustomEvent<FieldTouchEventInterface>('fieldTouch', { detail: { id: field.id } });
-        get().formRef?.current?.dispatchEvent(event);
+        get().form.formRef?.current?.dispatchEvent(event);
       },
       isValid(): boolean {
         return !!field?.isValid;
@@ -217,7 +226,7 @@ export const createFormStore = <Values,>() =>
       },
       getInputClassName(existClassName?: string): string {
         const classNames = existClassName ? [existClassName] : [];
-        const { invalid } = get().classes.field;
+        const { invalid } = get().form.classes.field;
         const errors = field.errors;
         if (errors && errors.length > 0 && invalid) {
           classNames.push(invalid);
@@ -226,7 +235,7 @@ export const createFormStore = <Values,>() =>
       },
       getErrorClassName(existClassName?: string): string {
         const classNames = existClassName ? [existClassName] : [];
-        const { error } = get().classes.field;
+        const { error } = get().form.classes.field;
         const errors = field.errors;
         if (errors && errors.length > 0 && error) {
           classNames.push(error);
@@ -237,7 +246,7 @@ export const createFormStore = <Values,>() =>
         // TODO check if Promise exist
         setField(field.id, { isValidating: true });
         const errors: string[] = [];
-        const validators = [...field.validators, ...(oGet(get().validation, field.id) || [])];
+        const validators = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
         for (let i = 0; i < validators.length; i++) {
           const validator = validators[i];
           const message = await validator(field.value);
@@ -253,15 +262,17 @@ export const createFormStore = <Values,>() =>
       },
     });
     return {
-      defaultValues: {},
+      form: {
+        defaultValues: {},
+        isValidating: false,
+        isTouched: false,
+        isValid: true,
+        isChanged: false,
+        formRef: null,
+        validation: {},
+        classes: defaultClasses,
+      },
       fields: [],
-      isValidating: false,
-      isTouched: false,
-      isValid: true,
-      isChanged: false,
-      formRef: null,
-      validation: {},
-      classes: defaultClasses,
       formApi,
     };
   });

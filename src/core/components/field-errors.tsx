@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFieldErrors } from '../../hooks';
+import { useFieldErrors } from '../hooks';
 
 export interface FieldErrorsProps extends React.HTMLProps<HTMLDivElement> {
   name: string;

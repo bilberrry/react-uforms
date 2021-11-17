@@ -2,10 +2,10 @@
 import React from 'react';
 import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Form } from '../form';
-import { Text } from './text';
+import { Form } from './form';
+import { Text } from './fields/text';
 import { FieldErrors } from './field-errors';
-import * as Validator from '../../validator';
+import * as Validator from '../validator';
 
 afterEach(() => {
   cleanup();

@@ -4,7 +4,7 @@ import {
   FieldProps,
   FieldValueType,
   FormApiInterface,
-  FormStateInterface
+  FormStateInterface,
 } from './types';
 import { useFormStore } from './api';
 import isEqual from 'lodash.isequal';
@@ -12,11 +12,7 @@ import { useEffect } from 'react';
 
 const selector = (state) => state;
 const compareState = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { formApi: oldFormApi, fields: oldFields, ...oldRest } = oldState;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { formApi: newFormApi, fields: newFields, ...newRest } = newState;
-  return isEqual(oldRest, newRest);
+  return isEqual(oldState.form, newState.form);
 };
 
 const compareField = (id: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
