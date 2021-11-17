@@ -34,15 +34,17 @@ export interface FormErrorItemInterface {
 
 export type FormErrorsType = Array<FormErrorItemInterface>;
 export interface FormStateInterface<Values> {
-  defaultValues: any;
+  form: {
+    defaultValues: any;
+    isValidating: boolean;
+    isTouched: boolean;
+    isValid: boolean;
+    isChanged: boolean;
+    formRef: RefObject<HTMLFormElement> | null;
+    classes: ClassesInterface;
+    validation: ValidationType;
+  };
   fields: Array<FieldInterface>;
-  isValidating: boolean;
-  isTouched: boolean;
-  isValid: boolean;
-  isChanged: boolean;
-  formRef: RefObject<HTMLFormElement> | null;
-  classes: ClassesInterface;
-  validation: ValidationType;
   formApi: FormApiInterface<Values>;
 }
 
