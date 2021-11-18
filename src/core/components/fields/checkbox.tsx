@@ -1,10 +1,10 @@
 import React from 'react';
 import { useField } from '../../hooks';
-import { FieldPassedProps } from '../../types';
+import { FieldPassedProps, FieldValueType } from '../../types';
 
 export interface CheckboxProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
-  onValue: string | number | boolean | null | Record<string, unknown>;
-  offValue: string | number | boolean | null | Record<string, unknown>;
+  onValue: FieldValueType;
+  offValue: FieldValueType;
 }
 
 const CheckboxComponent = React.forwardRef<HTMLInputElement, CheckboxProps & FieldPassedProps>(

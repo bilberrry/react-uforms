@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 
 // export type ValueType = string | number | boolean | null;
 export type ValidationType = any;
-export type FieldValueType = any; //ValueType | Array<ValueType>;
+export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
 export type FieldErrorsType = Array<FieldErrorType>;
 export type ValidatorType = (value: FieldValueType) => Promise<string | boolean>;

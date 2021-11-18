@@ -102,7 +102,7 @@ export const createFormStore = <Values,>() =>
           const field = fields[i];
           setField(field.id, { isValidating: true });
           const errors: string[] = [];
-          const validators = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
+          const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
           for (let i = 0; i < validators.length; i++) {
             // TODO Promise All?
             const validator = validators[i];
@@ -246,7 +246,7 @@ export const createFormStore = <Values,>() =>
         // TODO check if Promise exist
         setField(field.id, { isValidating: true });
         const errors: string[] = [];
-        const validators = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
+        const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
         for (let i = 0; i < validators.length; i++) {
           const validator = validators[i];
           const message = await validator(field.value);
