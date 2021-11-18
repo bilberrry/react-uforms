@@ -1,14 +1,14 @@
 import React from 'react';
 import { useField } from '../../hooks';
 import { jsonToValue, valueToJson } from '../../helpers';
-import { FieldPassedProps } from '../../types';
+import { FieldPassedProps, FieldValueType } from '../../types';
 import { FieldErrors } from '../field-errors';
 
 // TODO test
 
 export interface OptionProps extends Omit<React.HTMLProps<HTMLOptionElement>, 'value'> {
   name: string;
-  value: string | number | boolean | Record<string, unknown> | null;
+  value: FieldValueType;
   [key: string]: any; // TODO HTMLProps bug?
 }
 

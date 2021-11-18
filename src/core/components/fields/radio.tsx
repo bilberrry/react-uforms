@@ -1,10 +1,10 @@
 import React from 'react';
 import { useField } from '../../hooks';
 import { valueToJson } from '../../helpers';
-import { FieldPassedProps } from '../../types';
+import { FieldPassedProps, FieldValueType } from '../../types';
 
 export interface RadioProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
-  value: string | number | boolean | Record<string, unknown> | null;
+  value: FieldValueType;
 }
 
 const RadioComponent = React.forwardRef<HTMLInputElement, RadioProps & FieldPassedProps>(
