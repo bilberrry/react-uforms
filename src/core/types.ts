@@ -22,11 +22,20 @@ export interface FieldInterface {
   isDisabled: boolean;
   isTouched: boolean;
   isValid: boolean;
+  group: string | null;
   value: FieldValueType;
   validators: ValidatorsType;
   errors: FieldErrorsType;
 }
 
+export interface GroupInterface {
+  name: string;
+  isDisabled: boolean;
+  isValidating: boolean;
+  isTouched: boolean;
+  isValid: boolean;
+  isActive: boolean;
+}
 export interface FormErrorItemInterface {
   id: string;
   errors: FieldErrorsType;
@@ -46,6 +55,7 @@ export interface FormStateInterface<Values> {
   };
   fields: Array<FieldInterface>;
   formApi: FormApiInterface<Values>;
+  groups: Array<GroupInterface>;
 }
 
 export interface FieldClasses {
@@ -70,6 +80,20 @@ export interface FieldChangeEventInterface {
 }
 export interface FieldTouchEventInterface {
   id: string;
+}
+
+export interface GroupApiInterface {
+  getObject: () => GroupInterface;
+  getErrors: () => FormErrorsType;
+  isDisabled: () => boolean;
+  setDisabled: (value: boolean) => void;
+  isActive: () => boolean;
+  setActive: () => void;
+  isTouched: () => boolean;
+  setTouched: (value: boolean) => void;
+  isValid: () => boolean;
+  isValidating: () => boolean;
+  validate: () => Promise<boolean>;
 }
 
 export interface FieldApiInterface {
@@ -106,13 +130,14 @@ export interface FormApiInterface<Values> {
   validate: () => Promise<boolean>;
   setErrors: (formErrors: FormErrorsType) => void;
   getErrors: () => FormErrorsType;
-  getField: (id: string, autoCreate?: boolean) => FieldApiInterface | undefined;
   isTouched: () => boolean;
   isValid: () => boolean;
   isChanged: () => boolean;
   setChanged: (value: boolean) => void;
   isValidating: () => boolean;
   submit: () => void;
+  getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
+  getGroup: (groupName: string, autoCreate?: boolean) => GroupApiInterface | undefined;
 }
 
 export interface FieldPassedProps {
