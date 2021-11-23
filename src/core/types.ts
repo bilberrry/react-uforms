@@ -94,6 +94,7 @@ export interface GroupApiInterface {
   isValid: () => boolean;
   isValidating: () => boolean;
   validate: () => Promise<boolean>;
+  remove: () => void;
 }
 
 export interface FieldApiInterface {
@@ -109,6 +110,8 @@ export interface FieldApiInterface {
   setValidators: (validators: ValidatorsType) => void;
   isDisabled: () => boolean;
   setDisabled: (value: boolean) => void;
+  getGroup: () => string | null;
+  setGroup: (groupName: string | null) => void;
   isTouched: () => boolean;
   setTouched: () => void;
   isValid: () => boolean;
@@ -137,7 +140,11 @@ export interface FormApiInterface<Values> {
   isValidating: () => boolean;
   submit: () => void;
   getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
-  getGroup: (groupName: string, autoCreate?: boolean) => GroupApiInterface | undefined;
+  getGroup: (
+    groupName: string,
+    autoCreate?: boolean,
+    data: Partial<GroupInterface> = {},
+  ) => GroupApiInterface | undefined;
 }
 
 export interface FieldPassedProps {
@@ -151,4 +158,9 @@ export interface FieldProps {
   autoCreate?: boolean;
   disabled?: boolean;
   validators?: ValidatorsType;
+}
+
+export interface GroupProps {
+  autoCreate?: boolean;
+  defaultActive?: boolean;
 }

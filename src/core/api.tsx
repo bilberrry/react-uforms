@@ -94,14 +94,21 @@ const fieldApiPure = (set, get, field): FieldApiInterface => {
     },
     /* ========= Field Disabled ========= */
     isDisabled(): boolean {
-      return !!field?.isDisabled;
+      return field.isDisabled;
     },
     setDisabled(value = true): void {
       setField(field.id, { isDisabled: value });
     },
+    /* ========= Field Group ========= */
+    getGroup(): string | null {
+      return field.group;
+    },
+    setGroup(groupName: string | null): void {
+      setField(field.id, { group: groupName });
+    },
     /* ========= Field Touch ========= */
     isTouched(): boolean {
-      return !!field?.isTouched;
+      return field.isTouched;
     },
     setTouched(): void {
       if (!get().form.isTouched) {
@@ -112,10 +119,10 @@ const fieldApiPure = (set, get, field): FieldApiInterface => {
     },
     /* ========= Field Valid ========= */
     isValid(): boolean {
-      return !!field?.isValid;
+      return field.isValid;
     },
     isValidating(): boolean {
-      return !!field?.isValidating;
+      return field.isValidating;
     },
     /* ========= Field Classes ========= */
     getInputClassName(existClassName?: string): string {
@@ -198,31 +205,31 @@ const groupApiPure = (set, get, group): GroupApiInterface => {
     },
     /* ========= Group Disabled ========= */
     isDisabled(): boolean {
-      return !!group?.isDisabled;
+      return group.isDisabled;
     },
     setDisabled(value = true): void {
       setGroup(group.name, { isDisabled: value });
     },
     /* ========= Group Active ========= */
     isActive(): boolean {
-      return !!group?.isActive;
+      return group.isActive;
     },
     setActive(): void {
       // setGroup(group.name, { isTouched: true });
     },
     /* ========= Group Touch ========= */
     isTouched(): boolean {
-      return !!group?.isTouched;
+      return group.isTouched;
     },
     setTouched(value: boolean): void {
       setGroup(group.name, { isTouched: value });
     },
     /* ========= Group Valid ========= */
     isValid(): boolean {
-      return !!group?.isValid;
+      return group.isValid;
     },
     isValidating(): boolean {
-      return !!group?.isValidating;
+      return group.isValidating;
     },
     /* ========= Group Validation ========= */
     async validate(): Promise<boolean> {
@@ -244,6 +251,11 @@ const groupApiPure = (set, get, group): GroupApiInterface => {
       setGroup(group.name, { isValidating: false, isValid });
 
       return isValid;
+    },
+    remove(): void {
+      set((state) => ({
+        groups: state.groups.filter((i) => i.name !== group.name),
+      }));
     },
   };
 };
@@ -394,7 +406,11 @@ export const createFormStore = <Values,>() =>
       }
       return field ? fieldApiPure(set, get, field) : undefined;
     };
-    const getGroup = (groupName: string, autoCreate = false): GroupApiInterface | undefined => {
+    const getGroup = (
+      groupName: string,
+      autoCreate = false,
+      data: Partial<GroupInterface> = {},
+    ): GroupApiInterface | undefined => {
       let group: GroupInterface | undefined = get().groups.find((item) => item.name === groupName);
       if (!group && autoCreate) {
         group = {
@@ -404,6 +420,7 @@ export const createFormStore = <Values,>() =>
           isTouched: false,
           isActive: false,
           isValid: false,
+          ...data,
         };
         set({ groups: [...get().groups, group] });
       }
