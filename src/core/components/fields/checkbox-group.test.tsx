@@ -115,7 +115,7 @@ test('set default values -> uncheck input -> submit form', async () => {
   );
 });
 
-test('set onChange attribute -> change input value ', () => {
+test('set onChange attribute -> change input value ', async () => {
   const change = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={() => {}}>
@@ -128,12 +128,12 @@ test('set onChange attribute -> change input value ', () => {
   );
   const inputNews = getByTestId('input-news');
   fireEvent.click(inputNews);
-  expect(change).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(change).toHaveBeenCalledTimes(1));
   fireEvent.click(inputNews);
-  expect(change).toHaveBeenCalledTimes(2);
+  await waitFor(() => expect(change).toHaveBeenCalledTimes(2));
 });
 
-test('set onBlur attribute -> focus input -> blur input', () => {
+test('set onBlur attribute -> focus input -> blur input', async () => {
   const blurNews = jest.fn();
   const blurUpdates = jest.fn();
   const blurCompany = jest.fn();
@@ -154,17 +154,17 @@ test('set onBlur attribute -> focus input -> blur input', () => {
   inputNews.blur();
   expect(inputNews).not.toHaveFocus();
   fireEvent.click(inputNews);
-  expect(blurNews).toHaveBeenCalled();
-  expect(blurUpdates).not.toHaveBeenCalled();
+  await waitFor(() => expect(blurNews).toHaveBeenCalled());
+  await waitFor(() => expect(blurUpdates).not.toHaveBeenCalled());
   inputUpdates.focus();
   expect(inputUpdates).toHaveFocus();
   inputUpdates.blur();
   expect(inputUpdates).not.toHaveFocus();
-  expect(blurUpdates).toHaveBeenCalled();
-  expect(blurCompany).not.toHaveBeenCalled();
+  await waitFor(() => expect(blurUpdates).toHaveBeenCalled());
+  await waitFor(() => expect(blurCompany).not.toHaveBeenCalled());
   inputCompany.focus();
   expect(inputCompany).toHaveFocus();
   inputCompany.blur();
   expect(inputCompany).not.toHaveFocus();
-  expect(blurCompany).toHaveBeenCalled();
+  await waitFor(() => expect(blurCompany).toHaveBeenCalled());
 });
