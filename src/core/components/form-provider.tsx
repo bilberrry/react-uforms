@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, ReactNode, useEffect, useRef } from 'react';
 import { useForm } from '../hooks';
 import {
   ClassesInterface,
@@ -11,12 +11,14 @@ import {
 } from '../types';
 import isEqual from 'lodash.isequal';
 
+type FormApiChildren<Values> = (api: FormApiInterface<Values>) => ReactNode;
+
 export interface FormProps<Values>
   extends Omit<
     React.HTMLProps<HTMLFormElement & HTMLDivElement>,
     'onChange' | 'onSubmit' | 'onError' | 'defaultValues'
   > {
-  children: ReactElement | ReactElement[] | any;
+  children: ReactNode | FormApiChildren<Values>;
   onSubmit: (api: FormApiInterface<Values>, values: Values) => void;
   defaultValues?: Values;
   onChange?: (api: FormApiInterface<Values>, changedField: string, fieldValue: FieldValueType) => void;

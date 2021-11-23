@@ -5,10 +5,14 @@ import {
   FieldValueType,
   FormApiInterface,
   FormStateInterface,
+  GroupApiInterface,
+  GroupInterface,
+  GroupProps,
 } from './types';
 import { useFormStore } from './api';
 import isEqual from 'lodash.isequal';
 import { useEffect } from 'react';
+import { GroupState, useGroupStore } from './components/group';
 
 const selector = (state) => state;
 const compareState = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
@@ -19,6 +23,12 @@ const compareField = (id: string) => (oldState: FormStateInterface<any>, newStat
   const oldField = oldState.fields.find((item) => item.id === id);
   const newField = newState.fields.find((item) => item.id === id);
   return isEqual(oldField, newField);
+};
+
+const compareGroup = (name: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+  const oldGroup = oldState.groups.find((item) => item.name === name);
+  const newGroup = newState.groups.find((item) => item.name === name);
+  return isEqual(oldGroup, newGroup);
 };
 
 const compareFieldValue = (id: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
@@ -44,6 +54,11 @@ export const useField = (
 ): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface] => {
   const { autoCreate, disabled, validators } = props;
   const state = useFormStore(selector, compareField(fieldId));
+  let group: undefined | GroupState = undefined;
+  try {
+    group = useGroupStore();
+  } catch (e) {}
+
   const fieldApi = state.formApi.getField(
     fieldId,
     typeof autoCreate === 'undefined' ? true : autoCreate,
@@ -57,7 +72,24 @@ export const useField = (
       fieldApi.setValidators([]);
     };
   }, [validators]);
+  useEffect(() => {
+    fieldApi.setGroup(group ? group.name : null);
+  }, [group]);
   return [fieldApi.getValue(), fieldApi.setValue, fieldApi];
+};
+
+export const useGroup = (groupName: string, props: GroupProps = {}): [GroupInterface, GroupApiInterface] => {
+  const { defaultActive, autoCreate } = props;
+  const state = useFormStore(selector, compareGroup(groupName));
+  const groupApi = state.formApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
+    isActive: defaultActive,
+  }) as GroupApiInterface;
+  useEffect(() => {
+    return () => {
+      groupApi.remove();
+    };
+  }, []);
+  return [groupApi.getObject(), groupApi];
 };
 
 export const useFieldValue = (fieldId: string): [FieldValueType | undefined, string | undefined] => {
