@@ -39,3 +39,4 @@ export const getValuesDiff = (prev: any, current: any, maxLevel?: number, curren
 };
 
 export const isPromise = (value: any): boolean => Boolean(value && typeof value?.then === 'function');
+export const isArrayHasPromise = (arr: Array<any>): boolean => arr.some((item) => isPromise(item));

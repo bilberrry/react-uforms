@@ -136,7 +136,7 @@ test('set onChange attribute -> change input value ', async () => {
   await waitFor(() => expect(change).toHaveBeenCalled());
 });
 
-test('set onChange attribute -> focus input -> blur input', () => {
+test('set onBlur attribute -> focus input -> blur input', async () => {
   const blur = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={() => {}}>
@@ -157,29 +157,5 @@ test('set onChange attribute -> focus input -> blur input', () => {
   expect(input).toHaveFocus();
   input.blur();
   expect(input).not.toHaveFocus();
-  expect(blur).toHaveBeenCalled();
-});
-
-test('set onBlur attribute -> focus input -> blur input', () => {
-  const blur = jest.fn();
-  const { getByTestId } = render(
-    <Form onSubmit={() => {}}>
-      <Select
-        name="address.country"
-        data-testid="input"
-        onBlur={blur}
-        options={[
-          { value: null, name: 'Select country' },
-          { value: 'US', name: 'United States' },
-          { value: -1, name: 'Asgard' },
-        ]}
-      />
-    </Form>,
-  );
-  const input = getByTestId('input');
-  input.focus();
-  expect(input).toHaveFocus();
-  input.blur();
-  expect(input).not.toHaveFocus();
-  expect(blur).toHaveBeenCalled();
+  await waitFor(() => expect(blur).toHaveBeenCalled());
 });

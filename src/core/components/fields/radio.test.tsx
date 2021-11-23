@@ -117,7 +117,7 @@ test('set onChange attribute -> change input value ', () => {
   expect(changeNone).toHaveBeenCalledTimes(1);
 });
 
-test('set onBlur attribute -> focus input -> blur input', () => {
+test('set onBlur attribute -> focus input -> blur input', async () => {
   const blurMale = jest.fn();
   const blurFemale = jest.fn();
   const { getByTestId } = render(
@@ -132,10 +132,10 @@ test('set onBlur attribute -> focus input -> blur input', () => {
   expect(inputMale).toHaveFocus();
   inputMale.blur();
   expect(inputMale).not.toHaveFocus();
-  expect(blurMale).toHaveBeenCalled();
-  expect(blurFemale).not.toHaveBeenCalled();
+  await waitFor(() => expect(blurMale).toHaveBeenCalled());
+  await waitFor(() => expect(blurFemale).not.toHaveBeenCalled());
   inputFemale.focus();
   expect(inputFemale).toHaveFocus();
   inputFemale.blur();
-  expect(blurFemale).toHaveBeenCalled();
+  await waitFor(() => expect(blurFemale).toHaveBeenCalled());
 });

@@ -5,7 +5,7 @@ export type ValidationType = any;
 export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
 export type FieldErrorsType = Array<FieldErrorType>;
-export type ValidatorType = (value: FieldValueType) => Promise<string | boolean>;
+export type ValidatorType = (value: FieldValueType) => Promise<string | boolean> | string | boolean;
 export type ValidatorsType = Array<ValidatorType>;
 //
 // export interface FieldSetterInterface {
