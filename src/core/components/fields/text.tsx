@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from '../../hooks';
 import { stringToValue, valueToString } from '../../helpers';
 import { FieldPassedProps } from '../../types';
-import { FieldErrors } from '../field-errors';
+import { FieldErrors } from '../extra/field-errors';
 
 export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
   emptyValue?: string | null;

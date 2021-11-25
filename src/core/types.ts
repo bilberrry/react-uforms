@@ -65,9 +65,9 @@ export interface FieldClasses {
 
 export interface FieldGroupClasses {
   active: string;
-  errors: string;
+  valid: string;
   touched: string;
-  completed: string;
+  disabled: string;
 }
 
 export interface ClassesInterface {
@@ -140,6 +140,10 @@ export interface FormApiInterface<Values> {
   isValidating: () => boolean;
   submit: () => void;
   getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
+  // TODO refactor
+  prevGroup: () => void;
+  // TODO refactor
+  nextGroup: () => void;
   getGroup: (
     groupName: string,
     autoCreate?: boolean,

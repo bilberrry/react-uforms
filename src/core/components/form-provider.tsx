@@ -35,9 +35,9 @@ export const defaultClasses: ClassesInterface = {
   },
   fieldGroup: {
     active: 'active',
-    errors: 'is-invalid',
+    valid: 'is-invalid',
     touched: 'is-touched',
-    completed: 'is-completed',
+    disabled: 'is-disabled',
   },
 } as const;
 

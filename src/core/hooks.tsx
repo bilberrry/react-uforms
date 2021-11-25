@@ -12,7 +12,7 @@ import {
 import { useFormStore } from './api';
 import isEqual from 'lodash.isequal';
 import { useEffect } from 'react';
-import { GroupState, useGroupStore } from './components/group';
+import { GroupState, useGroupStore } from './components/extra/group';
 
 const selector = (state) => state;
 const compareState = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
@@ -29,6 +29,10 @@ const compareGroup = (name: string) => (oldState: FormStateInterface<any>, newSt
   const oldGroup = oldState.groups.find((item) => item.name === name);
   const newGroup = newState.groups.find((item) => item.name === name);
   return isEqual(oldGroup, newGroup);
+};
+
+const compareGroups = () => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+  return isEqual(oldState.groups, newState.groups);
 };
 
 const compareFieldValue = (id: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
@@ -90,6 +94,11 @@ export const useGroup = (groupName: string, props: GroupProps = {}): [GroupInter
     };
   }, []);
   return [groupApi.getObject(), groupApi];
+};
+
+export const useGroups = <Values,>(): [Array<GroupInterface>, FormApiInterface<Values>] => {
+  const state = useFormStore(selector, compareGroups()) as FormStateInterface<Values>;
+  return [state.groups, state.formApi];
 };
 
 export const useFieldValue = (fieldId: string): [FieldValueType | undefined, string | undefined] => {

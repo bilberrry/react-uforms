@@ -1,8 +1,8 @@
 import React, { CSSProperties, ReactElement, ReactNode } from 'react';
-import { useGroup } from '../hooks';
+import { useGroup } from '../../hooks';
 import create, { GetState, SetState } from 'zustand';
 import createContext from 'zustand/context';
-import { GroupApiInterface, GroupInterface } from '../types';
+import { GroupApiInterface, GroupInterface } from '../../types';
 
 export interface GroupState {
   name: string;
@@ -19,7 +19,7 @@ export interface GroupProps extends React.HTMLProps<HTMLDivElement> {
 const { Provider, useStore } = createContext<GroupState>();
 
 const GroupComponent: React.FC<GroupProps> = ({ name, children, defaultActive, style, ...props }) => {
-  const [group, groupAPi] = useGroup(name, { defaultActive });
+  const [group, groupAPi] = useGroup(name, { defaultActive, ...(defaultActive ? { isTouched: true } : {}) });
 
   const newStyle: CSSProperties = {
     ...style,

@@ -215,7 +215,15 @@ const groupApiPure = (set, get, group): GroupApiInterface => {
       return group.isActive;
     },
     setActive(): void {
-      // setGroup(group.name, { isTouched: true });
+      set((state) => ({
+        groups: state.groups.map((item) => {
+          return {
+            ...item,
+            active: group.name === item.name,
+            ...(group.name === item.name ? { isTouched: true } : {}),
+          };
+        }),
+      }));
     },
     /* ========= Group Touch ========= */
     isTouched(): boolean {
@@ -379,6 +387,8 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
       return get().form.isValidating;
     },
     getField,
+    nextGroup(): void {},
+    prevGroup(): void {},
     getGroup,
   };
 };
