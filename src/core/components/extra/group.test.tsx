@@ -2,9 +2,9 @@
 import React from 'react';
 import { render, cleanup, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Form } from './form';
+import { Form } from '../form';
 import { Group } from './group';
-import { Text } from './fields/text';
+import { Text } from '../fields/text';
 
 afterEach(() => {
   cleanup();

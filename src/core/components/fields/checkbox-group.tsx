@@ -2,7 +2,7 @@ import React, { ChangeEvent, createContext, ReactNode } from 'react';
 import { FieldPassedProps, FieldValueType } from '../../types';
 import { jsonToValue } from '../../helpers';
 import { useField } from '../../hooks';
-import { FieldErrors } from '../field-errors';
+import { FieldErrors } from '../extra/field-errors';
 
 // TODO refactor CheckboxGroup - delete React createContext
 

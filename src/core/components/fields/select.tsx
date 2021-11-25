@@ -2,7 +2,7 @@ import React from 'react';
 import { useField } from '../../hooks';
 import { jsonToValue, valueToJson } from '../../helpers';
 import { FieldPassedProps, FieldValueType } from '../../types';
-import { FieldErrors } from '../field-errors';
+import { FieldErrors } from '../extra/field-errors';
 
 // TODO test
 
