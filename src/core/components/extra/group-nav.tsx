@@ -1,18 +1,18 @@
 import React, { ReactNode } from 'react';
 import { useGroups } from '../../hooks';
-import { FormApiInterface, GroupInterface } from '../../types';
+import { GroupApiInterface, GroupInterface, GroupsApiInterface } from '../../types';
 import classNames from 'classnames';
 
 export interface GroupNavProps extends Omit<React.HTMLProps<HTMLUListElement>, 'children'> {
-  onClickGroup?: (formApi: FormApiInterface<unknown>, group: GroupInterface) => void;
+  onClickGroup?: (group: GroupApiInterface, api: GroupsApiInterface) => void;
   clickNext?: boolean;
   clickPrev?: boolean;
-  childNode?: (group: GroupInterface) => ReactNode;
+  childNode?: (group: GroupApiInterface, api: GroupsApiInterface) => ReactNode;
 }
 
 const GroupNavComponent: React.FC<GroupNavProps> = ({ onClickGroup, clickNext, clickPrev, childNode, ...props }) => {
-  const [groups, formApi] = useGroups();
-  const { active, valid, touched, disabled } = formApi.getClasses().fieldGroup;
+  const [groups, groupsApi] = useGroups();
+  const { active, valid, touched, disabled } = groupsApi.getClasses();
   return (
     <ul {...props}>
       {groups.map((group) => (
@@ -28,14 +28,14 @@ const GroupNavComponent: React.FC<GroupNavProps> = ({ onClickGroup, clickNext, c
             const groupIndex = groups.findIndex((item) => item.name === group.name);
             const activeIndex = groups.findIndex((item) => item.isActive);
             if (onClickGroup) {
-              onClickGroup(formApi, group);
+              onClickGroup(groupsApi.getGroup(group.name) as GroupApiInterface, groupsApi);
             }
             if ((groupIndex < activeIndex && clickPrev) || (groupIndex > activeIndex && clickNext)) {
-              formApi.getGroup(group.name)?.setActive();
+              groupsApi.getGroup(group.name)?.setActive();
             }
           }}
         >
-          {childNode ? childNode(group) : group.name}
+          {childNode ? childNode(groupsApi.getGroup(group.name) as GroupApiInterface, groupsApi) : group.name}
         </li>
       ))}
     </ul>

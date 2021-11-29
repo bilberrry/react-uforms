@@ -1,9 +1,6 @@
 import * as Validator from './core/validator';
 
 // Core
-// export * from './core/components/field-error';
-// export * from './core/components/field-group';
-// export * from './core/components/field-group-nav';
 export * from './core/hooks';
 export * from './core/types';
 
@@ -18,6 +15,13 @@ export * from './core/components/fields/radio';
 export * from './core/components/fields/select';
 export * from './core/components/fields/text';
 export * from './core/components/fields/text-area';
+
+// Extra
+export * from './core/components/extra/field-errors';
+export * from './core/components/extra/group';
+export * from './core/components/extra/group-buttons';
+export * from './core/components/extra/group-nav';
+
 // export * from './core/components/fields/custom-field';
 
 export { Validator };

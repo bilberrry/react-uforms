@@ -16,6 +16,7 @@ import {
   FieldErrorsType,
   GroupInterface,
   GroupApiInterface,
+  FieldGroupClasses,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
@@ -285,6 +286,26 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
       }),
     }));
   };
+  const validate = async (): Promise<boolean> => {
+    const fields = get().fields;
+    const promises: Array<Promise<boolean>> = [];
+    set({ form: { ...get().form, isValidating: true } });
+    for (let i = 0; i < fields.length; i++) {
+      const field: FieldInterface = fields[i];
+      const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
+      const callback = async () => {
+        const errors = await validateValue(field.value, validators);
+        setField(field.id, { errors, isValid: errors.length === 0, isValidating: false });
+        return errors.length === 0;
+      };
+      promises.push(callback());
+    }
+    const result = await Promise.all(promises);
+    const isValid = !result.some((i) => !i);
+    set({ form: { ...get().form, isValidating: false, isValid } });
+
+    return isValid;
+  };
   return {
     setDefaultValues(defaultValues): void {
       set({ form: { ...get().form, defaultValues } });
@@ -324,26 +345,6 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
         oSet(values, fields[i].id, fields[i].value);
       }
       return values;
-    },
-    async validate(): Promise<boolean> {
-      const fields = get().fields;
-      const promises: Array<Promise<boolean>> = [];
-      set({ form: { ...get().form, isValidating: true } });
-      for (let i = 0; i < fields.length; i++) {
-        const field: FieldInterface = fields[i];
-        const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
-        const callback = async () => {
-          const errors = await validateValue(field.value, validators);
-          setField(field.id, { errors, isValid: errors.length === 0, isValidating: false });
-          return errors.length === 0;
-        };
-        promises.push(callback());
-      }
-      const result = await Promise.all(promises);
-      const isValid = !result.some((i) => !i);
-      set({ form: { ...get().form, isValidating: false, isValid } });
-
-      return isValid;
     },
     getErrors(): FormErrorsType {
       return get().fields.map(({ id, errors }) => ({
@@ -386,10 +387,38 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
     isValidating(): boolean {
       return get().form.isValidating;
     },
+    validate,
     getField,
-    nextGroup(): void {},
-    prevGroup(): void {},
-    getGroup,
+    groupsApi: {
+      getClasses(): FieldGroupClasses {
+        return get().form.classes.groups;
+      },
+      async nextGroup(): Promise<boolean> {
+        const activeIndex = get().groups.findIndex((item) => item.isActive);
+        const activeGroup = get().groups[activeIndex];
+        if (activeIndex === get().groups.length - 1) {
+          if (await getGroup(activeGroup.name).validate()) {
+            return validate();
+          }
+        } else if (activeIndex < get().groups.length - 1) {
+          const nextGroup = get().groups[activeIndex + 1];
+          if (await getGroup(activeGroup.name).validate()) {
+            getGroup(nextGroup.name).setActive();
+            return true;
+          }
+        }
+
+        return false;
+      },
+      prevGroup(): void {
+        const activeIndex = get().groups.findIndex((item) => item.isActive);
+        if (activeIndex > 0) {
+          const prevGroup = get().groups[activeIndex - 1];
+          getGroup(prevGroup.name).setActive();
+        }
+      },
+      getGroup,
+    },
   };
 };
 
