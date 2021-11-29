@@ -1,13 +1,13 @@
 import {
   FieldApiInterface,
   FieldErrorsType,
-  FieldProps,
+  UseFieldProps,
   FieldValueType,
   FormApiInterface,
   FormStateInterface,
   GroupApiInterface,
   GroupInterface,
-  GroupProps,
+  UseGroupProps,
   GroupsApiInterface,
 } from './types';
 import { useFormStore } from './api';
@@ -55,7 +55,7 @@ export const useForm = <Values,>(): FormApiInterface<Values> => {
 
 export const useField = (
   fieldId: string,
-  props: FieldProps = {},
+  props: UseFieldProps = {},
 ): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface] => {
   const { autoCreate, disabled, validators } = props;
   const state = useFormStore(selector, compareField(fieldId));
@@ -83,7 +83,7 @@ export const useField = (
   return [fieldApi.getValue(), fieldApi.setValue, fieldApi];
 };
 
-export const useGroup = (groupName: string, props: GroupProps = {}): [GroupApiInterface, GroupsApiInterface] => {
+export const useGroup = (groupName: string, props: UseGroupProps = {}): [GroupApiInterface, GroupsApiInterface] => {
   const { defaultActive, autoCreate } = props;
   const state = useFormStore(selector, compareGroup(groupName));
   const groupsApi = state.formApi.groupsApi;

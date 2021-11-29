@@ -86,11 +86,7 @@ export interface GroupsApiInterface {
   prevGroup: () => void;
   nextGroup: () => Promise<boolean>;
   getClasses: () => GroupClasses;
-  getGroup: (
-    groupName: string,
-    autoCreate?: boolean,
-    data: Partial<GroupInterface> = {},
-  ) => GroupApiInterface | undefined;
+  getGroup: (groupName: string, autoCreate?: boolean, data?: Partial<GroupInterface>) => GroupApiInterface | undefined;
 }
 
 export interface GroupApiInterface {
@@ -161,13 +157,13 @@ export interface FieldPassedProps {
   validators?: ValidatorsType;
 }
 
-export interface FieldProps {
+export interface UseFieldProps {
   autoCreate?: boolean;
   disabled?: boolean;
   validators?: ValidatorsType;
 }
 
-export interface GroupProps {
+export interface UseGroupProps {
   autoCreate?: boolean;
   defaultActive?: boolean;
 }
