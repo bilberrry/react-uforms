@@ -33,7 +33,7 @@ export const defaultClasses: ClassesInterface = {
     error: 'invalid-feedback',
     invalid: 'is-invalid',
   },
-  fieldGroup: {
+  group: {
     active: 'active',
     valid: 'is-invalid',
     touched: 'is-touched',
@@ -80,7 +80,8 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
       formRef?.current?.removeEventListener<any>('fieldTouch', onTouchCallback);
     };
   }, [formRef]);
-  const onSubmitCallback = async () => {
+  const onSubmitCallback = async (e) => {
+    e.preventDefault();
     const isValid = await api.validate();
     if (isValid) {
       onSubmit(api, api.getValues());

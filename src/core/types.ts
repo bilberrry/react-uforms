@@ -63,7 +63,7 @@ export interface FieldClasses {
   invalid: string;
 }
 
-export interface FieldGroupClasses {
+export interface GroupClasses {
   active: string;
   valid: string;
   touched: string;
@@ -72,7 +72,7 @@ export interface FieldGroupClasses {
 
 export interface ClassesInterface {
   field: FieldClasses;
-  fieldGroup: FieldGroupClasses;
+  group: GroupClasses;
 }
 export interface FieldChangeEventInterface {
   id: string;
@@ -85,7 +85,7 @@ export interface FieldTouchEventInterface {
 export interface GroupsApiInterface {
   prevGroup: () => void;
   nextGroup: () => Promise<boolean>;
-  getClasses: () => FieldGroupClasses;
+  getClasses: () => GroupClasses;
   getGroup: (
     groupName: string,
     autoCreate?: boolean,
