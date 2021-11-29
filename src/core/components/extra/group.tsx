@@ -1,8 +1,8 @@
-import React, { CSSProperties, ReactElement, ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import { useGroup } from '../../hooks';
-import create, { GetState, SetState } from 'zustand';
+import create from 'zustand';
 import createContext from 'zustand/context';
-import { GroupApiInterface, GroupInterface, GroupsApiInterface } from '../../types';
+import { GroupApiInterface, GroupsApiInterface } from '../../types';
 
 export interface GroupState {
   name: string;
@@ -18,27 +18,29 @@ export interface GroupProps extends React.HTMLProps<HTMLDivElement> {
 
 const { Provider, useStore } = createContext<GroupState>();
 
-const GroupComponent: React.FC<GroupProps> = ({ name, children, defaultActive, style, ...props }) => {
-  const [groupApi, groupsAPi] = useGroup(name, { defaultActive, ...(defaultActive ? { isTouched: true } : {}) });
-  const newStyle: CSSProperties = {
-    ...style,
-    ...(groupApi.isActive() ? {} : { display: 'none' }),
-  };
-  const childrenComponent = typeof children === 'function' ? children(groupApi, groupsAPi) : children;
-  return (
-    <Provider
-      createStore={() =>
-        create(() => ({
-          name,
-        }))
-      }
-    >
-      <div {...props} style={newStyle}>
-        {childrenComponent}
-      </div>
-    </Provider>
-  );
-};
+const GroupComponent = React.forwardRef<HTMLDivElement, GroupProps>(
+  ({ name, children, defaultActive, style, ...props }, ref) => {
+    const [groupApi, groupsAPi] = useGroup(name, { defaultActive, ...(defaultActive ? { isTouched: true } : {}) });
+    const newStyle: CSSProperties = {
+      ...style,
+      ...(groupApi.isActive() ? {} : { display: 'none' }),
+    };
+    const childrenComponent = typeof children === 'function' ? children(groupApi, groupsAPi) : children;
+    return (
+      <Provider
+        createStore={() =>
+          create(() => ({
+            name,
+          }))
+        }
+      >
+        <div {...props} ref={ref} style={newStyle}>
+          {childrenComponent}
+        </div>
+      </Provider>
+    );
+  },
+);
 
 GroupComponent.displayName = 'Group';
 

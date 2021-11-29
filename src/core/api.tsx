@@ -2,21 +2,21 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 import {
   ClassesInterface,
-  FormErrorsType,
-  FieldInterface,
-  FormStateInterface,
-  FieldValueType,
-  FieldErrorType,
-  FormApiInterface,
   FieldApiInterface,
-  FieldTouchEventInterface,
   FieldChangeEventInterface,
-  ValidationType,
-  ValidatorsType,
   FieldErrorsType,
-  GroupInterface,
+  FieldErrorType,
+  FieldInterface,
+  FieldTouchEventInterface,
+  FieldValueType,
+  FormApiInterface,
+  FormErrorsType,
+  FormStateInterface,
   GroupApiInterface,
   GroupClasses,
+  GroupInterface,
+  ValidationType,
+  ValidatorsType,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
