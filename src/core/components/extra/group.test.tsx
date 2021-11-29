@@ -17,31 +17,33 @@ test('renders without crashing', () => {
       <Group name="group1">
         <Text name="profile.firstName" />
       </Group>
-      <Group name="group2" defaultActive={true}>
+      <Group name="group2">
         <Text name="profile.middleName" />
-      </Group>
-      <Group name="group3">
-        <Text name="profile.lastName" />
       </Group>
     </Form>,
   );
   unmount();
 });
 
-test('renders without crashing', () => {
-  const { unmount } = render(
+test('set defaultActive', async () => {
+  const { getByTestId } = render(
     <Form onSubmit={() => {}}>
       <Text name="profile.id" />
-      <Group name="group1">
+      <Group name="group1" data-testid="group1">
         <Text name="profile.firstName" />
       </Group>
-      <Group name="group2" defaultActive={true}>
+      <Group name="group2" defaultActive={true} data-testid="group2">
         <Text name="profile.middleName" />
       </Group>
-      <Group name="group3">
+      <Group name="group3" data-testid="group3">
         <Text name="profile.lastName" />
       </Group>
     </Form>,
   );
-  unmount();
+  const group1 = getByTestId('group1');
+  const group2 = getByTestId('group2');
+  const group3 = getByTestId('group3');
+  await waitFor(() => expect(group1).toHaveStyle('display: none'));
+  await waitFor(() => expect(group2).not.toHaveStyle('display: none'));
+  await waitFor(() => expect(group3).toHaveStyle('display: none'));
 });

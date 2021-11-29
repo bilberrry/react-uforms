@@ -88,7 +88,7 @@ export const useGroup = (groupName: string, props: GroupProps = {}): [GroupApiIn
   const state = useFormStore(selector, compareGroup(groupName));
   const groupsApi = state.formApi.groupsApi;
   const groupApi = state.formApi.groupsApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
-    isActive: defaultActive,
+    isActive: !!defaultActive,
   }) as GroupApiInterface;
   useEffect(() => {
     return () => {

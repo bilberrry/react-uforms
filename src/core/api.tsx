@@ -16,7 +16,7 @@ import {
   FieldErrorsType,
   GroupInterface,
   GroupApiInterface,
-  FieldGroupClasses,
+  GroupClasses,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
@@ -220,7 +220,7 @@ const groupApiPure = (set, get, group): GroupApiInterface => {
         groups: state.groups.map((item) => {
           return {
             ...item,
-            active: group.name === item.name,
+            isActive: group.name === item.name,
             ...(group.name === item.name ? { isTouched: true } : {}),
           };
         }),
@@ -390,8 +390,8 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
     validate,
     getField,
     groupsApi: {
-      getClasses(): FieldGroupClasses {
-        return get().form.classes.groups;
+      getClasses(): GroupClasses {
+        return get().form.classes.group;
       },
       async nextGroup(): Promise<boolean> {
         const activeIndex = get().groups.findIndex((item) => item.isActive);
