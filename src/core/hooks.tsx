@@ -8,6 +8,7 @@ import {
   GroupApiInterface,
   GroupInterface,
   GroupProps,
+  GroupsApiInterface,
 } from './types';
 import { useFormStore } from './api';
 import isEqual from 'lodash.isequal';
@@ -82,10 +83,11 @@ export const useField = (
   return [fieldApi.getValue(), fieldApi.setValue, fieldApi];
 };
 
-export const useGroup = (groupName: string, props: GroupProps = {}): [GroupInterface, GroupApiInterface] => {
+export const useGroup = (groupName: string, props: GroupProps = {}): [GroupApiInterface, GroupsApiInterface] => {
   const { defaultActive, autoCreate } = props;
   const state = useFormStore(selector, compareGroup(groupName));
-  const groupApi = state.formApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
+  const groupsApi = state.formApi.groupsApi;
+  const groupApi = state.formApi.groupsApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
     isActive: defaultActive,
   }) as GroupApiInterface;
   useEffect(() => {
@@ -93,12 +95,12 @@ export const useGroup = (groupName: string, props: GroupProps = {}): [GroupInter
       groupApi.remove();
     };
   }, []);
-  return [groupApi.getObject(), groupApi];
+  return [groupApi, groupsApi];
 };
 
-export const useGroups = <Values,>(): [Array<GroupInterface>, FormApiInterface<Values>] => {
+export const useGroups = <Values,>(): [Array<GroupInterface>, GroupsApiInterface] => {
   const state = useFormStore(selector, compareGroups()) as FormStateInterface<Values>;
-  return [state.groups, state.formApi];
+  return [state.groups, state.formApi.groupsApi];
 };
 
 export const useFieldValue = (fieldId: string): [FieldValueType | undefined, string | undefined] => {

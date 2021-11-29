@@ -82,6 +82,17 @@ export interface FieldTouchEventInterface {
   id: string;
 }
 
+export interface GroupsApiInterface {
+  prevGroup: () => void;
+  nextGroup: () => Promise<boolean>;
+  getClasses: () => FieldGroupClasses;
+  getGroup: (
+    groupName: string,
+    autoCreate?: boolean,
+    data: Partial<GroupInterface> = {},
+  ) => GroupApiInterface | undefined;
+}
+
 export interface GroupApiInterface {
   getObject: () => GroupInterface;
   getErrors: () => FormErrorsType;
@@ -140,15 +151,7 @@ export interface FormApiInterface<Values> {
   isValidating: () => boolean;
   submit: () => void;
   getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
-  // TODO refactor
-  prevGroup: () => void;
-  // TODO refactor
-  nextGroup: () => void;
-  getGroup: (
-    groupName: string,
-    autoCreate?: boolean,
-    data: Partial<GroupInterface> = {},
-  ) => GroupApiInterface | undefined;
+  groupsApi: GroupsApiInterface;
 }
 
 export interface FieldPassedProps {
