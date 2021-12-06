@@ -155,12 +155,14 @@ export interface FieldPassedProps {
   disabled?: boolean;
   hideError?: boolean;
   validators?: ValidatorsType;
+  dependsOn?: Array<string>;
 }
 
 export interface UseFieldProps {
   autoCreate?: boolean;
   disabled?: boolean;
   validators?: ValidatorsType;
+  dependsOn?: Array<string>;
 }
 
 export interface UseGroupProps {

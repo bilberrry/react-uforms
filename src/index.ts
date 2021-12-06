@@ -6,6 +6,7 @@ export * from './core/types';
 
 // Fields
 export * from './core/components/form';
+export * from './core/components/fields/field';
 export * from './core/components/fields/checkbox';
 export * from './core/components/fields/checkbox-group';
 export * from './core/components/fields/checkbox-group-item';
@@ -21,7 +22,5 @@ export * from './core/components/extra/field-errors';
 export * from './core/components/extra/group';
 export * from './core/components/extra/group-buttons';
 export * from './core/components/extra/group-nav';
-
-// export * from './core/components/fields/custom-field';
 
 export { Validator };

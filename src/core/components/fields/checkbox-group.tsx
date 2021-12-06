@@ -26,11 +26,13 @@ const CheckboxGroupComponent: React.FC<CheckboxGroupProps & FieldPassedProps> = 
   disabled,
   hideError,
   validators,
+  dependsOn,
   onChange,
 }) => {
   const [value, setValue, { validate, setTouched }] = useField(name, {
     disabled,
     validators,
+    dependsOn,
   });
   const childApi: CheckboxGroupApi = {
     name,

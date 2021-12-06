@@ -27,10 +27,12 @@ const RadioGroupComponent: React.FC<RadioGroupProps & FieldPassedProps> = ({
   hideError,
   validators,
   onChange,
+  dependsOn,
 }) => {
   const [value, setValue, { validate, setTouched }] = useField(name, {
     disabled,
     validators,
+    dependsOn,
   });
   const childApi: RadioGroupApi = {
     name,

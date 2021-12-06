@@ -18,8 +18,27 @@ export interface SelectProps extends React.HTMLProps<HTMLSelectElement> {
 }
 
 const SelectComponent = React.forwardRef<HTMLSelectElement, SelectProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, emptyValue = '', className, options, validators, hideError, ...props }, ref) => {
-    const [value, setValue, { getInputClassName, setTouched, validate }] = useField(name, { disabled, validators });
+  (
+    {
+      name,
+      disabled,
+      onBlur,
+      onChange,
+      emptyValue = '',
+      className,
+      options,
+      validators,
+      hideError,
+      dependsOn,
+      ...props
+    },
+    ref,
+  ) => {
+    const [value, setValue, { getInputClassName, setTouched, validate }] = useField(name, {
+      disabled,
+      validators,
+      dependsOn,
+    });
     return (
       <>
         <select

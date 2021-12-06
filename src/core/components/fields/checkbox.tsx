@@ -8,10 +8,11 @@ export interface CheckboxProps extends Omit<React.HTMLProps<HTMLInputElement>, '
 }
 
 const CheckboxComponent = React.forwardRef<HTMLInputElement, CheckboxProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, className, validators, onValue, offValue, ...props }, ref) => {
+  ({ name, disabled, onBlur, onChange, className, validators, onValue, offValue, dependsOn, ...props }, ref) => {
     const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
       disabled,
       validators,
+      dependsOn,
     });
     return (
       <input

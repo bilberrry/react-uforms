@@ -9,10 +9,14 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
 }
 
 const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, emptyValue = '', className, validators, hideError, ...props }, ref) => {
+  (
+    { name, disabled, onBlur, onChange, emptyValue = '', className, validators, hideError, dependsOn, ...props },
+    ref,
+  ) => {
     const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
       disabled,
       validators,
+      dependsOn,
     });
     return (
       <>

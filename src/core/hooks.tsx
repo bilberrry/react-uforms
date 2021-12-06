@@ -16,13 +16,13 @@ import { useEffect } from 'react';
 import { GroupState, useGroupStore } from './components/extra/group';
 
 const selector = (state) => state;
-const compareState = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+const compareForm = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
   return isEqual(oldState.form, newState.form);
 };
 
-const compareField = (id: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
-  const oldField = oldState.fields.find((item) => item.id === id);
-  const newField = newState.fields.find((item) => item.id === id);
+const compareField = (ids: Array<string>) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+  const oldField = oldState.fields.filter((item) => ids.indexOf(item.id) > -1);
+  const newField = newState.fields.filter((item) => ids.indexOf(item.id) > -1);
   return isEqual(oldField, newField);
 };
 
@@ -49,22 +49,23 @@ const compareFieldError = (id: string) => (oldState: FormStateInterface<any>, ne
 };
 
 export const useForm = <Values,>(): FormApiInterface<Values> => {
-  const state = useFormStore((state) => state, compareState);
+  const state = useFormStore((state) => state, compareForm);
   return state.formApi;
 };
 
-export const useField = (
+export const useField = <Values,>(
   fieldId: string,
   props: UseFieldProps = {},
-): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface] => {
-  const { autoCreate, disabled, validators } = props;
-  const state = useFormStore(selector, compareField(fieldId));
+): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface, FormApiInterface<Values>] => {
+  const { autoCreate, disabled, validators, dependsOn } = props;
+  const state = useFormStore(selector, compareField([fieldId, ...(dependsOn || [])]));
   let group: undefined | GroupState = undefined;
   try {
     group = useGroupStore();
   } catch (e) {}
 
-  const fieldApi = state.formApi.getField(
+  const formApi = state.formApi as FormApiInterface<Values>;
+  const fieldApi = formApi.getField(
     fieldId,
     typeof autoCreate === 'undefined' ? true : autoCreate,
   ) as FieldApiInterface;
@@ -80,14 +81,18 @@ export const useField = (
   useEffect(() => {
     fieldApi.setGroup(group ? group.name : null);
   }, [group]);
-  return [fieldApi.getValue(), fieldApi.setValue, fieldApi];
+  return [fieldApi.getValue(), fieldApi.setValue, fieldApi, formApi];
 };
 
-export const useGroup = (groupName: string, props: UseGroupProps = {}): [GroupApiInterface, GroupsApiInterface] => {
+export const useGroup = <Values,>(
+  groupName: string,
+  props: UseGroupProps = {},
+): [GroupApiInterface, GroupsApiInterface, FormApiInterface<Values>] => {
   const { defaultActive, autoCreate } = props;
   const state = useFormStore(selector, compareGroup(groupName));
-  const groupsApi = state.formApi.groupsApi;
-  const groupApi = state.formApi.groupsApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
+  const formApi = state.formApi as FormApiInterface<Values>;
+  const groupsApi = formApi.groupsApi;
+  const groupApi = formApi.groupsApi.getGroup(groupName, typeof autoCreate === 'undefined' ? true : autoCreate, {
     isActive: !!defaultActive,
   }) as GroupApiInterface;
   useEffect(() => {
@@ -95,12 +100,12 @@ export const useGroup = (groupName: string, props: UseGroupProps = {}): [GroupAp
       groupApi.remove();
     };
   }, []);
-  return [groupApi, groupsApi];
+  return [groupApi, groupsApi, formApi];
 };
 
-export const useGroups = <Values,>(): [Array<GroupInterface>, GroupsApiInterface] => {
+export const useGroups = <Values,>(): [Array<GroupInterface>, GroupsApiInterface, FormApiInterface<Values>] => {
   const state = useFormStore(selector, compareGroups()) as FormStateInterface<Values>;
-  return [state.groups, state.formApi.groupsApi];
+  return [state.groups, state.formApi.groupsApi, state.formApi];
 };
 
 export const useFieldValue = (fieldId: string): [FieldValueType | undefined, string | undefined] => {

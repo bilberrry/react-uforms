@@ -8,10 +8,11 @@ export interface RadioProps extends Omit<React.HTMLProps<HTMLInputElement>, 'val
 }
 
 const RadioComponent = React.forwardRef<HTMLInputElement, RadioProps & FieldPassedProps>(
-  ({ name, disabled, onBlur, onChange, className, validators, value: inputValue, ...props }, ref) => {
+  ({ name, disabled, onBlur, onChange, className, validators, value: inputValue, dependsOn, ...props }, ref) => {
     const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
       disabled,
       validators,
+      dependsOn,
     });
     return (
       <input
