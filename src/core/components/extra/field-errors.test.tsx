@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
+import * as yup from 'yup';
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Text } from '../fields/text';
 import { FieldErrors } from './field-errors';
-import * as Validator from '../../validator';
 
 afterEach(() => {
   cleanup();
@@ -21,10 +21,11 @@ test('renders without crashing', () => {
 });
 
 test('submit form', async () => {
-  const validation = () => ({
-    profile: {
-      firstName: [Validator.Required()],
-    },
+  const validation = yup.object({
+    id: yup.string().required(),
+    profile: yup.object({
+      firstName: yup.string().required(),
+    }),
   });
   const { getByTestId } = render(
     <Form onSubmit={() => {}} validation={validation} data-testid="form">
@@ -38,10 +39,11 @@ test('submit form', async () => {
 });
 
 test('touch input', async () => {
-  const validation = () => ({
-    profile: {
-      firstName: [Validator.Required()],
-    },
+  const validation = yup.object({
+    id: yup.string().required(),
+    profile: yup.object({
+      firstName: yup.string().required(),
+    }),
   });
   const { getByTestId } = render(
     <Form onSubmit={() => {}} validation={validation}>

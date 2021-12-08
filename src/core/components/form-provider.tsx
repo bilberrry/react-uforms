@@ -24,7 +24,7 @@ export interface FormProps<Values>
   onChange?: (api: FormApiInterface<Values>, changedField: string, fieldValue: FieldValueType) => void;
   onTouch?: (api: FormApiInterface<Values>, touchedField: string) => void;
   onError?: (api: FormApiInterface<Values>, errors: FormErrorsType) => void;
-  validation?: ValidationType | ((api: FormApiInterface<Values>) => ValidationType);
+  validation?: ValidationType;
   classes?: Partial<ClassesInterface>;
 }
 
@@ -69,8 +69,7 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
     api.setClasses(mergedClasses);
   }, [classes]);
   useEffect(() => {
-    const items = validation && typeof validation === 'function' ? validation(api) : validation;
-    api.setValidation(items || {});
+    api.setValidation(validation);
   }, [validation]);
   useEffect(() => {
     formRef?.current?.addEventListener<any>('fieldChange', onChangeCallback);

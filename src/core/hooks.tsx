@@ -1,14 +1,14 @@
 import {
   FieldApiInterface,
   FieldErrorsType,
-  UseFieldProps,
   FieldValueType,
   FormApiInterface,
   FormStateInterface,
   GroupApiInterface,
   GroupInterface,
-  UseGroupProps,
   GroupsApiInterface,
+  UseFieldProps,
+  UseGroupProps,
 } from './types';
 import { useFormStore } from './api';
 import isEqual from 'lodash.isequal';
@@ -57,7 +57,7 @@ export const useField = <Values,>(
   fieldId: string,
   props: UseFieldProps = {},
 ): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface, FormApiInterface<Values>] => {
-  const { autoCreate, disabled, validators, dependsOn } = props;
+  const { autoCreate, disabled, dependsOn } = props;
   const state = useFormStore(selector, compareField([fieldId, ...(dependsOn || [])]));
   let group: undefined | GroupState = undefined;
   try {
@@ -72,12 +72,6 @@ export const useField = <Values,>(
   useEffect(() => {
     fieldApi.setDisabled(!!disabled);
   }, [disabled]);
-  useEffect(() => {
-    fieldApi.setValidators(validators || []);
-    return () => {
-      fieldApi.setValidators([]);
-    };
-  }, [validators]);
   useEffect(() => {
     fieldApi.setGroup(group ? group.name : null);
   }, [group]);

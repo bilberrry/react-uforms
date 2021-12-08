@@ -1,5 +1,3 @@
-import * as Validator from './core/validator';
-
 // Core
 export * from './core/hooks';
 export * from './core/types';
@@ -22,5 +20,3 @@ export * from './core/components/extra/field-errors';
 export * from './core/components/extra/group';
 export * from './core/components/extra/group-buttons';
 export * from './core/components/extra/group-nav';
-
-export { Validator };

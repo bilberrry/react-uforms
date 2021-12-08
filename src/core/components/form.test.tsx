@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from './form';
 import { Text } from './fields/text';
-import * as Validator from '../validator';
+import * as yup from 'yup';
 
 afterEach(() => {
   cleanup();
@@ -147,13 +147,13 @@ test('touch input -> unsure onTouch is called ', async () => {
 
 test('set onError -> submit', async () => {
   const onError = jest.fn();
-  const validators = () => ({
-    profile: {
-      firstName: [Validator.Required()],
-    },
+  const validation = yup.object({
+    profile: yup.object({
+      firstName: yup.string().required('Required'),
+    }),
   });
   const { getByTestId } = render(
-    <Form onSubmit={() => {}} onError={onError} validation={validators} data-testid="form">
+    <Form onSubmit={() => {}} onError={onError} validation={validation} data-testid="form">
       <Text name="profile.firstName" />
     </Form>,
   );
@@ -197,10 +197,10 @@ test('change input -> unsure isChanged is true ', async () => {
 });
 
 test('set classes -> field:invalid -> submit', async () => {
-  const validation = () => ({
-    profile: {
-      firstName: [Validator.Required()],
-    },
+  const validation = yup.object({
+    profile: yup.object({
+      firstName: yup.string().required(),
+    }),
   });
   const invalidClass = 'foo';
   const { getByTestId } = render(
@@ -221,96 +221,3 @@ test('set classes -> field:invalid -> submit', async () => {
   fireEvent.submit(form);
   await waitFor(() => expect(input).not.toHaveClass(invalidClass));
 });
-
-// test('set classes -> field:error -> submit', () => {
-//   const validation = () => ({
-//     profile: {
-//       firstName: [Validator.Required()],
-//     },
-//   });
-//   const errorClass = 'foo';
-//   const { getByTestId } = render(
-//     <Form
-//       onSubmit={() => {}}
-//       validation={validation}
-//       data-testid="form"
-//       classes={{ field: { error: errorClass, invalid: 'is-invalid' } }}
-//     >
-//       <Text name="profile.firstName" />
-//       <FieldError name="profile.firstName" data-testid="error" />
-//     </Form>,
-//   );
-//   const form = getByTestId('form');
-//   fireEvent.submit(form);
-//   expect(getByTestId('error')).toHaveClass(errorClass);
-// })
-
-//
-//
-// test('div form: renders without crashing', () => {
-//   const { unmount } = render(
-//     <Form onSubmit={() => {}} element="div">
-//       <div />
-//     </Form>,
-//   );
-//   unmount();
-// });
-//
-// test('div form: set default values -> change input -> submit form -> get values difference', () => {
-//   const defaultValues = {
-//     id: 2,
-//     email: 'foo@example.com',
-//     profile: {
-//       firstName: 'John',
-//       lastName: 'Brown',
-//       bio: 'Travel Blogger',
-//     },
-//     createdAt: '2018-04-25T20:36:02+00:00',
-//   };
-//   let diffValues = null;
-//   let diffValuesLevel1 = null;
-//   const { getByTestId } = render(
-//     <Form
-//       defaultValues={defaultValues}
-//       onSubmit={(_, api) => {
-//         diffValues = api.getValuesDiff();
-//         diffValuesLevel1 = api.getValuesDiff(1);
-//       }}
-//       data-testid="form"
-//     >
-//       {api => (
-//         <Fragment>
-//           <Text name="id" disabled />
-//           <Text name="email" data-testid="email" />
-//           <Text name="profile.firstName" data-testid="first-name" />
-//           <Text name="profile.lastName" />
-//           <button type="button" onClick={() => api.submit()} data-testid="button" />
-//         </Fragment>
-//       )}
-//     </Form>,
-//   );
-//   const submit = getByTestId('button');
-//   const email = getByTestId('email');
-//   const firstName = getByTestId('first-name');
-//   fireEvent.click(submit);
-//   expect(diffValues).toEqual({});
-//   fireEvent.change(email, { target: { value: 'bar@example.com' } });
-//   fireEvent.click(submit);
-//   expect(diffValues).toEqual({ email: 'bar@example.com' });
-//   fireEvent.change(firstName, { target: { value: 'Bill' } });
-//   fireEvent.click(submit);
-//   expect(diffValues).toEqual({
-//     email: 'bar@example.com',
-//     profile: {
-//       firstName: 'Bill',
-//     },
-//   });
-//   expect(diffValuesLevel1).toEqual({
-//     email: 'bar@example.com',
-//     profile: {
-//       firstName: 'Bill',
-//       lastName: 'Brown',
-//       bio: 'Travel Blogger',
-//     },
-//   });
-// });

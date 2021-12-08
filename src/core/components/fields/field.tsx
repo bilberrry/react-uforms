@@ -12,14 +12,12 @@ export interface FieldProps {
 const FieldComponent: React.FC<FieldProps & FieldPassedProps> = ({
   name,
   disabled,
-  validators,
   hideError,
   children,
   dependsOn,
 }) => {
   const [, , fieldApi, formApi] = useField(name, {
     disabled,
-    validators,
     dependsOn,
   });
   return (

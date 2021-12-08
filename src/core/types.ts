@@ -5,8 +5,6 @@ export type ValidationType = any;
 export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
 export type FieldErrorsType = Array<FieldErrorType>;
-export type ValidatorType = (value: FieldValueType) => Promise<string | boolean> | string | boolean;
-export type ValidatorsType = Array<ValidatorType>;
 //
 // export interface FieldSetterInterface {
 //   id: string;
@@ -24,7 +22,6 @@ export interface FieldInterface {
   isValid: boolean;
   group: string | null;
   value: FieldValueType;
-  validators: ValidatorsType;
   errors: FieldErrorsType;
 }
 
@@ -113,8 +110,6 @@ export interface FieldApiInterface {
   setErrors: (errors: FieldErrorsType) => void;
   getInputClassName: (existedClassName?: string) => string;
   getErrorClassName: (existedClassName?: string) => string;
-  getValidators: () => ValidatorsType;
-  setValidators: (validators: ValidatorsType) => void;
   isDisabled: () => boolean;
   setDisabled: (value: boolean) => void;
   getGroup: () => string | null;
@@ -154,14 +149,12 @@ export interface FieldPassedProps {
   name: string;
   disabled?: boolean;
   hideError?: boolean;
-  validators?: ValidatorsType;
   dependsOn?: Array<string>;
 }
 
 export interface UseFieldProps {
   autoCreate?: boolean;
   disabled?: boolean;
-  validators?: ValidatorsType;
   dependsOn?: Array<string>;
 }
 

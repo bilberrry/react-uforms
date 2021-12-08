@@ -16,39 +16,29 @@ import {
   GroupClasses,
   GroupInterface,
   ValidationType,
-  ValidatorsType,
 } from './types';
 import { defaultClasses } from './components/form-provider';
 import { RefObject } from 'react';
 import oGet from 'lodash.get';
 import oSet from 'lodash.set';
-import { isArrayHasPromise, isPromise } from './helpers';
 
 export const { Provider: FormStoreProvider, useStore: useFormStore } = createContext<FormStateInterface<any>>();
-
-const validateValue = async (value, validators: ValidatorsType): Promise<Array<string>> => {
-  const errors: Array<string> = [];
-  for (let i = 0; i < validators.length; i++) {
-    const validator = validators[i];
-    try {
-      const message = isPromise(validator) ? await validator(value) : validator(value);
-      if (message && typeof message === 'string') {
-        errors.push(message);
-        break;
-      }
-    } catch (e: any) {
-      errors.push(e?.message || 'Value is invalid');
-      break;
-    }
-  }
-
-  return errors;
-};
 
 /* ============================= */
 /* ========= Field API ========= */
 /* ============================= */
 const fieldApiPure = (set, get, field): FieldApiInterface => {
+  const getValues = (): any => {
+    const {
+      fields,
+      form: { defaultValues },
+    } = get();
+    const values = JSON.parse(JSON.stringify(defaultValues));
+    for (let i = 0; i < fields.length; i++) {
+      oSet(values, fields[i].id, fields[i].value);
+    }
+    return values;
+  };
   const setField = (id: string, data: Partial<FieldInterface>) => {
     set((state) => ({
       fields: state.fields.map((item) => {
@@ -75,13 +65,6 @@ const fieldApiPure = (set, get, field): FieldApiInterface => {
       setField(field.id, { value });
       const event = new CustomEvent<FieldChangeEventInterface>('fieldChange', { detail: { id: field.id, value } });
       get().form.formRef?.current?.dispatchEvent(event);
-    },
-    /* ========= Field Validators ========= */
-    getValidators(): ValidatorsType {
-      return field.validators;
-    },
-    setValidators(validators: ValidatorsType): void {
-      setField(field.id, { validators });
     },
     /* ========= Field Errors ========= */
     getErrors(): FieldErrorsType {
@@ -145,16 +128,24 @@ const fieldApiPure = (set, get, field): FieldApiInterface => {
       return classNames.join(' ');
     },
     /* ========= Field Validation ========= */
-    // TODO refactor
     async validate(): Promise<boolean> {
-      const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
-      if (isArrayHasPromise(validators)) {
-        setField(field.id, { isValidating: true });
+      const validation = get().form.validation;
+      if (!validation) {
+        return true;
       }
-      const errors = await validateValue(field.value, validators);
-      setField(field.id, { errors, isValid: errors.length === 0, isValidating: false });
+      const values = getValues();
+      let isValid = false;
 
-      return errors.length === 0;
+      setField(field.id, { isValidating: true });
+      try {
+        await validation.validateAt(field.id, values, { abortEarly: false });
+        setField(field.id, { errors: [], isValid: true, isValidating: false });
+        isValid = true;
+      } catch (err: any) {
+        setField(field.id, { errors: err.errors, isValid: false, isValidating: false });
+      }
+
+      return isValid;
     },
   };
 };
@@ -163,19 +154,33 @@ const fieldApiPure = (set, get, field): FieldApiInterface => {
 /* ========= Group API ========= */
 /* ============================= */
 const groupApiPure = (set, get, group): GroupApiInterface => {
-  const setField = (id: string, data: Partial<FieldInterface>) => {
+  const setFields = (
+    ids: Array<string>,
+    data: Array<Partial<FieldInterface>>,
+    defaultData: Partial<FieldInterface> = {},
+  ) => {
     set((state) => ({
       fields: state.fields.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            ...data,
-          };
-        }
-        return item;
+        const index = ids.indexOf(item.id);
+        return {
+          ...item,
+          ...(index > -1 ? data[index] : defaultData),
+        };
       }),
     }));
   };
+  const getValues = (): any => {
+    const {
+      fields,
+      form: { defaultValues },
+    } = get();
+    const values = JSON.parse(JSON.stringify(defaultValues));
+    for (let i = 0; i < fields.length; i++) {
+      oSet(values, fields[i].id, fields[i].value);
+    }
+    return values;
+  };
+
   const setGroup = (name: string, data: Partial<GroupInterface>) => {
     set((state) => ({
       groups: state.groups.map((item) => {
@@ -242,21 +247,32 @@ const groupApiPure = (set, get, group): GroupApiInterface => {
     },
     /* ========= Group Validation ========= */
     async validate(): Promise<boolean> {
+      const validation = get().form.validation;
+      if (!validation) {
+        return true;
+      }
       const fields = get().fields.filter((item) => item.group === group.name);
-      const promises: Array<Promise<boolean>> = [];
+      const values = getValues();
+      const ids: Array<string> = [];
+      const data: Array<Partial<FieldInterface>> = [];
+      let isValid = true;
+
       setGroup(group.name, { isValidating: true });
+
       for (let i = 0; i < fields.length; i++) {
         const field: FieldInterface = fields[i];
-        const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
-        const callback = async (): Promise<boolean> => {
-          const errors = await validateValue(field.value, validators);
-          setField(field.id, { errors, isValid: errors.length === 0, isValidating: false });
-          return errors.length === 0;
-        };
-        promises.push(callback());
+        try {
+          await validation.validateAt(field.id, values, { abortEarly: false });
+          ids.push(field.id);
+          data.push({ errors: [], isValid: true });
+        } catch (err: any) {
+          isValid = false;
+          ids.push(field.id);
+          data.push({ errors: err.errors, isValid: false });
+        }
       }
-      const result = await Promise.all(promises);
-      const isValid = !result.some((i) => !i);
+
+      setFields(ids, data);
       setGroup(group.name, { isValidating: false, isValid });
 
       return isValid;
@@ -286,22 +302,57 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
       }),
     }));
   };
-  const validate = async (): Promise<boolean> => {
-    const fields = get().fields;
-    const promises: Array<Promise<boolean>> = [];
-    set({ form: { ...get().form, isValidating: true } });
+  const setFields = (
+    ids: Array<string>,
+    data: Array<Partial<FieldInterface>>,
+    defaultData: Partial<FieldInterface> = {},
+  ) => {
+    set((state) => ({
+      fields: state.fields.map((item) => {
+        const index = ids.indexOf(item.id);
+        return {
+          ...item,
+          ...(index > -1 ? data[index] : defaultData),
+        };
+      }),
+    }));
+  };
+
+  const getValues = (): Values => {
+    const {
+      fields,
+      form: { defaultValues },
+    } = get();
+    const values = JSON.parse(JSON.stringify(defaultValues));
     for (let i = 0; i < fields.length; i++) {
-      const field: FieldInterface = fields[i];
-      const validators: ValidatorsType = [...field.validators, ...(oGet(get().form.validation, field.id) || [])];
-      const callback = async () => {
-        const errors = await validateValue(field.value, validators);
-        setField(field.id, { errors, isValid: errors.length === 0, isValidating: false });
-        return errors.length === 0;
-      };
-      promises.push(callback());
+      oSet(values, fields[i].id, fields[i].value);
     }
-    const result = await Promise.all(promises);
-    const isValid = !result.some((i) => !i);
+    return values;
+  };
+
+  const validate = async (): Promise<boolean> => {
+    const validation = get().form.validation;
+    if (!validation) {
+      return true;
+    }
+    const values = getValues();
+    const ids: Array<string> = [];
+    const data: Array<Partial<FieldInterface>> = [];
+    let isValid = false;
+
+    set({ form: { ...get().form, isValidating: true } });
+
+    try {
+      await validation.validate(values, { abortEarly: false });
+      isValid = true;
+    } catch (err: any) {
+      for (let i = 0; i < err.inner.length; i++) {
+        const { path, errors } = err.inner[i];
+        ids.push(path as string);
+        data.push({ errors: errors, isValid: false });
+      }
+    }
+    setFields(ids, data, { errors: [], isValid: true });
     set({ form: { ...get().form, isValidating: false, isValid } });
 
     return isValid;
@@ -335,17 +386,7 @@ const formApiPure = <Values,>(set, get, getField, getGroup): FormApiInterface<Va
       const event = new Event('submit', { cancelable: true, bubbles: true });
       get().form.formRef?.current?.dispatchEvent(event);
     },
-    getValues(): Values {
-      const {
-        fields,
-        form: { defaultValues },
-      } = get();
-      const values = JSON.parse(JSON.stringify(defaultValues));
-      for (let i = 0; i < fields.length; i++) {
-        oSet(values, fields[i].id, fields[i].value);
-      }
-      return values;
-    },
+    getValues,
     getErrors(): FormErrorsType {
       return get().fields.map(({ id, errors }) => ({
         id,
@@ -438,7 +479,6 @@ export const createFormStore = <Values,>() =>
           isValid: false,
           group: null,
           value: oGet(get().form.defaultValues, fieldId),
-          validators: [],
           errors: [],
         };
         set({ fields: [...get().fields, field] });

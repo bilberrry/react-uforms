@@ -9,13 +9,9 @@ export interface TextAreaProps extends Omit<React.HTMLProps<HTMLTextAreaElement>
 }
 
 const TextAreaComponent = React.forwardRef<HTMLTextAreaElement, TextAreaProps & FieldPassedProps>(
-  (
-    { name, disabled, onBlur, onChange, emptyValue = '', className, validators, hideError, dependsOn, ...props },
-    ref,
-  ) => {
+  ({ name, disabled, onBlur, onChange, emptyValue = '', className, hideError, dependsOn, ...props }, ref) => {
     const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
       disabled,
-      validators,
       dependsOn,
     });
     return (
