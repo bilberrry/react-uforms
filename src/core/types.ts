@@ -53,6 +53,7 @@ export interface FormStateInterface<Values> {
   fields: Array<FieldInterface>;
   formApi: FormApiInterface<Values>;
   groups: Array<GroupInterface>;
+  arrFields: Array<ArrFieldInterface>;
 }
 
 export interface FieldClasses {
@@ -116,6 +117,7 @@ export interface FieldApiInterface {
   setGroup: (groupName: string | null) => void;
   isTouched: () => boolean;
   setTouched: () => void;
+  remove: () => void;
   isValid: () => boolean;
   isValidating: () => boolean;
   validate: () => Promise<boolean>;
@@ -143,6 +145,22 @@ export interface FormApiInterface<Values> {
   submit: () => void;
   getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
   groupsApi: GroupsApiInterface;
+  getArrField: (fieldId: string, autoCreate?: boolean) => ArrFieldApiInterface | undefined;
+}
+
+export interface ArrFieldInterface {
+  id: string;
+  fields: Array<string>;
+}
+
+export interface ArrFieldApiInterface {
+  getObject: () => ArrFieldInterface;
+  remove: () => void;
+  addItem: (index?: number) => void;
+  removeItem: (index: number) => void;
+  moveItem: (fromIndex: number, toIndex: number) => void;
+  setItems: (items: Array<string>) => void;
+  getItems: () => Array<string>;
 }
 
 export interface FieldPassedProps {

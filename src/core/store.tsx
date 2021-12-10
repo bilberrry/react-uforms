@@ -1,0 +1,90 @@
+import create from 'zustand';
+import createContext from 'zustand/context';
+import {
+  ArrFieldApiInterface,
+  ArrFieldInterface,
+  FieldApiInterface,
+  FieldInterface,
+  FormStateInterface,
+  GroupApiInterface,
+  GroupInterface,
+} from './types';
+import { defaultClasses } from './components/form-provider';
+import oGet from 'lodash.get';
+import { groupApiPure } from './apis/group';
+import { formApiPure } from './apis/form';
+import { fieldApiPure } from './apis/field';
+import { arrFieldApiPure } from './apis/arr-field';
+
+export const { Provider: FormStoreProvider, useStore: useFormStore } = createContext<FormStateInterface<any>>();
+
+export const createFormStore = <Values,>() =>
+  create<FormStateInterface<Values>>((set, get) => {
+    const getField = (fieldId: string, autoCreate = false): FieldApiInterface | undefined => {
+      let field: FieldInterface | undefined = get().fields.find((item) => item.id === fieldId);
+      if (!field && autoCreate) {
+        field = {
+          id: fieldId,
+          isValidating: false,
+          isDisabled: false,
+          isTouched: false,
+          isValid: false,
+          group: null,
+          value: oGet(get().form.defaultValues, fieldId),
+          errors: [],
+        };
+        set({ fields: [...get().fields, field] });
+      }
+      return field ? fieldApiPure(set, get, field) : undefined;
+    };
+    const getGroup = (
+      groupName: string,
+      autoCreate = false,
+      data: Partial<GroupInterface> = {},
+    ): GroupApiInterface | undefined => {
+      let group: GroupInterface | undefined = get().groups.find((item) => item.name === groupName);
+      if (!group && autoCreate) {
+        group = {
+          name: groupName,
+          isValidating: false,
+          isDisabled: false,
+          isTouched: false,
+          isActive: false,
+          isValid: false,
+          ...data,
+        };
+        set({ groups: [...get().groups, group] });
+      }
+      return group ? groupApiPure(set, get, group) : undefined;
+    };
+    const getArrField = (arrFieldId: string, autoCreate = false): ArrFieldApiInterface | undefined => {
+      let arrField: ArrFieldInterface | undefined = get().arrFields.find((item) => item.id === arrFieldId);
+      if (!arrField && autoCreate) {
+        arrField = {
+          id: arrFieldId,
+          fields: [],
+        };
+        set({ arrFields: [...get().arrFields, arrField] });
+      }
+      return arrField ? arrFieldApiPure(set, get, arrField) : undefined;
+    };
+
+    const formApi = formApiPure<Values>(set, get, getField, getGroup, getArrField);
+
+    return {
+      form: {
+        defaultValues: {},
+        isValidating: false,
+        isTouched: false,
+        isValid: true,
+        isChanged: false,
+        formRef: null,
+        validation: {},
+        classes: defaultClasses,
+      },
+      fields: [],
+      groups: [],
+      formApi,
+      arrFields: [],
+    };
+  });

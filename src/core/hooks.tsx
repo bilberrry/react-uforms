@@ -1,4 +1,5 @@
 import {
+  ArrFieldApiInterface,
   FieldApiInterface,
   FieldErrorsType,
   FieldValueType,
@@ -10,10 +11,11 @@ import {
   UseFieldProps,
   UseGroupProps,
 } from './types';
-import { useFormStore } from './api';
+import { useFormStore } from './store';
 import isEqual from 'lodash.isequal';
 import { useEffect } from 'react';
 import { GroupState, useGroupStore } from './components/extra/group';
+import oGet from 'lodash.get';
 
 const selector = (state) => state;
 const compareForm = (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
@@ -25,6 +27,13 @@ const compareField = (ids: Array<string>) => (oldState: FormStateInterface<any>,
   const newField = newState.fields.filter((item) => ids.indexOf(item.id) > -1);
   return isEqual(oldField, newField);
 };
+
+const compareArrField =
+  (ids: Array<string>) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+    const oldField = oldState.arrFields.filter((item) => ids.indexOf(item.id) > -1);
+    const newField = newState.arrFields.filter((item) => ids.indexOf(item.id) > -1);
+    return isEqual(oldField, newField);
+  };
 
 const compareGroup = (name: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
   const oldGroup = oldState.groups.find((item) => item.name === name);
@@ -75,6 +84,11 @@ export const useField = <Values,>(
   useEffect(() => {
     fieldApi.setGroup(group ? group.name : null);
   }, [group]);
+  useEffect(() => {
+    return () => {
+      fieldApi.remove();
+    };
+  }, []);
   return [fieldApi.getValue(), fieldApi.setValue, fieldApi, formApi];
 };
 
@@ -112,4 +126,29 @@ export const useFieldErrors = (fieldId: string): [FieldErrorsType | undefined, s
   const state = useFormStore(selector, compareFieldError(fieldId));
   const fieldApi = state.formApi.getField(fieldId, false) as FieldApiInterface;
   return fieldApi ? [fieldApi.getErrors(), fieldApi.getErrorClassName()] : [undefined, undefined];
+};
+
+export const useArrField = <Values,>(
+  arrFieldId: string,
+): [items: Array<string>, arrFieldApi: ArrFieldApiInterface, formApi: FormApiInterface<Values>] => {
+  const state = useFormStore((state) => state, compareArrField([arrFieldId]));
+  const formApi = state.formApi as FormApiInterface<Values>;
+  const arrFieldApi = formApi.getArrField(arrFieldId, true) as ArrFieldApiInterface;
+
+  useEffect(() => {
+    const defaultValues = state.formApi.getDefaultValues();
+    const arr = oGet(defaultValues, arrFieldId);
+    if (Array.isArray(arr) && arr.length > 0) {
+      const items = arr.map((e, i) => `${arrFieldId}.${i}`);
+      arrFieldApi.setItems(items);
+    }
+  }, [arrFieldId, state.formApi.getDefaultValues()]);
+
+  useEffect(() => {
+    return () => {
+      arrFieldApi.remove();
+    };
+  }, []);
+
+  return [arrFieldApi.getItems(), arrFieldApi, formApi];
 };
