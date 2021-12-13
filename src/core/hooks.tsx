@@ -1,6 +1,6 @@
 import {
-  ArrFieldApiInterface,
   FieldApiInterface,
+  FieldArrayApiInterface,
   FieldErrorsType,
   FieldValueType,
   FormApiInterface,
@@ -28,13 +28,6 @@ const compareField = (ids: Array<string>) => (oldState: FormStateInterface<any>,
   return isEqual(oldField, newField);
 };
 
-const compareArrField =
-  (ids: Array<string>) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
-    const oldField = oldState.arrFields.filter((item) => ids.indexOf(item.id) > -1);
-    const newField = newState.arrFields.filter((item) => ids.indexOf(item.id) > -1);
-    return isEqual(oldField, newField);
-  };
-
 const compareGroup = (name: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
   const oldGroup = oldState.groups.find((item) => item.name === name);
   const newGroup = newState.groups.find((item) => item.name === name);
@@ -56,6 +49,13 @@ const compareFieldError = (id: string) => (oldState: FormStateInterface<any>, ne
   const newField = newState.fields.find((item) => item.id === id);
   return oldField?.errors.length === newField?.errors.length;
 };
+
+const compareDynamicValues =
+  (path: string) => (oldState: FormStateInterface<any>, newState: FormStateInterface<any>) => {
+    const oldValue = oGet(oldState.dynamicValues, path);
+    const newValue = oGet(newState.dynamicValues, path);
+    return isEqual(oldValue, newValue);
+  };
 
 export const useForm = <Values,>(): FormApiInterface<Values> => {
   const state = useFormStore((state) => state, compareForm);
@@ -88,7 +88,7 @@ export const useField = <Values,>(
     return () => {
       fieldApi.remove();
     };
-  }, []);
+  }, [fieldId]);
   return [fieldApi.getValue(), fieldApi.setValue, fieldApi, formApi];
 };
 
@@ -116,6 +116,14 @@ export const useGroups = <Values,>(): [Array<GroupInterface>, GroupsApiInterface
   return [state.groups, state.formApi.groupsApi, state.formApi];
 };
 
+export const useFieldValues = (fieldIds: Array<string>): Array<FieldValueType> => {
+  const state = useFormStore(selector, compareField(fieldIds));
+  return fieldIds.map((fieldId) => {
+    const fieldApi = state.formApi.getField(fieldId, false);
+    return fieldApi ? fieldApi.getValue() : undefined;
+  });
+};
+
 export const useFieldValue = (fieldId: string): [FieldValueType | undefined, string | undefined] => {
   const state = useFormStore(selector, compareFieldValue(fieldId));
   const fieldApi = state.formApi.getField(fieldId, false) as FieldApiInterface;
@@ -128,27 +136,12 @@ export const useFieldErrors = (fieldId: string): [FieldErrorsType | undefined, s
   return fieldApi ? [fieldApi.getErrors(), fieldApi.getErrorClassName()] : [undefined, undefined];
 };
 
-export const useArrField = <Values,>(
-  arrFieldId: string,
-): [items: Array<string>, arrFieldApi: ArrFieldApiInterface, formApi: FormApiInterface<Values>] => {
-  const state = useFormStore((state) => state, compareArrField([arrFieldId]));
+export const useFieldArray = <Values,>(
+  fieldArrayId: string,
+): [items: Array<string>, fieldArrayApi: FieldArrayApiInterface, formApi: FormApiInterface<Values>] => {
+  const state = useFormStore((state) => state, compareDynamicValues(fieldArrayId));
   const formApi = state.formApi as FormApiInterface<Values>;
-  const arrFieldApi = formApi.getArrField(arrFieldId, true) as ArrFieldApiInterface;
+  const fieldArrayApi = formApi.getFieldArray(fieldArrayId) as FieldArrayApiInterface;
 
-  useEffect(() => {
-    const defaultValues = state.formApi.getDefaultValues();
-    const arr = oGet(defaultValues, arrFieldId);
-    if (Array.isArray(arr) && arr.length > 0) {
-      const items = arr.map((e, i) => `${arrFieldId}.${i}`);
-      arrFieldApi.setItems(items);
-    }
-  }, [arrFieldId, state.formApi.getDefaultValues()]);
-
-  useEffect(() => {
-    return () => {
-      arrFieldApi.remove();
-    };
-  }, []);
-
-  return [arrFieldApi.getItems(), arrFieldApi, formApi];
+  return [fieldArrayApi.getItems(), fieldArrayApi, formApi];
 };

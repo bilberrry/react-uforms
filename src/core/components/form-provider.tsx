@@ -56,6 +56,7 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
   const api = useForm();
   useEffect(() => {
     api.setDefaultValues({ ...(defaultValues as object) });
+    api.setDynamicValues({ ...(defaultValues as object) });
     api.setValues({ ...(defaultValues as object) });
   }, []);
   useEffect(() => {

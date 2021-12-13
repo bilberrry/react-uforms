@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { FieldArray } from './field-array';
-import { Text } from './text';
+import { Text } from '../fields/text';
 
 afterEach(() => {
   cleanup();
@@ -35,9 +35,9 @@ test('default values -> change item -> submit', async () => {
         {(items) => (
           <>
             {items.map((item, index) => (
-              <div key={`${item}`}>
-                <Text name={`${item}.id`} data-testid={`${item}-${index}-id`} />
-                <Text name={`${item}.title`} data-testid={`${item}-${index}-title`} />
+              <div key={item.id}>
+                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
+                <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
           </>
@@ -46,8 +46,8 @@ test('default values -> change item -> submit', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  const title5 = getByTestId('profile.posts.0-0-title');
-  const title7 = getByTestId('profile.posts.1-1-title');
+  const title5 = getByTestId('5-title');
+  const title7 = getByTestId('7-title');
   await waitFor(() => expect(title5).toHaveValue('Foo'));
   await waitFor(() => expect(title7).toHaveValue('Bar'));
   fireEvent.change(title7, { target: { value: 'Baz' } });
@@ -82,12 +82,16 @@ test('default values -> add item -> submit', async () => {
         {(items, fieldArrayApi, formApi) => (
           <>
             {items.map((item, index) => (
-              <div key={`${item}`}>
-                <Text name={`${item}.id`} data-testid={`${item}-${index}-id`} />
-                <Text name={`${item}.title`} data-testid={`${item}-${index}-title`} />
+              <div key={item.id}>
+                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
+                <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
-            <button type="button" onClick={() => fieldArrayApi.addItem()} data-testid="add-button">
+            <button
+              type="button"
+              onClick={() => fieldArrayApi.addItem({ id: -1, title: 'New' })}
+              data-testid="add-button"
+            >
               Add item
             </button>
             <span data-testid="items-length">{items.length}</span>
@@ -109,12 +113,12 @@ test('default values -> add item -> submit', async () => {
         posts: [
           { id: 5, title: 'Foo' },
           { id: 7, title: 'Bar' },
-          { id: undefined, title: undefined },
+          { id: -1, title: 'New' },
         ],
       },
     }),
   );
-  const newTitle = getByTestId('profile.posts.2-2-title');
+  const newTitle = getByTestId('-1-title');
   fireEvent.change(newTitle, { target: { value: 'Baz' } });
   fireEvent.submit(form);
   await waitFor(() =>
@@ -123,7 +127,7 @@ test('default values -> add item -> submit', async () => {
         posts: [
           { id: 5, title: 'Foo' },
           { id: 7, title: 'Bar' },
-          { id: undefined, title: 'Baz' },
+          { id: -1, title: 'Baz' },
         ],
       },
     }),
@@ -144,12 +148,12 @@ test('default values -> remove item -> submit', async () => {
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
       <FieldArray name="profile.posts">
-        {(items, fieldArrayApi, formApi) => (
+        {(items, fieldArrayApi) => (
           <>
             {items.map((item, index) => (
-              <div key={`${item}`}>
-                <Text name={`${item}.id`} data-testid={`${item}-${index}-id`} />
-                <Text name={`${item}.title`} data-testid={`${item}-${index}-title`} />
+              <div key={item.id}>
+                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
+                <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
             <button type="button" onClick={() => fieldArrayApi.removeItem(1)} data-testid="remove-button">
@@ -178,7 +182,7 @@ test('default values -> remove item -> submit', async () => {
       },
     }),
   );
-  const title9 = getByTestId('profile.posts.2-1-title');
+  const title9 = getByTestId('9-title');
   await waitFor(() => expect(title9).toHaveValue('Baz'));
   fireEvent.change(title9, { target: { value: 'Foobar' } });
   fireEvent.submit(form);

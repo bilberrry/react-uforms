@@ -3,7 +3,7 @@ import { RefObject } from 'react';
 import oGet from 'lodash.get';
 import { commonApiPure } from './common';
 
-export const formApiPure = <Values,>(set, get, getField, getGroup, getArrField): FormApiInterface<Values> => {
+export const formApiPure = <Values,>(set, get, getField, getGroup, getFieldArray): FormApiInterface<Values> => {
   const { setField, getValues, validate } = commonApiPure(set, get);
   return {
     setDefaultValues(defaultValues): void {
@@ -11,6 +11,12 @@ export const formApiPure = <Values,>(set, get, getField, getGroup, getArrField):
     },
     getDefaultValues(): Values {
       return get().form.defaultValues;
+    },
+    setDynamicValues(dynamicValues): void {
+      set({ dynamicValues });
+    },
+    getDynamicValues(): Values {
+      return get().dynamicValues;
     },
     setClasses(classes: ClassesInterface): void {
       set({ form: { ...get().form, classes } });
@@ -78,7 +84,7 @@ export const formApiPure = <Values,>(set, get, getField, getGroup, getArrField):
     },
     validate,
     getField,
-    getArrField,
+    getFieldArray,
     groupsApi: {
       getClasses(): GroupClasses {
         return get().form.classes.group;

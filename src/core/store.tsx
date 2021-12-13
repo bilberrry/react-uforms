@@ -1,9 +1,8 @@
 import create from 'zustand';
 import createContext from 'zustand/context';
 import {
-  ArrFieldApiInterface,
-  ArrFieldInterface,
   FieldApiInterface,
+  FieldArrayApiInterface,
   FieldInterface,
   FormStateInterface,
   GroupApiInterface,
@@ -14,7 +13,7 @@ import oGet from 'lodash.get';
 import { groupApiPure } from './apis/group';
 import { formApiPure } from './apis/form';
 import { fieldApiPure } from './apis/field';
-import { arrFieldApiPure } from './apis/arr-field';
+import { fieldArrayApiPure } from './apis/field-array';
 
 export const { Provider: FormStoreProvider, useStore: useFormStore } = createContext<FormStateInterface<any>>();
 
@@ -30,7 +29,7 @@ export const createFormStore = <Values,>() =>
           isTouched: false,
           isValid: false,
           group: null,
-          value: oGet(get().form.defaultValues, fieldId),
+          value: oGet(get().dynamicValues, fieldId),
           errors: [],
         };
         set({ fields: [...get().fields, field] });
@@ -57,19 +56,11 @@ export const createFormStore = <Values,>() =>
       }
       return group ? groupApiPure(set, get, group) : undefined;
     };
-    const getArrField = (arrFieldId: string, autoCreate = false): ArrFieldApiInterface | undefined => {
-      let arrField: ArrFieldInterface | undefined = get().arrFields.find((item) => item.id === arrFieldId);
-      if (!arrField && autoCreate) {
-        arrField = {
-          id: arrFieldId,
-          fields: [],
-        };
-        set({ arrFields: [...get().arrFields, arrField] });
-      }
-      return arrField ? arrFieldApiPure(set, get, arrField) : undefined;
+    const getFieldArray = (fieldArrayId: string): FieldArrayApiInterface | undefined => {
+      return fieldArrayApiPure(set, get, fieldArrayId);
     };
 
-    const formApi = formApiPure<Values>(set, get, getField, getGroup, getArrField);
+    const formApi = formApiPure<Values>(set, get, getField, getGroup, getFieldArray);
 
     return {
       form: {
@@ -82,9 +73,9 @@ export const createFormStore = <Values,>() =>
         validation: {},
         classes: defaultClasses,
       },
+      dynamicValues: {},
       fields: [],
       groups: [],
       formApi,
-      arrFields: [],
     };
   });

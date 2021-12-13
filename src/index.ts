@@ -4,7 +4,7 @@ export * from './core/types';
 
 // Fields
 export * from './core/components/form';
-export * from './core/components/fields/field';
+export * from './core/components/extra/field';
 export * from './core/components/fields/checkbox';
 export * from './core/components/fields/checkbox-group';
 export * from './core/components/fields/checkbox-group-item';

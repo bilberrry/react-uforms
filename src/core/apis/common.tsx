@@ -1,4 +1,4 @@
-import { ArrFieldInterface, FieldInterface, GroupInterface } from '../types';
+import { FieldInterface, GroupInterface } from '../types';
 import oSet from 'lodash.set';
 
 export const commonApiPure = (set, get) => {
@@ -31,26 +31,10 @@ export const commonApiPure = (set, get) => {
     }));
   };
   const getValues = (): any => {
-    const {
-      fields,
-      arrFields,
-      form: { defaultValues },
-    } = get();
-    const values = JSON.parse(JSON.stringify(defaultValues));
+    const { fields, dynamicValues } = get();
+    const values = JSON.parse(JSON.stringify(dynamicValues));
     for (let i = 0; i < fields.length; i++) {
       oSet(values, fields[i].id, fields[i].value);
-    }
-    for (let i = 0; i < arrFields.length; i++) {
-      const arrField = arrFields[i];
-      oSet(values, arrFields[i].id, []);
-      for (let j = 0; j < arrField.fields.length; j++) {
-        const aFields = fields.filter((item) => item.id.indexOf(arrField.fields[j]) === 0);
-        for (let k = 0; k < aFields.length; k++) {
-          const regex = /\.[0-9]+\./i;
-          const newId = aFields[k].id.toString().replace(regex, `.${j}.`);
-          oSet(values, newId, aFields[k].value);
-        }
-      }
     }
     return values;
   };
@@ -81,18 +65,15 @@ export const commonApiPure = (set, get) => {
 
     return isValid;
   };
-  const setArrField = (id: string, data: Partial<ArrFieldInterface>) => {
-    set((state) => ({
-      arrFields: state.arrFields.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            ...data,
-          };
-        }
-        return item;
-      }),
-    }));
+  const setFieldArray = (path: string, data: Array<any>) => {
+    set((state) => {
+      // TODO improve speed
+      const dynamicValues = JSON.parse(JSON.stringify(state.dynamicValues));
+      oSet(dynamicValues, path, data);
+      return {
+        dynamicValues,
+      };
+    });
   };
   const setGroup = (name: string, data: Partial<GroupInterface>) => {
     set((state) => ({
@@ -110,7 +91,7 @@ export const commonApiPure = (set, get) => {
   return {
     setField,
     setFields,
-    setArrField,
+    setFieldArray,
     setGroup,
     getValues,
     validate,

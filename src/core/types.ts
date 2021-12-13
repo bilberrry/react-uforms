@@ -5,14 +5,6 @@ export type ValidationType = any;
 export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
 export type FieldErrorsType = Array<FieldErrorType>;
-//
-// export interface FieldSetterInterface {
-//   id: string;
-// }
-// export interface FieldGetterInterface {
-//   id: string;
-//   callback: (value: FieldValueType) => void;
-// }
 
 export interface FieldInterface {
   id: string;
@@ -50,10 +42,10 @@ export interface FormStateInterface<Values> {
     classes: ClassesInterface;
     validation: ValidationType;
   };
+  dynamicValues: any;
   fields: Array<FieldInterface>;
   formApi: FormApiInterface<Values>;
   groups: Array<GroupInterface>;
-  arrFields: Array<ArrFieldInterface>;
 }
 
 export interface FieldClasses {
@@ -126,6 +118,8 @@ export interface FieldApiInterface {
 export interface FormApiInterface<Values> {
   setDefaultValues: (values: Values) => void;
   getDefaultValues: () => Values;
+  setDynamicValues: (values: Values) => void;
+  getDynamicValues: () => Values;
   setClasses: (values: ClassesInterface) => void;
   getClasses: () => ClassesInterface;
   setValidation: (validation: ValidationType) => void;
@@ -145,22 +139,15 @@ export interface FormApiInterface<Values> {
   submit: () => void;
   getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
   groupsApi: GroupsApiInterface;
-  getArrField: (fieldId: string, autoCreate?: boolean) => ArrFieldApiInterface | undefined;
+  getFieldArray: (fieldId: string) => FieldArrayApiInterface | undefined;
 }
 
-export interface ArrFieldInterface {
-  id: string;
-  fields: Array<string>;
-}
-
-export interface ArrFieldApiInterface {
-  getObject: () => ArrFieldInterface;
-  remove: () => void;
-  addItem: (index?: number) => void;
+export interface FieldArrayApiInterface {
+  addItem: (data?: any, index?: number) => void;
   removeItem: (index: number) => void;
   moveItem: (fromIndex: number, toIndex: number) => void;
-  setItems: (items: Array<string>) => void;
-  getItems: () => Array<string>;
+  setItems: (items: Array<any>) => void;
+  getItems: () => Array<any>;
 }
 
 export interface FieldPassedProps {
