@@ -18,14 +18,15 @@ jobs:
         node-version: [ 14.x ]
 
     steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install
       - name: Build project
-        run: |
-          yarn install
-          yarn build
+        run: yarn build
 
   lint:
     name: Linter
@@ -36,14 +37,15 @@ jobs:
         node-version: [ 14.x ]
 
     steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install
       - name: Linter
-        run: |
-          yarn install
-          yarn lint
+        run: yarn lint
 
   tests:
     name: Tests
@@ -54,11 +56,12 @@ jobs:
         node-version: [ 14.x ]
 
     steps:
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: yarn install
       - name: Tests
-        run: |
-          yarn install
-          yarn test-coverage
+        run: yarn test-coverage
