@@ -49,16 +49,17 @@ test('set default values -> change input value -> submit form', async () => {
   const defaultValues = {
     email: 'test@example.com',
     profile: {
+      isPublic: true,
       firstName: 'John',
       lastName: 'Brown',
     },
   };
   const { getByTestId } = render(
     <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
-      <Field name="profile.firstName">
+      <Field name="profile.isPublic">
         {({ setValue, getValue }) => (
-          <button type="button" onClick={() => setValue('Bill')} data-testid="input">
-            {getValue()}
+          <button type="button" onClick={() => setValue(!getValue())} data-testid="input">
+            {getValue() ? 'on' : 'off'}
           </button>
         )}
       </Field>
@@ -66,16 +67,17 @@ test('set default values -> change input value -> submit form', async () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('input');
-  expect(input.innerHTML).toBe('John');
+  expect(input.innerHTML).toBe('on');
   fireEvent.click(input);
   fireEvent.submit(form);
-  await waitFor(() => expect(input.innerHTML).toBe('Bill'));
+  await waitFor(() => expect(input.innerHTML).toBe('off'));
   fireEvent.submit(form);
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(expect.any(Object), {
       email: 'test@example.com',
       profile: {
-        firstName: 'Bill',
+        isPublic: false,
+        firstName: 'John',
         lastName: 'Brown',
       },
     }),
