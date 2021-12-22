@@ -221,3 +221,85 @@ test('set classes -> field:invalid -> submit', async () => {
   fireEvent.submit(form);
   await waitFor(() => expect(input).not.toHaveClass(invalidClass));
 });
+
+test('set cast validation', async () => {
+  const submit = jest.fn();
+  const defaultValues = {
+    id: 2,
+    profile: {
+      firstName: 'John',
+      lastName: 'Brown',
+      age: '30',
+    },
+  };
+  const validation = yup.object({
+    profile: yup.object({
+      age: yup.number().required('Required'),
+    }),
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={submit} validation={validation} defaultValues={defaultValues} data-testid="form">
+      <Text name="profile.age" data-testid="input" />
+    </Form>,
+  );
+  const form = getByTestId('form');
+  const input = getByTestId('input');
+  fireEvent.submit(form);
+  await waitFor(() =>
+    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
+      id: 2,
+      profile: {
+        firstName: 'John',
+        lastName: 'Brown',
+        age: 30,
+      },
+    }),
+  );
+  fireEvent.change(input, { target: { value: '32' } });
+  fireEvent.submit(form);
+  await waitFor(() =>
+    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
+      id: 2,
+      profile: {
+        firstName: 'John',
+        lastName: 'Brown',
+        age: 32,
+      },
+    }),
+  );
+});
+
+test('set stripUnknown', async () => {
+  const submit = jest.fn();
+  const defaultValues = {
+    id: 2,
+    profile: {
+      firstName: 'John',
+      lastName: 'Brown',
+      age: '30',
+    },
+  };
+  const validation = yup.object({
+    id: yup.number().required('Required'),
+    profile: yup.object({
+      firstName: yup.string().required('Required'),
+      age: yup.number().required('Required'),
+    }),
+  });
+  const { getByTestId } = render(
+    <Form onSubmit={submit} validation={validation} defaultValues={defaultValues} stripUnknown={true} data-testid="form">
+      <Text name="profile.age" />
+    </Form>,
+  );
+  const form = getByTestId('form');
+  fireEvent.submit(form);
+  await waitFor(() =>
+    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
+      id: 2,
+      profile: {
+        firstName: 'John',
+        age: 30,
+      },
+    }),
+  );
+});

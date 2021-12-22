@@ -65,6 +65,7 @@ export const createFormStore = <Values,>() =>
     return {
       form: {
         defaultValues: {},
+        isStripUnknown: false,
         isValidating: false,
         isTouched: false,
         isValid: true,

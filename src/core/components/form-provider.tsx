@@ -26,6 +26,7 @@ export interface FormProps<Values>
   onError?: (api: FormApiInterface<Values>, errors: FormErrorsType) => void;
   validation?: ValidationType;
   classes?: Partial<ClassesInterface>;
+  stripUnknown?: boolean;
 }
 
 export const defaultClasses: ClassesInterface = {
@@ -49,6 +50,7 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
   onChange,
   onTouch,
   validation,
+  stripUnknown,
   classes,
   ...props
 }) => {
@@ -73,6 +75,9 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
     api.setValidation(validation);
   }, [validation]);
   useEffect(() => {
+    api.setStripUnknown(!!stripUnknown);
+  }, [stripUnknown]);
+  useEffect(() => {
     formRef?.current?.addEventListener<any>('fieldChange', onChangeCallback);
     formRef?.current?.addEventListener<any>('fieldTouch', onTouchCallback);
     return () => {
@@ -82,10 +87,10 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
   }, [formRef]);
   const onSubmitCallback = async (e) => {
     e.preventDefault();
-    const isValid = await api.validate();
-    if (isValid) {
-      onSubmit(api, api.getValues());
-    } else {
+    try {
+      const values = await api.validate();
+      onSubmit(api, values);
+    } catch (e) {
       if (typeof onError === 'function') {
         onError(api, api.getErrors());
       }

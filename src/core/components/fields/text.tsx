@@ -31,12 +31,12 @@ const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassed
       disabled,
       dependsOn,
     });
-    if (validateOnChange) {
-      useEffect(() => {
+    useEffect(() => {
+      if (validateOnChange) {
         const timeOutId = setTimeout(() => validate(), validateDelay || 500);
         return () => clearTimeout(timeOutId);
-      }, [value]);
-    }
+      }
+    }, [value, validateOnChange]);
 
     return (
       <>

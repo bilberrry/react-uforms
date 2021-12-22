@@ -34,6 +34,7 @@ export type FormErrorsType = Array<FormErrorItemInterface>;
 export interface FormStateInterface<Values> {
   form: {
     defaultValues: any;
+    isStripUnknown: boolean;
     isValidating: boolean;
     isTouched: boolean;
     isValid: boolean;
@@ -118,6 +119,8 @@ export interface FieldApiInterface {
 export interface FormApiInterface<Values> {
   setDefaultValues: (values: Values) => void;
   getDefaultValues: () => Values;
+  setStripUnknown: (isStripUnknown: boolean) => void;
+  isStripUnknown: () => boolean;
   setDynamicValues: (values: Values) => void;
   getDynamicValues: () => Values;
   setClasses: (values: ClassesInterface) => void;
@@ -128,7 +131,7 @@ export interface FormApiInterface<Values> {
   getFormRef: () => RefObject<HTMLFormElement> | null;
   setValues: (values: Values) => void;
   getValues: () => Values;
-  validate: () => Promise<boolean>;
+  validate: () => Promise<Values>;
   setErrors: (formErrors: FormErrorsType) => void;
   getErrors: () => FormErrorsType;
   isTouched: () => boolean;

@@ -12,6 +12,12 @@ export const formApiPure = <Values,>(set, get, getField, getGroup, getFieldArray
     getDefaultValues(): Values {
       return get().form.defaultValues;
     },
+    setStripUnknown(isStripUnknown: boolean): void {
+      set({ form: { ...get().form, isStripUnknown } });
+    },
+    isStripUnknown(): boolean {
+      return get().form.isStripUnknown;
+    },
     setDynamicValues(dynamicValues): void {
       set({ dynamicValues });
     },
