@@ -287,7 +287,13 @@ test('set stripUnknown', async () => {
     }),
   });
   const { getByTestId } = render(
-    <Form onSubmit={submit} validation={validation} defaultValues={defaultValues} stripUnknown={true} data-testid="form">
+    <Form
+      onSubmit={submit}
+      validation={validation}
+      defaultValues={defaultValues}
+      stripUnknown={true}
+      data-testid="form"
+    >
       <Text name="profile.age" />
     </Form>,
   );
