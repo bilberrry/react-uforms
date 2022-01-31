@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "strict": true,
     "allowJs": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "noEmit": false,
     "allowSyntheticDefaultImports": true,
@@ -15,6 +15,6 @@
     "isolatedModules": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "dist"],
+  "exclude": ["node_modules", "dist", "src-old"],
   "include": ["src"]
 }

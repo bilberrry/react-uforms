@@ -1,8 +1,7 @@
 # react-uforms
 [![npm version](https://badge.fury.io/js/react-uforms.svg)](https://badge.fury.io/js/react-uforms)
+![build status](https://github.com/bilberrry/react-uforms/actions/workflows/workflow.yml/badge.svg?branch=master)
 ![TypeScript](https://img.shields.io/npm/types/typescript)
-[![build status](https://travis-ci.org/summerua/react-uforms.svg?branch=master)](https://travis-ci.org/summerua/react-uforms)
-[![codecov](https://codecov.io/gh/summerua/react-uforms/branch/master/graph/badge.svg)](https://codecov.io/gh/summerua/react-uforms)
 ![NPM](https://img.shields.io/npm/l/react-uforms.svg)
 
 Simple and elegant forms for your React application.
@@ -25,7 +24,7 @@ npm install react-uforms --save
 import { Form, Text } from 'react-uforms';
 
 const example = (
-  <Form onSubmit={values => console.log(values)}>
+  <Form onSubmit={(formApi, values) => console.log(values)}>
     <label htmlFor="email">Email</label>
     <Text type="text" id="email" name="email" />
     
@@ -36,30 +35,25 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#simple-example)
 
 ### 2. Validation
 ```jsx
 import { Form, Text } from 'react-uforms';
+import * as yup from 'yup';
     
 const example = (
   <Form
-    validation={() => ({
-      email: [
-        Validator.Required(),
-        Validator.Email(),
-      ],
-      password: [
-        Validator.Required(),
-        Validator.MinLength(6),
-        Validator.MaxLength(32),
-        Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
-        Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
-        Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
-      ]
+    validation={yup.object({
+      email: yup.string().required('Email is required').email(),
+      password: yup
+        .string()
+        .required('Password is required')
+        .matches(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character')
+        .matches(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character')
+        .matches(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
     })}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
+    onSubmit={(formApi, values) => console.log(values)}
+    onError={(formApi, errors) => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text type="text" id="email" name="email" />
@@ -71,58 +65,11 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#validation)
 
-### 3. Custom validation
-```jsx
-import { Form, Text } from 'react-uforms';
-    
-const example = (
-  <Form
-    validation={({ getValue }) => ({
-      email: [
-        Validator.Required(),
-        Validator.Email(),
-      ],
-      password: [
-        Validator.Required(),
-        Validator.MinLength(6),
-        Validator.MaxLength(32),
-        Validator.Preg(/^(?=.*[a-z]).+$/, 'At least 1 lowercase alphabetical character'),
-        Validator.Preg(/^(?=.*[A-Z]).+$/, 'At least 1 uppercase alphabetical character'),
-        Validator.Preg(/^(?=.*\d+).+$/, 'At least 1 numeric character'),
-      ],
-      password2: [
-        Validator.Required(),
-        (value) => {
-          if (getValue('password') !== value) {
-            return 'Retype password is not equal.'
-          }
-          return true;
-        },
-      ]
-    })}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
-  >
-    <label htmlFor="email">Email</label>
-    <Text type="text" id="email" name="email" />
-  
-    <label htmlFor="password">Password</label>
-    <Text type="password" id="password" name="password" />
-    
-    <label htmlFor="password2">Retype Password</label>
-    <Text type="password" id="password2" name="password2" />
-  
-    <button type="submit">Submit</button>
-  </Form>
-);
-```
-[Demo](http://react-uforms.d3v.me#custom-validation)
-
-### 4. Pre-filled form
+### 3. Pre-filled form
 ```jsx
 import { Form, Text, TextArea } from 'react-uforms';
+import * as yup from 'yup';
     
 const example = (
   <Form
@@ -136,29 +83,16 @@ const example = (
       },
       createdAt: '2018-04-25T23:36:02+00:00'
     }}
-    validation={() => ({
-      email: [
-        Validator.Required(),
-        Validator.Email(),
-      ],
-      profile: {
-        firstName: [
-          Validator.Required(),
-          Validator.MinLength(2),
-          Validator.MaxLength(20),
-        ],
-        lastName: [
-          Validator.Required(),
-          Validator.MinLength(2),
-          Validator.MaxLength(20),
-        ],
-        bio: [
-          Validator.MaxLength(200)
-        ]
-      },
+    validation={yup.object({
+      email: yup.string().required('Email is required').email(),
+      profile: yup.object({
+        firstName: yup.string().required(),
+        lastName: yup.string().required(),
+        bio: yup.string(),
+      }),
     })}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
+    onSubmit={(formApi, values) => console.log(values)}
+    onError={(formApi, errors) => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text type="text" id="email" name="email" />
@@ -176,111 +110,21 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#pre-filled-form)
 
-### 5. Dynamic form
-```jsx
-import { Form, Text, Select, Validator } from 'react-uforms';
-    
-const example = (
-  <Form
-    defaultValues={{
-      id: 1,
-      email: 'foo.bar@example.com',
-      address: {
-        country: 'US',
-        state: 'WA',
-        city: 'Seattle',
-      },
-    }}
-    validation={({ getValue }) => ({
-      address: {
-        country: [
-          Validator.Required(),
-          Validator.Range(['US', 'CA']),
-        ],
-        state:
-          getValue('address.country') === 'US'
-            ? [Validator.Required(), Validator.Range(['WA', 'OR', 'CA'])]
-            : [],
-        city: [
-          Validator.Required(),
-          Validator.MaxLength(30),
-        ],
-      },
-    })}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
-  >
-    {({ getValue, setValue, hasChanges }) => (
-      <Fragment>
-        <label htmlFor="country">Country</label>
-        <Select
-          id="country"
-          name="address.country"
-          onChange={() => {
-            if (getValue('address.country') !== 'US') {
-              setValue('address.state', null);
-            }
-          }}
-          options={[
-            { value: null, name: 'Select country' },
-            { value: 'US', name: 'United States' },
-            { value: 'CA', name: 'Canada' },
-            { value: 'UK', name: 'United Kingdom - coming soon', disabled: true }
-          ]}
-        />
-
-        {getValue('address.country') === 'US' && <Fragment>
-          <label htmlFor="state">State</label>
-          <Select
-            id="state"
-            name="address.state"
-            options={[
-              { value: null, name: 'Select state' },
-              { value: 'WA', name: 'Washington' },
-              { value: 'CA', name: 'California' },
-              { value: 'OR', name: 'Oregon' }
-            ]}
-          />
-        </Fragment>}
-
-        <label htmlFor="city">City</label>
-        <Text type="text" id="city" name="address.city" />
-
-        <button type="submit" disabled={!hasChanges()}>
-          Submit
-        </button>
-      </Fragment>
-    )}
-  </Form>
-);
-```
-[Demo](http://react-uforms.d3v.me#pre-filled-form)
-
-### 6. Errors customization
+### 4. Errors customization
 ```jsx
 import { Form, Text, FieldError } from 'react-uforms';
+import * as yup from 'yup';
     
 const example = (
   <Form
-    validation={() => ({
-      email: [
-        Validator.Required(),
-        Validator.Email(),
-      ],
-      profile: {
-        firstName: [
-          Validator.Required(),
-          Validator.MinLength(2),
-          Validator.MaxLength(20),
-        ],
-        lastName: [
-          Validator.Required(),
-          Validator.MinLength(2),
-          Validator.MaxLength(20),
-        ],
-      },
+    validation={yup.object({
+      email: yup.string().required('Email is required').email(),
+      profile: yup.object({
+        firstName: yup.string().required(),
+        lastName: yup.string().required(),
+        bio: yup.string(),
+      }),
     })}
     classes={{
       field: {
@@ -288,8 +132,8 @@ const example = (
         invalid: "your-invalid-input-class",
       },
     }}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
+    onSubmit={(formApi, values) => console.log(values)}
+    onError={(formApi, errors) => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text type="text" id="email" name="email" hideError={true} />
@@ -306,44 +150,15 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#errors-customization)
 
-### 7. All fields
+### 5. Other fields
 ```jsx
-import { Form, Validator, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
+import { Form, Text, Select, TextArea, RadioGroup, RadioGroupItem, Checkbox } from 'react-uforms';
     
 const example = (
   <Form
-    defaultValues={{
-      email: 'foo.bar@example.com',
-      country: 'US',
-      bio: 'Travel blogger',
-      gender: 'male',
-      newsletter: 0,
-    }}
-    validation={() => ({
-      email: [
-        Validator.Required(),
-        Validator.Email(),
-      ],
-      country: [
-        Validator.Required(),
-        Validator.Range(['US', 'CA']),
-      ],
-      gender: [
-        Validator.Required(),
-        Validator.Range(['male', 'female']),
-      ],
-      bio: [
-        Validator.MaxLength(200),
-      ],
-      newsletter: [
-        Validator.Required(),
-        Validator.Range([1, 0]),
-      ],
-    })}
-    onSubmit={values => console.log(values)}
-    onError={errors => console.log(errors)}
+    onSubmit={(formApi, values) => console.log(values)}
+    onError={(formApi, errors) => console.log(errors)}
   >
     <label htmlFor="email">Email</label>
     <Text id="email" name="email" disabled={true} />
@@ -390,96 +205,34 @@ const example = (
   </Form>
 );
 ```
-[Demo](http://react-uforms.d3v.me#values-diff-example)
 
-### 8. Get values difference
+### 6. Custom field
 ```jsx
-import { Form, Text, TextArea, Validator } from 'react-uforms';
+import { Form, Field } from 'react-uforms';
 
 const example = (
   <Form
+    onSubmit={(formApi, values) => console.log(values)}
     defaultValues={{
-      id: 1,
-      email: 'foo.bar@example.com',
+      email: 'test@example.com',
       profile: {
-        firstName: 'Foo',
-        lastName: 'Bar',
-        bio: 'Travel blogger',
+        isPublic: true,
+        firstName: 'John',
+        lastName: 'Brown',
       },
-      createdAt: '2018-04-25T20:36:02+00:00',
-    }}
-    validation={() => ({
-      email: [Validator.Required(), Validator.Email()],
-      profile: {
-        firstName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
-        lastName: [Validator.Required(), Validator.MinLength(2), Validator.MaxLength(20)],
-        bio: [Validator.MaxLength(200)],
-      },
-    })}
-    onSubmit={(values, { getValuesDiff }) => console.log(getValuesDiff())}
-    onError={errors => console.log(errors)}
-  >
-    <label htmlFor="email">Email</label>
-    <Text type="text" id="email" name="email" />
-
-    <label htmlFor="firstName">First Name</label>
-    <Text type="text" id="firstName" name="profile.firstName" />
-
-    <label htmlFor="lastName">Last Name</label>
-    <Text type="text" id="lastName" name="profile.lastName" />
-
-    <label htmlFor="bio">Bio</label>
-    <TextArea id="bio" name="profile.bio" />
-
-    <button type="submit">Submit</button>
-  </Form>
-);
-```
-[Demo](http://react-uforms.d3v.me#custom-field-example)
-
-### 9. Custom field
-```jsx
-import { Form, CustomField } from 'react-uforms';
-
-const example = (
-  <Form
-    onSubmit={values => console.log(values)}
-    defaultValues={{
-      timestamp: 1562457600,
     }}
   >
-    <CustomField name="timestamp">
+    <Field name="profile.isPublic">
       {({ setValue, getValue }) => (
-        <input
-          type="date"
-          value={new Date(+getValue() * 1000).toISOString().split('T')[0]}
-          onChange={e => {
-            const { value } = e.target;
-            setValue(value ? Math.round(+new Date(value) / 1000) : null);
-          }}
-        />
+        <button type="button" onClick={() => setValue(!getValue())}>
+          {getValue() ? 'on' : 'off'}
+        </button>
       )}
-    </CustomField>
-
+    </Field>
     <button type="submit">Submit</button>
   </Form>
 );
 ```
-
-## Upgrading from 0.3
-
-### Braking changes
-1. Renamed `values` (`Form` attribute) to `defaultValues`;
-```diff
-<Form
--  values={...}
-+  defaultValues={...}
-...
-```
-2. Migrated to strong `===` comparison for checked/selected values;
-3. Added type support for `Select` / `Radio` / `RadioGroup` values;
-4. Refactored/fixed all validators;
-5. Deleted `isUpdatesOnly` (`Form` attribute). Use [getValuesDiff()](http://react-uforms.d3v.me#values-diff-example) instead.
 
 ## Authors
 

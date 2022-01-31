@@ -1,20 +1,22 @@
-import * as Validator from './components/validator';
-export * from './components/form';
-export * from './components/field-error';
-export * from './components/field-group';
-export * from './components/field-group-nav';
-export * from './components/field';
+// Core
+export * from './core/hooks';
+export * from './core/types';
 
-export * from './components/fields/checkbox';
-export * from './components/fields/checkbox-group';
-export * from './components/fields/checkbox-group-item';
-export * from './components/fields/radio-group';
-export * from './components/fields/radio-group-item';
-export * from './components/fields/radio';
-export * from './components/fields/select';
-export * from './components/fields/text';
-export * from './components/fields/text-area';
-export * from './components/fields/custom-field';
-export * from './components/form-context';
+// Fields
+export * from './core/components/form';
+export * from './core/components/extra/field';
+export * from './core/components/fields/checkbox';
+export * from './core/components/fields/checkbox-group';
+export * from './core/components/fields/checkbox-group-item';
+export * from './core/components/fields/radio-group';
+export * from './core/components/fields/radio-group-item';
+export * from './core/components/fields/radio';
+export * from './core/components/fields/select';
+export * from './core/components/fields/text';
+export * from './core/components/fields/text-area';
 
-export { Validator };
+// Extra
+export * from './core/components/extra/field-errors';
+export * from './core/components/extra/group';
+export * from './core/components/extra/group-buttons';
+export * from './core/components/extra/group-nav';
