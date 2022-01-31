@@ -1,6 +1,6 @@
 {
   "name": "react-uforms",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0",
   "description": "Simple and elegant forms for your React application",
   "keywords": [
     "react",
@@ -13,7 +13,6 @@
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "homepage": "http://react-uforms.d3v.me/",
   "repository": "https://github.com/bilberrry/react-uforms.git",
   "author": {
     "name": "Bohdan Protsiuk",
