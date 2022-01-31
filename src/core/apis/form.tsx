@@ -1,15 +1,29 @@
-import { ClassesInterface, FormApiInterface, FormErrorsType, GroupClasses, ValidationType } from '../types';
+import {
+  ClassesInterface,
+  FormApiInterface,
+  FormErrorsType,
+  FormValues,
+  GroupClasses,
+  SomeFormValues,
+  ValidationType,
+} from '../types';
 import { RefObject } from 'react';
 import oGet from 'lodash.get';
 import { commonApiPure } from './common';
 
-export const formApiPure = <Values,>(set, get, getField, getGroup, getFieldArray): FormApiInterface<Values> => {
+export const formApiPure = <Values extends FormValues>(
+  set,
+  get,
+  getField,
+  getGroup,
+  getFieldArray,
+): FormApiInterface<Values> => {
   const { setField, getValues, validate } = commonApiPure(set, get);
   return {
     setDefaultValues(defaultValues): void {
       set({ form: { ...get().form, defaultValues } });
     },
-    getDefaultValues(): Values {
+    getDefaultValues(): SomeFormValues<Values> {
       return get().form.defaultValues;
     },
     setStripUnknown(isStripUnknown: boolean): void {
@@ -21,7 +35,7 @@ export const formApiPure = <Values,>(set, get, getField, getGroup, getFieldArray
     setDynamicValues(dynamicValues): void {
       set({ dynamicValues });
     },
-    getDynamicValues(): Values {
+    getDynamicValues(): SomeFormValues<Values> {
       return get().dynamicValues;
     },
     setClasses(classes: ClassesInterface): void {
@@ -60,7 +74,7 @@ export const formApiPure = <Values,>(set, get, getField, getGroup, getFieldArray
         setField(id, { errors });
       }
     },
-    setValues(values: Values): void {
+    setValues(values: SomeFormValues<Values>): void {
       // TODO one set
       const { fields } = get();
       for (let i = 0; i < fields.length; i++) {

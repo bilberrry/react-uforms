@@ -1,20 +1,23 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithRef, ReactElement, ReactNode } from 'react';
 import { useFieldArray } from '../../hooks';
-import { FieldArrayApiInterface, FormApiInterface } from '../../types';
+import { FieldArrayApiInterface, FormApiInterface, FormValues } from '../../types';
 
-type FieldArrayApiChildren = (
+type FieldArrayApiChildren<Values extends FormValues> = (
   items: Array<any>,
   fieldArrayApi: FieldArrayApiInterface,
-  formApi: FormApiInterface<unknown>,
+  formApi: FormApiInterface<Values>,
 ) => ReactNode;
 
-export interface FieldArrayProps {
+export interface FieldArrayProps<Values extends FormValues> {
   name: string;
-  children: FieldArrayApiChildren;
+  children: FieldArrayApiChildren<Values>;
 }
 
-const FieldArrayComponent: React.FC<FieldArrayProps> = ({ name, children }) => {
-  const [items, fieldArrayApi, formApi] = useFieldArray(name);
+const FieldArrayComponent = <Values extends FormValues>({
+  name,
+  children,
+}: PropsWithRef<FieldArrayProps<Values>>): ReactElement | null => {
+  const [items, fieldArrayApi, formApi] = useFieldArray<Values>(name);
   return <>{children(items, fieldArrayApi, formApi)}</>;
 };
 

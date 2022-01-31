@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { PropsWithRef, ReactElement, ReactNode, useEffect, useRef } from 'react';
 import { useForm } from '../hooks';
 import {
   ClassesInterface,
@@ -7,20 +7,22 @@ import {
   FieldValueType,
   FormApiInterface,
   FormErrorsType,
+  FormValues,
+  SomeFormValues,
   ValidationType,
 } from '../types';
 import isEqual from 'lodash.isequal';
 
-type FormApiChildren<Values> = (api: FormApiInterface<Values>) => ReactNode;
+type FormApiChildren<Values extends FormValues> = (api: FormApiInterface<Values>) => ReactNode;
 
-export interface FormProps<Values>
+export interface FormProps<Values extends FormValues>
   extends Omit<
     React.HTMLProps<HTMLFormElement & HTMLDivElement>,
     'onChange' | 'onSubmit' | 'onError' | 'defaultValues'
   > {
   children: ReactNode | FormApiChildren<Values>;
-  onSubmit: (api: FormApiInterface<Values>, values: Values) => void;
-  defaultValues?: Values;
+  onSubmit: (api: FormApiInterface<Values>, values: SomeFormValues<Values>) => void;
+  defaultValues?: SomeFormValues<Values>;
   onChange?: (api: FormApiInterface<Values>, changedField: string, fieldValue: FieldValueType) => void;
   onTouch?: (api: FormApiInterface<Values>, touchedField: string) => void;
   onError?: (api: FormApiInterface<Values>, errors: FormErrorsType) => void;
@@ -42,7 +44,7 @@ export const defaultClasses: ClassesInterface = {
   },
 } as const;
 
-const FormProviderComponent: React.FC<FormProps<unknown>> = ({
+const FormProviderComponent = <Values extends FormValues>({
   children,
   defaultValues,
   onSubmit,
@@ -53,13 +55,13 @@ const FormProviderComponent: React.FC<FormProps<unknown>> = ({
   stripUnknown,
   classes,
   ...props
-}) => {
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const api = useForm();
+}: PropsWithRef<FormProps<Values>>): ReactElement | null => {
+  const formRef = useRef<HTMLFormElement | null>(null); // TODO forwardRef
+  const api = useForm<Values>();
   useEffect(() => {
-    api.setDefaultValues({ ...(defaultValues as object) });
-    api.setDynamicValues({ ...(defaultValues as object) });
-    api.setValues({ ...(defaultValues as object) });
+    api.setDefaultValues({ ...defaultValues } as Values);
+    api.setDynamicValues({ ...defaultValues } as Values);
+    api.setValues({ ...defaultValues } as Values);
   }, []);
   useEffect(() => {
     api.setFormRef(formRef);

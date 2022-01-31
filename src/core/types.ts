@@ -5,6 +5,8 @@ export type ValidationType = any;
 export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
 export type FieldErrorsType = Array<FieldErrorType>;
+export type FormValues = { [key: string]: unknown };
+export type SomeFormValues<V extends FormValues> = Partial<V>;
 
 export interface FieldInterface {
   id: string;
@@ -31,9 +33,9 @@ export interface FormErrorItemInterface {
 }
 
 export type FormErrorsType = Array<FormErrorItemInterface>;
-export interface FormStateInterface<Values> {
+export interface FormStateInterface<Values extends FormValues> {
   form: {
-    defaultValues: any;
+    defaultValues: SomeFormValues<Values>;
     isStripUnknown: boolean;
     isValidating: boolean;
     isTouched: boolean;
@@ -43,7 +45,7 @@ export interface FormStateInterface<Values> {
     classes: ClassesInterface;
     validation: ValidationType;
   };
-  dynamicValues: any;
+  dynamicValues: SomeFormValues<Values>;
   fields: Array<FieldInterface>;
   formApi: FormApiInterface<Values>;
   groups: Array<GroupInterface>;
@@ -116,22 +118,22 @@ export interface FieldApiInterface {
   validate: () => Promise<boolean>;
 }
 
-export interface FormApiInterface<Values> {
-  setDefaultValues: (values: Values) => void;
-  getDefaultValues: () => Values;
+export interface FormApiInterface<Values extends FormValues> {
+  setDefaultValues: (values: SomeFormValues<Values>) => void;
+  getDefaultValues: () => SomeFormValues<Values>;
   setStripUnknown: (isStripUnknown: boolean) => void;
   isStripUnknown: () => boolean;
-  setDynamicValues: (values: Values) => void;
-  getDynamicValues: () => Values;
+  setDynamicValues: (values: SomeFormValues<Values>) => void;
+  getDynamicValues: () => SomeFormValues<Values>;
   setClasses: (values: ClassesInterface) => void;
   getClasses: () => ClassesInterface;
   setValidation: (validation: ValidationType) => void;
   getValidation: () => ValidationType;
   setFormRef: (value: RefObject<HTMLFormElement> | null) => void;
   getFormRef: () => RefObject<HTMLFormElement> | null;
-  setValues: (values: Values) => void;
-  getValues: () => Values;
-  validate: () => Promise<Values>;
+  setValues: (values: SomeFormValues<Values>) => void;
+  getValues: () => SomeFormValues<Values>;
+  validate: () => Promise<SomeFormValues<Values>>;
   setErrors: (formErrors: FormErrorsType) => void;
   getErrors: () => FormErrorsType;
   isTouched: () => boolean;

@@ -5,6 +5,7 @@ import {
   FieldArrayApiInterface,
   FieldInterface,
   FormStateInterface,
+  FormValues,
   GroupApiInterface,
   GroupInterface,
 } from './types';
@@ -15,9 +16,9 @@ import { formApiPure } from './apis/form';
 import { fieldApiPure } from './apis/field';
 import { fieldArrayApiPure } from './apis/field-array';
 
-export const { Provider: FormStoreProvider, useStore: useFormStore } = createContext<FormStateInterface<any>>();
+export const { Provider: FormStoreProvider, useStore: useFormStore } = createContext<any>();
 
-export const createFormStore = <Values,>() =>
+export const createFormStore = <Values extends FormValues>() =>
   create<FormStateInterface<Values>>((set, get) => {
     const getField = (fieldId: string, autoCreate = false): FieldApiInterface | undefined => {
       let field: FieldInterface | undefined = get().fields.find((item) => item.id === fieldId);

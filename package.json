@@ -14,7 +14,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "homepage": "http://react-uforms.d3v.me/",
-  "repository": "https://github.com/summerua/react-uforms.git",
+  "repository": "https://github.com/bilberrry/react-uforms.git",
   "author": {
     "name": "Bohdan Protsiuk",
     "email": "bohdan.protsiuk@gmail.com"

@@ -1,22 +1,25 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithRef, ReactElement, ReactNode } from 'react';
 import { useField } from '../../hooks';
-import { FieldApiInterface, FieldPassedProps, FormApiInterface } from '../../types';
+import { FieldApiInterface, FieldPassedProps, FormApiInterface, FormValues } from '../../types';
 import { FieldErrors } from './field-errors';
 
-type FieldApiChildren = (fieldApi: FieldApiInterface, formAPi: FormApiInterface<unknown>) => ReactNode;
+type FieldApiChildren<Values extends FormValues> = (
+  fieldApi: FieldApiInterface,
+  formAPi: FormApiInterface<Values>,
+) => ReactNode;
 
-export interface FieldProps {
-  children: FieldApiChildren;
+export interface FieldProps<Values extends FormValues> {
+  children: FieldApiChildren<Values>;
 }
 
-const FieldComponent: React.FC<FieldProps & FieldPassedProps> = ({
+const FieldComponent = <Values extends FormValues>({
   name,
   disabled,
   hideError,
   children,
   dependsOn,
-}) => {
-  const [, , fieldApi, formApi] = useField(name, {
+}: PropsWithRef<FieldProps<Values> & FieldPassedProps>): ReactElement | null => {
+  const [, , fieldApi, formApi] = useField<Values>(name, {
     disabled,
     dependsOn,
   });
