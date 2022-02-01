@@ -81,7 +81,7 @@ test('clickPrev', async () => {
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).not.toHaveStyle('display: none'));
   fireEvent.click(g3Next);
-  await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.any(Object), expect.any(Object)));
+  await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.any(Object)));
   fireEvent.click(g3Jump);
   await waitFor(() => expect(group1).not.toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));

@@ -55,14 +55,18 @@ test('default values -> change item -> submit', async () => {
   await waitFor(() => expect(title7).toHaveValue('Baz'));
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        posts: [
-          { id: 5, title: 'Foo' },
-          { id: 7, title: 'Baz' },
-        ],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            posts: [
+              { id: 5, title: 'Foo' },
+              { id: 7, title: 'Baz' },
+            ],
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -108,29 +112,37 @@ test('default values -> add item -> submit', async () => {
   await waitFor(() => expect(itemsLength.innerHTML).toBe('3'));
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        posts: [
-          { id: 5, title: 'Foo' },
-          { id: 7, title: 'Bar' },
-          { id: -1, title: 'New' },
-        ],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            posts: [
+              { id: 5, title: 'Foo' },
+              { id: 7, title: 'Bar' },
+              { id: -1, title: 'New' },
+            ],
+          },
+        },
+      }),
+    ),
   );
   const newTitle = getByTestId('-1-title');
   fireEvent.change(newTitle, { target: { value: 'Baz' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        posts: [
-          { id: 5, title: 'Foo' },
-          { id: 7, title: 'Bar' },
-          { id: -1, title: 'Baz' },
-        ],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            posts: [
+              { id: 5, title: 'Foo' },
+              { id: 7, title: 'Bar' },
+              { id: -1, title: 'Baz' },
+            ],
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -173,28 +185,36 @@ test('default values -> remove item -> submit', async () => {
   await waitFor(() => expect(itemsLength.innerHTML).toBe('2'));
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        posts: [
-          { id: 5, title: 'Foo' },
-          { id: 9, title: 'Baz' },
-        ],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            posts: [
+              { id: 5, title: 'Foo' },
+              { id: 9, title: 'Baz' },
+            ],
+          },
+        },
+      }),
+    ),
   );
   const title9 = getByTestId('9-title');
   await waitFor(() => expect(title9).toHaveValue('Baz'));
   fireEvent.change(title9, { target: { value: 'Foobar' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        posts: [
-          { id: 5, title: 'Foo' },
-          { id: 9, title: 'Foobar' },
-        ],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            posts: [
+              { id: 5, title: 'Foo' },
+              { id: 9, title: 'Foobar' },
+            ],
+          },
+        },
+      }),
+    ),
   );
 });
 

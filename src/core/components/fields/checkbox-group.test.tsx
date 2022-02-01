@@ -42,11 +42,15 @@ test('check input -> submit form', async () => {
   expect(inputNews).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        subscription: ['news'],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            subscription: ['news'],
+          },
+        },
+      }),
+    ),
   );
   fireEvent.click(inputUpdates);
   expect(inputUpdates).toHaveProperty('checked');
@@ -54,11 +58,15 @@ test('check input -> submit form', async () => {
   expect(inputCompany).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        subscription: ['news', 'updates', 'company'],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            subscription: ['news', 'updates', 'company'],
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -89,14 +97,18 @@ test('set default values -> uncheck input -> submit form', async () => {
   fireEvent.click(inputUpdates);
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'Kelly',
-        lastName: 'Brown',
-        subscription: [],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: 'Kelly',
+            lastName: 'Brown',
+            subscription: [],
+          },
+        },
+      }),
+    ),
   );
   fireEvent.click(inputCompany);
   expect(inputCompany).toHaveProperty('checked');
@@ -104,14 +116,18 @@ test('set default values -> uncheck input -> submit form', async () => {
   expect(inputNews).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'Kelly',
-        lastName: 'Brown',
-        subscription: ['company', 'news'],
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: 'Kelly',
+            lastName: 'Brown',
+            subscription: ['company', 'news'],
+          },
+        },
+      }),
+    ),
   );
 });
 

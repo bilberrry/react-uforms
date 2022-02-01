@@ -36,11 +36,15 @@ test('change input value -> submit form', async () => {
   fireEvent.click(input);
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        firstName: 'John',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            firstName: 'John',
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -73,13 +77,17 @@ test('set default values -> change input value -> submit form', async () => {
   await waitFor(() => expect(input.innerHTML).toBe('off'));
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        isPublic: false,
-        firstName: 'John',
-        lastName: 'Brown',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            isPublic: false,
+            firstName: 'John',
+            lastName: 'Brown',
+          },
+        },
+      }),
+    ),
   );
 });

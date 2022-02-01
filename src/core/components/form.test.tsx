@@ -47,14 +47,14 @@ test('set default values -> submit form', async () => {
   );
   const form = getByTestId('form');
   fireEvent.submit(form);
-  await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.any(Object), defaultValues));
+  await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.objectContaining({ values: defaultValues })));
 });
 
 test('submit form -> ensure field is disabled ', async () => {
   let isInputDisabled;
   const { getByTestId } = render(
     <Form
-      onSubmit={(api) => {
+      onSubmit={({ api }) => {
         isInputDisabled = api.getField('profile.firstName')?.isDisabled();
       }}
       data-testid="form"
@@ -96,7 +96,7 @@ test('set default values -> change input -> submit form', async () => {
   const { getByTestId } = render(
     <Form
       defaultValues={defaultValues}
-      onSubmit={(api, values) => {
+      onSubmit={({ values }) => {
         submitValues.push(values);
       }}
       data-testid="form"
@@ -129,7 +129,14 @@ test('change input -> unsure onChange is called ', async () => {
   );
   const input = getByTestId('input');
   fireEvent.change(input, { target: { value: 'Bill' } });
-  await waitFor(() => expect(onChange).toHaveBeenCalledWith(expect.any(Object), 'profile.firstName', 'Bill'));
+  await waitFor(() =>
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        changedField: 'profile.firstName',
+        fieldValue: 'Bill',
+      }),
+    ),
+  );
 });
 
 test('touch input -> unsure onTouch is called ', async () => {
@@ -142,7 +149,13 @@ test('touch input -> unsure onTouch is called ', async () => {
   const input = getByTestId('input');
   input.focus();
   input.blur();
-  await waitFor(() => expect(onTouch).toHaveBeenCalledWith(expect.any(Object), 'profile.firstName'));
+  await waitFor(() =>
+    expect(onTouch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        touchedField: 'profile.firstName',
+      }),
+    ),
+  );
 });
 
 test('set onError -> submit', async () => {
@@ -160,12 +173,16 @@ test('set onError -> submit', async () => {
   const form = getByTestId('form');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(onError).toHaveBeenCalledWith(expect.any(Object), [
-      {
-        id: 'profile.firstName',
-        errors: ['Required'],
-      },
-    ]),
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        errors: [
+          {
+            id: 'profile.firstName',
+            errors: ['Required'],
+          },
+        ],
+      }),
+    ),
   );
 });
 
@@ -246,26 +263,34 @@ test('set cast validation', async () => {
   const input = getByTestId('input');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      id: 2,
-      profile: {
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 30,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          id: 2,
+          profile: {
+            firstName: 'John',
+            lastName: 'Brown',
+            age: 30,
+          },
+        },
+      }),
+    ),
   );
   fireEvent.change(input, { target: { value: '32' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      id: 2,
-      profile: {
-        firstName: 'John',
-        lastName: 'Brown',
-        age: 32,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          id: 2,
+          profile: {
+            firstName: 'John',
+            lastName: 'Brown',
+            age: 32,
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -300,12 +325,16 @@ test('set stripUnknown', async () => {
   const form = getByTestId('form');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      id: 2,
-      profile: {
-        firstName: 'John',
-        age: 30,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          id: 2,
+          profile: {
+            firstName: 'John',
+            age: 30,
+          },
+        },
+      }),
+    ),
   );
 });
