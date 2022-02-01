@@ -31,11 +31,15 @@ test('change input value -> submit form', async () => {
   fireEvent.change(input, { target: { value: 'John' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        firstName: 'John',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            firstName: 'John',
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -59,13 +63,17 @@ test('set default values -> change input value -> submit form', async () => {
   fireEvent.change(input, { target: { value: 'Bill' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'Bill',
-        lastName: 'Brown',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: 'Bill',
+            lastName: 'Brown',
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -89,13 +97,17 @@ test('set emptyValue attribute -> change input value -> submit form', async () =
   fireEvent.change(input, { target: { value: '' } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: null,
-        lastName: 'Brown',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: null,
+            lastName: 'Brown',
+          },
+        },
+      }),
+    ),
   );
 });
 

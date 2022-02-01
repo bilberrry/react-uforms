@@ -31,11 +31,15 @@ test('check input -> submit form', async () => {
   expect(input).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        isPrivate: true,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            isPrivate: true,
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -60,14 +64,18 @@ test('set default values -> uncheck input -> submit form', async () => {
   fireEvent.click(input);
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'John',
-        lastName: 'Brown',
-        isPrivate: 0,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: 'John',
+            lastName: 'Brown',
+            isPrivate: 0,
+          },
+        },
+      }),
+    ),
   );
 });
 

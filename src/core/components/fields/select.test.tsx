@@ -48,29 +48,41 @@ test('change input value -> submit form', async () => {
   fireEvent.change(input, { target: { value: optUs.getAttribute('value') } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      address: {
-        country: 'US',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          address: {
+            country: 'US',
+          },
+        },
+      }),
+    ),
   );
   fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      address: {
-        country: null,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          address: {
+            country: null,
+          },
+        },
+      }),
+    ),
   );
   fireEvent.change(input, { target: { value: optAs.getAttribute('value') } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      address: {
-        country: -1,
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          address: {
+            country: -1,
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -103,12 +115,16 @@ test('set default values -> change input value -> submit form', async () => {
   fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      address: {
-        country: null,
-        city: 'Valhalla',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          address: {
+            country: null,
+            city: 'Valhalla',
+          },
+        },
+      }),
+    ),
   );
   expect(optNull).toHaveProperty('selected');
 });

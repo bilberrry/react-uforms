@@ -4,7 +4,7 @@ import {
   FormErrorsType,
   FormValues,
   GroupClasses,
-  SomeFormValues,
+  PartialFormValues,
   ValidationType,
 } from '../types';
 import { RefObject } from 'react';
@@ -23,7 +23,7 @@ export const formApiPure = <Values extends FormValues>(
     setDefaultValues(defaultValues): void {
       set({ form: { ...get().form, defaultValues } });
     },
-    getDefaultValues(): SomeFormValues<Values> {
+    getDefaultValues(): PartialFormValues<Values> {
       return get().form.defaultValues;
     },
     setStripUnknown(isStripUnknown: boolean): void {
@@ -35,7 +35,7 @@ export const formApiPure = <Values extends FormValues>(
     setDynamicValues(dynamicValues): void {
       set({ dynamicValues });
     },
-    getDynamicValues(): SomeFormValues<Values> {
+    getDynamicValues(): PartialFormValues<Values> {
       return get().dynamicValues;
     },
     setClasses(classes: ClassesInterface): void {
@@ -74,7 +74,7 @@ export const formApiPure = <Values extends FormValues>(
         setField(id, { errors });
       }
     },
-    setValues(values: SomeFormValues<Values>): void {
+    setValues(values: PartialFormValues<Values>): void {
       // TODO one set
       const { fields } = get();
       for (let i = 0; i < fields.length; i++) {

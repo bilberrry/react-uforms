@@ -8,24 +8,45 @@ import {
   FormApiInterface,
   FormErrorsType,
   FormValues,
-  SomeFormValues,
+  PartialFormValues,
   ValidationType,
 } from '../types';
 import isEqual from 'lodash.isequal';
 
 type FormApiChildren<Values extends FormValues> = (api: FormApiInterface<Values>) => ReactNode;
 
+export interface OnSubmitParams<Values extends FormValues> {
+  api: FormApiInterface<Values>;
+  values: Values;
+}
+
+export interface OnChangeParams<Values extends FormValues> {
+  api: FormApiInterface<Values>;
+  changedField: string;
+  fieldValue: FieldValueType;
+}
+
+export interface OnTouchParams<Values extends FormValues> {
+  api: FormApiInterface<Values>;
+  touchedField: string;
+}
+
+export interface OnErrorParams<Values extends FormValues> {
+  api: FormApiInterface<Values>;
+  errors: FormErrorsType;
+}
+
 export interface FormProps<Values extends FormValues>
   extends Omit<
     React.HTMLProps<HTMLFormElement & HTMLDivElement>,
-    'onChange' | 'onSubmit' | 'onError' | 'defaultValues'
+    'onChange' | 'onSubmit' | 'onError' | 'defaultValues' | 'children'
   > {
   children: ReactNode | FormApiChildren<Values>;
-  onSubmit: (api: FormApiInterface<Values>, values: SomeFormValues<Values>) => void;
-  defaultValues?: SomeFormValues<Values>;
-  onChange?: (api: FormApiInterface<Values>, changedField: string, fieldValue: FieldValueType) => void;
-  onTouch?: (api: FormApiInterface<Values>, touchedField: string) => void;
-  onError?: (api: FormApiInterface<Values>, errors: FormErrorsType) => void;
+  onSubmit: (params: OnSubmitParams<Values>) => void;
+  defaultValues?: PartialFormValues<Values>;
+  onChange?: (params: OnChangeParams<Values>) => void;
+  onTouch?: (params: OnTouchParams<Values>) => void;
+  onError?: (params: OnErrorParams<Values>) => void;
   validation?: ValidationType;
   classes?: Partial<ClassesInterface>;
   stripUnknown?: boolean;
@@ -55,7 +76,7 @@ const FormProviderComponent = <Values extends FormValues>({
   stripUnknown,
   classes,
   ...props
-}: PropsWithRef<FormProps<Values>>): ReactElement | null => {
+}: FormProps<Values>): ReactElement | null => {
   const formRef = useRef<HTMLFormElement | null>(null); // TODO forwardRef
   const api = useForm<Values>();
   useEffect(() => {
@@ -91,16 +112,26 @@ const FormProviderComponent = <Values extends FormValues>({
     e.preventDefault();
     try {
       const values = await api.validate();
-      onSubmit(api, values);
+      onSubmit({
+        api,
+        values,
+      });
     } catch (e) {
       if (typeof onError === 'function') {
-        onError(api, api.getErrors());
+        onError({
+          api,
+          errors: api.getErrors(),
+        });
       }
     }
   };
   const onChangeCallback = (e: CustomEvent<FieldChangeEventInterface>) => {
     if (typeof onChange === 'function') {
-      onChange(api, e.detail.id, e.detail.value);
+      onChange({
+        api,
+        changedField: e.detail.id,
+        fieldValue: e.detail.value,
+      });
     }
     // TODO improve
     const isChanged = !isEqual(api.getDefaultValues(), api.getValues());
@@ -110,7 +141,10 @@ const FormProviderComponent = <Values extends FormValues>({
   };
   const onTouchCallback = (e: CustomEvent<FieldTouchEventInterface>) => {
     if (typeof onTouch === 'function') {
-      onTouch(api, e.detail.id);
+      onTouch({
+        api,
+        touchedField: e.detail.id,
+      });
     }
   };
 

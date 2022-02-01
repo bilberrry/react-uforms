@@ -39,21 +39,29 @@ test('check input -> submit form', async () => {
   expect(inputMale).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        gender: 'male',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            gender: 'male',
+          },
+        },
+      }),
+    ),
   );
   fireEvent.click(inputFemale);
   expect(inputFemale).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      profile: {
-        gender: 'female',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          profile: {
+            gender: 'female',
+          },
+        },
+      }),
+    ),
   );
 });
 
@@ -80,19 +88,29 @@ test('set default values -> uncheck input -> submit form', async () => {
   const form = getByTestId('form');
   expect(inputMale).toHaveProperty('checked');
   fireEvent.submit(form);
-  await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.any(Object), defaultValues));
+  await waitFor(() =>
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: defaultValues,
+      }),
+    ),
+  );
   fireEvent.click(inputFemale);
   expect(inputFemale).toHaveProperty('checked');
   fireEvent.submit(form);
   await waitFor(() =>
-    expect(submit).toHaveBeenCalledWith(expect.any(Object), {
-      email: 'test@example.com',
-      profile: {
-        firstName: 'Kelly',
-        lastName: 'Brown',
-        gender: 'female',
-      },
-    }),
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        values: {
+          email: 'test@example.com',
+          profile: {
+            firstName: 'Kelly',
+            lastName: 'Brown',
+            gender: 'female',
+          },
+        },
+      }),
+    ),
   );
 });
 
