@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { PropsWithoutRef } from 'react';
 import { valueToJson } from '../../helpers';
-import { FieldValueType } from '../../types';
+import { FieldRefProp, FieldValueType } from '../../types';
 import { ContextRadioGroup } from './radio-group';
 
 export interface RadioGroupItemProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value' | 'name'> {
   value: FieldValueType;
 }
 
-const RadioGroupItemComponent = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(({ value, ...props }, ref) => (
+const RadioGroupItemComponent = ({
+  value,
+  uRef,
+  ...props
+}: PropsWithoutRef<RadioGroupItemProps & FieldRefProp<HTMLInputElement>>) => (
   <ContextRadioGroup.Consumer>
     {(checkboxApi) => {
       if (!checkboxApi) {
-        console.error('Could not found Radio Group API. Make sure <RadioGroupItem/> is in the <RadioGroup/>.');
+        console.error('Could not find Radio Group API. Make sure <RadioGroupItem/> is in the <RadioGroup/>.');
         return null;
       }
 
@@ -19,7 +23,7 @@ const RadioGroupItemComponent = React.forwardRef<HTMLInputElement, RadioGroupIte
       return (
         <input
           {...props}
-          ref={ref}
+          ref={uRef}
           name={name}
           value={valueToJson(value)}
           checked={value === stateValue}
@@ -30,7 +34,7 @@ const RadioGroupItemComponent = React.forwardRef<HTMLInputElement, RadioGroupIte
       );
     }}
   </ContextRadioGroup.Consumer>
-));
+);
 
 RadioGroupItemComponent.displayName = 'RadioGroupItem';
 

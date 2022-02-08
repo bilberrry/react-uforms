@@ -1,5 +1,5 @@
-import React, { ChangeEvent, createContext, ReactNode } from 'react';
-import { FieldPassedProps, FieldValueType } from '../../types';
+import React, { ChangeEvent, createContext, PropsWithoutRef, ReactNode } from 'react';
+import { FieldPassedProps, FieldValueType, FormValues } from '../../types';
 import { jsonToValue } from '../../helpers';
 import { useField } from '../../hooks';
 import { FieldErrors } from '../extra/field-errors';
@@ -20,15 +20,15 @@ export interface CheckboxGroupProps {
 
 export const ContextCheckboxGroup = createContext<CheckboxGroupApi | undefined>(undefined);
 
-const CheckboxGroupComponent: React.FC<CheckboxGroupProps & FieldPassedProps> = ({
+const CheckboxGroupComponent = <Values extends FormValues>({
   name,
   children,
   disabled,
   hideError,
   dependsOn,
   onChange,
-}) => {
-  const [value, setValue, { validate, setTouched }] = useField(name, {
+}: PropsWithoutRef<CheckboxGroupProps & FieldPassedProps<Values>>) => {
+  const [value, setValue, { validate, setTouched }] = useField<Values>(name, {
     disabled,
     dependsOn,
   });
