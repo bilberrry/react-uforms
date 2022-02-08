@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { PropsWithoutRef } from 'react';
 import { useFieldErrors } from '../../hooks';
+import { FieldRefProp, FormValues, NestedKeys } from '../../types';
 
-export interface FieldErrorsProps extends React.HTMLProps<HTMLDivElement> {
-  name: string;
+export interface FieldErrorsProps<Values extends FormValues> extends React.HTMLProps<HTMLUListElement> {
+  name: NestedKeys<Values>;
 }
 
-const FieldErrorsComponent = React.forwardRef<HTMLDivElement, FieldErrorsProps>(({ name, ...rest }, ref) => {
-  const [errors, className] = useFieldErrors(name);
+const FieldErrorsComponent = <Values extends FormValues>({
+  name,
+  uRef,
+  ...rest
+}: PropsWithoutRef<FieldErrorsProps<Values> & FieldRefProp<HTMLUListElement>>) => {
+  const [errors, className] = useFieldErrors<Values>(name);
   return errors && errors.length > 0 ? (
-    <div {...rest} ref={ref} className={className}>
-      {errors.join(' ')}
-    </div>
+    <ul {...rest} ref={uRef} className={className}>
+      {errors.map((message) => (
+        <li key={message}>{message}</li>
+      ))}
+    </ul>
   ) : null;
-});
+};
 
 FieldErrorsComponent.displayName = 'FieldErrors';
 

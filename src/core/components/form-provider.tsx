@@ -1,4 +1,4 @@
-import React, { PropsWithRef, ReactElement, ReactNode, useEffect, useRef } from 'react';
+import React, { PropsWithoutRef, ReactElement, ReactNode, useEffect, useRef } from 'react';
 import { useForm } from '../hooks';
 import {
   ClassesInterface,
@@ -76,8 +76,8 @@ const FormProviderComponent = <Values extends FormValues>({
   stripUnknown,
   classes,
   ...props
-}: FormProps<Values>): ReactElement | null => {
-  const formRef = useRef<HTMLFormElement | null>(null); // TODO forwardRef
+}: PropsWithoutRef<FormProps<Values>>): ReactElement | null => {
+  const formRef = useRef<HTMLFormElement | null>(null);
   const api = useForm<Values>();
   useEffect(() => {
     api.setDefaultValues({ ...defaultValues } as Values);

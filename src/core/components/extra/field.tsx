@@ -1,4 +1,4 @@
-import React, { PropsWithRef, ReactElement, ReactNode } from 'react';
+import React, { PropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { useField } from '../../hooks';
 import { FieldApiInterface, FieldPassedProps, FormApiInterface, FormValues } from '../../types';
 import { FieldErrors } from './field-errors';
@@ -18,7 +18,7 @@ const FieldComponent = <Values extends FormValues>({
   hideError,
   children,
   dependsOn,
-}: PropsWithRef<FieldProps<Values> & FieldPassedProps>): ReactElement | null => {
+}: PropsWithoutRef<FieldProps<Values> & FieldPassedProps<Values>>): ReactElement | null => {
   const [, , fieldApi, formApi] = useField<Values>(name, {
     disabled,
     dependsOn,

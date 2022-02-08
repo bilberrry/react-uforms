@@ -1,6 +1,5 @@
-import { RefObject } from 'react';
+import { Ref, RefObject } from 'react';
 
-// export type ValueType = string | number | boolean | null;
 export type ValidationType = any;
 export type FieldValueType = any; //string | number | boolean | null | Record<string, unknown>;
 export type FieldErrorType = string;
@@ -142,7 +141,7 @@ export interface FormApiInterface<Values extends FormValues> {
   setChanged: (value: boolean) => void;
   isValidating: () => boolean;
   submit: () => void;
-  getField: (fieldId: string, autoCreate?: boolean) => FieldApiInterface | undefined;
+  getField: (fieldId: NestedKeys<Values>, autoCreate?: boolean) => FieldApiInterface | undefined;
   groupsApi: GroupsApiInterface;
   getFieldArray: (fieldId: string) => FieldArrayApiInterface | undefined;
 }
@@ -155,11 +154,15 @@ export interface FieldArrayApiInterface {
   getItems: () => Array<any>;
 }
 
-export interface FieldPassedProps {
-  name: string;
+export interface FieldPassedProps<Values extends FormValues> {
+  name: NestedKeys<Values>;
   disabled?: boolean;
   hideError?: boolean;
   dependsOn?: Array<string>;
+}
+
+export interface FieldRefProp<T> {
+  uRef?: Ref<T>;
 }
 
 export interface UseFieldProps {
@@ -172,3 +175,18 @@ export interface UseGroupProps {
   autoCreate?: boolean;
   defaultActive?: boolean;
 }
+
+type NestedPrefix<T extends string> = T extends '' ? '' : `.${T}`;
+
+export type NestedKeys<T> = (
+  T extends object
+    ? T extends Array<infer Item>
+      ? { [K in Exclude<keyof Item, symbol>]: `${number}.${K}${NestedPrefix<NestedKeys<Item[K]>>}` }[Exclude<
+          keyof Item,
+          symbol
+        >]
+      : { [K in Exclude<keyof T, symbol>]: `${K}${NestedPrefix<NestedKeys<T[K]>>}` }[Exclude<keyof T, symbol>]
+    : ''
+) extends infer D
+  ? Extract<D, string>
+  : never;

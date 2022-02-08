@@ -1,5 +1,5 @@
-import React, { ChangeEvent, createContext, ReactNode } from 'react';
-import { FieldPassedProps, FieldValueType } from '../../types';
+import React, { ChangeEvent, createContext, PropsWithoutRef, ReactNode } from 'react';
+import { FieldPassedProps, FieldValueType, FormValues } from '../../types';
 import { jsonToValue } from '../../helpers';
 import { useField } from '../../hooks';
 import { FieldErrors } from '../extra/field-errors';
@@ -20,15 +20,15 @@ export interface RadioGroupProps {
 
 export const ContextRadioGroup = createContext<RadioGroupApi | undefined>(undefined);
 
-const RadioGroupComponent: React.FC<RadioGroupProps & FieldPassedProps> = ({
+const RadioGroupComponent = <Values extends FormValues>({
   name,
   children,
   disabled,
   hideError,
   onChange,
   dependsOn,
-}) => {
-  const [value, setValue, { validate, setTouched }] = useField(name, {
+}: PropsWithoutRef<RadioGroupProps & FieldPassedProps<Values>>) => {
+  const [value, setValue, { validate, setTouched }] = useField<Values>(name, {
     disabled,
     dependsOn,
   });

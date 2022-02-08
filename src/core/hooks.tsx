@@ -9,6 +9,7 @@ import {
   GroupApiInterface,
   GroupInterface,
   GroupsApiInterface,
+  NestedKeys,
   UseFieldProps,
   UseGroupProps,
 } from './types';
@@ -78,7 +79,7 @@ export const useForm = <Values extends FormValues>(): FormApiInterface<Values> =
 };
 
 export const useField = <Values extends FormValues>(
-  fieldId: string,
+  fieldId: NestedKeys<Values>,
   props: UseFieldProps = {},
 ): [FieldValueType, (value: FieldValueType) => void, FieldApiInterface, FormApiInterface<Values>] => {
   const { autoCreate, disabled, dependsOn } = props;
@@ -138,7 +139,9 @@ export const useGroups = <Values extends FormValues>(): [
   return [state.groups, state.formApi.groupsApi, state.formApi];
 };
 
-export const useFieldValues = <Values extends FormValues>(fieldIds: Array<string>): Array<FieldValueType> => {
+export const useFieldValues = <Values extends FormValues>(
+  fieldIds: Array<NestedKeys<Values>>,
+): Array<FieldValueType> => {
   const state = useFormStore(selector, compareField(fieldIds)) as unknown as FormStateInterface<Values>;
   return fieldIds.map((fieldId) => {
     const fieldApi = state.formApi.getField(fieldId, false);
@@ -147,7 +150,7 @@ export const useFieldValues = <Values extends FormValues>(fieldIds: Array<string
 };
 
 export const useFieldValue = <Values extends FormValues>(
-  fieldId: string,
+  fieldId: NestedKeys<Values>,
 ): [FieldValueType | undefined, string | undefined] => {
   const state = useFormStore(selector, compareFieldValue(fieldId)) as unknown as FormStateInterface<Values>;
   const fieldApi = state.formApi.getField(fieldId, false) as FieldApiInterface;
@@ -155,7 +158,7 @@ export const useFieldValue = <Values extends FormValues>(
 };
 
 export const useFieldErrors = <Values extends FormValues>(
-  fieldId: string,
+  fieldId: NestedKeys<Values>,
 ): [FieldErrorsType | undefined, string | undefined] => {
   const state = useFormStore(selector, compareFieldError(fieldId)) as unknown as FormStateInterface<Values>;
   const fieldApi = state.formApi.getField(fieldId, false);

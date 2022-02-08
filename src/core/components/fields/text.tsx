@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { PropsWithoutRef, useEffect } from 'react';
 import { useField } from '../../hooks';
 import { stringToValue, valueToString } from '../../helpers';
-import { FieldPassedProps } from '../../types';
+import { FieldPassedProps, FieldRefProp, FormValues } from '../../types';
 import { FieldErrors } from '../extra/field-errors';
 
 export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'value'> {
@@ -10,63 +10,59 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
   validateDelay?: number;
 }
 
-const TextComponent = React.forwardRef<HTMLInputElement, TextProps & FieldPassedProps>(
-  (
-    {
-      name,
-      disabled,
-      onBlur,
-      onChange,
-      emptyValue = '',
-      className,
-      hideError,
-      dependsOn,
-      validateOnChange,
-      validateDelay,
-      ...props
-    },
-    ref,
-  ) => {
-    const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
-      disabled,
-      dependsOn,
-    });
-    useEffect(() => {
-      if (validateOnChange) {
-        const timeOutId = setTimeout(() => validate(), validateDelay || 500);
-        return () => clearTimeout(timeOutId);
-      }
-    }, [value, validateOnChange]);
+const TextComponent = <Values extends FormValues>({
+  name,
+  disabled,
+  onBlur,
+  onChange,
+  emptyValue = '',
+  className,
+  hideError,
+  dependsOn,
+  validateOnChange,
+  validateDelay,
+  uRef,
+  ...props
+}: PropsWithoutRef<TextProps & FieldPassedProps<Values> & FieldRefProp<HTMLInputElement>>) => {
+  const [value, setValue, { getInputClassName, validate, setTouched }] = useField<Values>(name, {
+    disabled,
+    dependsOn,
+  });
+  useEffect(() => {
+    if (validateOnChange) {
+      const timeOutId = setTimeout(() => validate(), validateDelay || 500);
+      return () => clearTimeout(timeOutId);
+    }
+  }, [value, validateOnChange]);
 
-    return (
-      <>
-        <input
-          {...props}
-          ref={ref}
-          value={valueToString(value, emptyValue)}
-          disabled={disabled}
-          className={getInputClassName(className)}
-          onChange={(event) => {
-            event.persist();
-            setValue(stringToValue(event.target.value, emptyValue));
-            if (onChange) {
-              onChange(event);
-            }
-          }}
-          onBlur={(event) => {
-            event.persist();
-            setTouched();
-            validate();
-            if (onBlur) {
-              onBlur(event);
-            }
-          }}
-        />
-        {!hideError && <FieldErrors name={name} />}
-      </>
-    );
-  },
-);
+  return (
+    <>
+      <input
+        {...props}
+        ref={uRef}
+        value={valueToString(value, emptyValue)}
+        disabled={disabled}
+        className={getInputClassName(className)}
+        onChange={(event) => {
+          event.persist();
+          setValue(stringToValue(event.target.value, emptyValue));
+          if (onChange) {
+            onChange(event);
+          }
+        }}
+        onBlur={(event) => {
+          event.persist();
+          setTouched();
+          validate();
+          if (onBlur) {
+            onBlur(event);
+          }
+        }}
+      />
+      {!hideError && <FieldErrors name={name} />}
+    </>
+  );
+};
 
 TextComponent.displayName = 'Text';
 
