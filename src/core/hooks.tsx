@@ -62,7 +62,7 @@ const compareFieldError =
   (oldState: FormStateInterface<Values>, newState: FormStateInterface<Values>) => {
     const oldField = oldState.fields.find((item) => item.id === id);
     const newField = newState.fields.find((item) => item.id === id);
-    return oldField?.errors.length === newField?.errors.length;
+    return oldField?.errors?.length === newField?.errors?.length;
   };
 
 const compareDynamicValues =
