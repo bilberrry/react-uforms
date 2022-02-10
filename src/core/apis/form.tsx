@@ -18,7 +18,7 @@ export const formApiPure = <Values extends FormValues>(
   getGroup,
   getFieldArray,
 ): FormApiInterface<Values> => {
-  const { setField, getValues, validate } = commonApiPure(set, get);
+  const { setField, getValues, validate, submit } = commonApiPure(set, get);
   return {
     setDefaultValues(defaultValues): void {
       set({ form: { ...get().form, defaultValues } });
@@ -56,10 +56,7 @@ export const formApiPure = <Values extends FormValues>(
     getFormRef(): RefObject<HTMLFormElement> | null {
       return get().form.formRef;
     },
-    submit(): void {
-      const event = new Event('submit', { cancelable: true, bubbles: true });
-      get().form.formRef?.current?.dispatchEvent(event);
-    },
+    submit,
     getValues,
     getErrors(): FormErrorsType {
       return get().fields.map(({ id, errors }) => ({
@@ -114,7 +111,8 @@ export const formApiPure = <Values extends FormValues>(
         const activeGroup = get().groups[activeIndex];
         if (activeIndex === get().groups.length - 1) {
           if (await getGroup(activeGroup.name).validate()) {
-            return validate();
+            submit();
+            return true;
           }
         } else if (activeIndex < get().groups.length - 1) {
           const nextGroup = get().groups[activeIndex + 1];
