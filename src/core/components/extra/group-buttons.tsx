@@ -16,6 +16,7 @@ const GroupNextComponent = ({
   const [, groupsApi] = useGroups();
   return (
     <button
+      type="button"
       {...props}
       ref={uRef}
       onClick={(e) => {
@@ -42,6 +43,7 @@ const GroupPrevComponent = ({
   const [, groupsApi] = useGroups();
   return (
     <button
+      type="button"
       {...props}
       ref={uRef}
       onClick={(e) => {
@@ -69,6 +71,7 @@ const GroupJumpComponent = ({
   const [, groupsApi] = useGroups();
   return (
     <button
+      type="button"
       {...props}
       ref={uRef}
       onClick={(e) => {

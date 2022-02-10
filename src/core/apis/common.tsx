@@ -94,6 +94,10 @@ export const commonApiPure = (set, get) => {
       }),
     }));
   };
+  const submit = (): void => {
+    const event = new Event('submit', { cancelable: true, bubbles: true });
+    get().form.formRef?.current?.dispatchEvent(event);
+  };
   return {
     setField,
     setFields,
@@ -101,5 +105,6 @@ export const commonApiPure = (set, get) => {
     setGroup,
     getValues,
     validate,
+    submit,
   };
 };
