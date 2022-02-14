@@ -76,7 +76,7 @@ export interface FieldTouchEventInterface {
 
 export interface GroupsApiInterface {
   prevGroup: () => void;
-  nextGroup: () => Promise<boolean>;
+  nextGroup: (autoSubmit?: boolean) => Promise<boolean>;
   getClasses: () => GroupClasses;
   getGroup: (groupName: string, autoCreate?: boolean, data?: Partial<GroupInterface>) => GroupApiInterface | undefined;
 }

@@ -106,12 +106,14 @@ export const formApiPure = <Values extends FormValues>(
       getClasses(): GroupClasses {
         return get().form.classes.group;
       },
-      async nextGroup(): Promise<boolean> {
+      async nextGroup(autoSubmit = false): Promise<boolean> {
         const activeIndex = get().groups.findIndex((item) => item.isActive);
         const activeGroup = get().groups[activeIndex];
         if (activeIndex === get().groups.length - 1) {
           if (await getGroup(activeGroup.name).validate()) {
-            submit();
+            if (autoSubmit) {
+              submit();
+            }
             return true;
           }
         } else if (activeIndex < get().groups.length - 1) {

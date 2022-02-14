@@ -35,6 +35,7 @@ test('renders without crashing', () => {
 
 test('clickPrev', async () => {
   const submit = jest.fn();
+  const g2Success = jest.fn();
   const { getByTestId } = render(
     <Form onSubmit={submit}>
       <Group name="group1" data-testid="group1" defaultActive={true}>
@@ -44,14 +45,16 @@ test('clickPrev', async () => {
       <Group name="group2" data-testid="group2">
         <Text name="profile.middleName" />
         <GroupPrev data-testid="g2-prev" />
-        <GroupNext data-testid="g2-next">Next Step</GroupNext>
+        <GroupNext data-testid="g2-next" onSuccess={g2Success}>
+          Next Step
+        </GroupNext>
       </Group>
       <Group name="group3" data-testid="group3">
         <Text name="profile.lastName" />
         <GroupJump to="group1" data-testid="g3-jump">
           Go to first step
         </GroupJump>
-        <GroupNext data-testid="g3-next" />
+        <GroupNext data-testid="g3-next" autoSubmit={true} />
       </Group>
     </Form>,
   );
@@ -81,6 +84,7 @@ test('clickPrev', async () => {
   await waitFor(() => expect(group2).not.toHaveStyle('display: none'));
   fireEvent.click(g2Next);
   await waitFor(() => expect(submit).not.toHaveBeenCalled());
+  await waitFor(() => expect(g2Success).toHaveBeenCalled());
   await waitFor(() => expect(group1).toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).not.toHaveStyle('display: none'));

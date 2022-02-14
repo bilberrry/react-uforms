@@ -3,7 +3,13 @@ import { useGroups } from '../../hooks';
 import { FieldRefProp } from '../../types';
 
 export type GroupButtonsProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
-export interface GroupJumpButtonsProps extends GroupButtonsProps {
+export type GroupPrevButtonProps = GroupButtonsProps;
+export interface GroupNextButtonProps extends GroupButtonsProps {
+  onSuccess?: () => void;
+  onError?: () => void;
+  autoSubmit?: boolean;
+}
+export interface GroupJumpButtonProps extends GroupButtonsProps {
   to: string;
 }
 
@@ -11,19 +17,28 @@ const GroupNextComponent = ({
   onClick,
   children,
   uRef,
+  autoSubmit,
+  onSuccess,
+  onError,
   ...props
-}: PropsWithoutRef<GroupButtonsProps & FieldRefProp<HTMLButtonElement>>) => {
+}: PropsWithoutRef<GroupNextButtonProps & FieldRefProp<HTMLButtonElement>>) => {
   const [, groupsApi] = useGroups();
   return (
     <button
       type="button"
       {...props}
       ref={uRef}
-      onClick={(e) => {
+      onClick={async (e) => {
         e.persist();
-        groupsApi.nextGroup();
         if (onClick) {
           onClick(e);
+        }
+        if (await groupsApi.nextGroup(!!autoSubmit)) {
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else if (onError) {
+          onError();
         }
       }}
     >
@@ -39,7 +54,7 @@ const GroupPrevComponent = ({
   children,
   uRef,
   ...props
-}: PropsWithoutRef<GroupButtonsProps & FieldRefProp<HTMLButtonElement>>) => {
+}: PropsWithoutRef<GroupPrevButtonProps & FieldRefProp<HTMLButtonElement>>) => {
   const [, groupsApi] = useGroups();
   return (
     <button
@@ -67,7 +82,7 @@ const GroupJumpComponent = ({
   children,
   uRef,
   ...props
-}: PropsWithoutRef<GroupJumpButtonsProps & FieldRefProp<HTMLButtonElement>>) => {
+}: PropsWithoutRef<GroupJumpButtonProps & FieldRefProp<HTMLButtonElement>>) => {
   const [, groupsApi] = useGroups();
   return (
     <button
