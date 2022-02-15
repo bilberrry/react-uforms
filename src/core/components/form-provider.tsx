@@ -59,7 +59,7 @@ export const defaultClasses: ClassesInterface = {
   },
   group: {
     active: 'active',
-    valid: 'is-invalid',
+    valid: 'is-valid',
     touched: 'is-touched',
     disabled: 'is-disabled',
   },
