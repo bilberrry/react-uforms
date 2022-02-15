@@ -17,7 +17,7 @@ const RadioComponent = <Values extends FormValues>({
   dependsOn,
   uRef,
   ...props
-}: PropsWithoutRef<RadioProps & FieldPassedProps<Values> & FieldRefProp<HTMLInputElement>>) => {
+}: PropsWithoutRef<RadioProps & Omit<FieldPassedProps<Values>, 'hideError'> & FieldRefProp<HTMLInputElement>>) => {
   const [value, setValue, { getInputClassName, validate, setTouched }] = useField(name, {
     disabled,
     dependsOn,
