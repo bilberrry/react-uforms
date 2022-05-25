@@ -8,6 +8,8 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
   emptyValue?: string | null;
   validateOnChange?: boolean;
   validateDelay?: number;
+  onStopTyping?: () => {};
+  stopTypingDelay?: number;
 }
 
 const TextComponent = <Values extends FormValues>({
@@ -21,6 +23,8 @@ const TextComponent = <Values extends FormValues>({
   dependsOn,
   validateOnChange,
   validateDelay,
+  onStopTyping,
+  stopTypingDelay,
   uRef,
   ...props
 }: PropsWithoutRef<TextProps & FieldPassedProps<Values> & FieldRefProp<HTMLInputElement>>) => {
@@ -34,6 +38,12 @@ const TextComponent = <Values extends FormValues>({
       return () => clearTimeout(timeOutId);
     }
   }, [value, validateOnChange]);
+  useEffect(() => {
+    if (onStopTyping) {
+      const timeOutId = setTimeout(() => onStopTyping(), stopTypingDelay || 500);
+      return () => clearTimeout(timeOutId);
+    }
+  }, [value, onStopTyping]);
 
   return (
     <>
