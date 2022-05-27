@@ -8,7 +8,7 @@ export interface TextAreaProps extends Omit<React.HTMLProps<HTMLTextAreaElement>
   emptyValue?: string | null;
   validateOnChange?: boolean;
   validateDelay?: number;
-  onStopTyping?: () => {};
+  onStopTyping?: () => void;
   stopTypingDelay?: number;
 }
 

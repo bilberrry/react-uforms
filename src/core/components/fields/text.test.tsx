@@ -137,3 +137,35 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
   expect(input).not.toHaveFocus();
   await waitFor(() => expect(blur).toHaveBeenCalled());
 });
+
+test('set onStopTyping attribute -> change input value ', async () => {
+  const stopTyping = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Text name="profile.firstName" onStopTyping={stopTyping} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'Jo' } });
+  fireEvent.change(input, { target: { value: 'John' } });
+  expect(stopTyping).not.toHaveBeenCalled();
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  expect(stopTyping).toHaveBeenCalled();
+});
+
+test('set onStopTyping / stopTypingDelay attribute -> change input value ', async () => {
+  const stopTyping = jest.fn();
+  const { getByTestId } = render(
+    <Form onSubmit={() => {}}>
+      <Text name="profile.firstName" onStopTyping={stopTyping} stopTypingDelay={1000} data-testid="input" />
+    </Form>,
+  );
+  const input = getByTestId('input');
+  fireEvent.change(input, { target: { value: 'Jo' } });
+  fireEvent.change(input, { target: { value: 'John' } });
+  expect(stopTyping).not.toHaveBeenCalled();
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  expect(stopTyping).not.toHaveBeenCalled();
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  expect(stopTyping).toHaveBeenCalled();
+});

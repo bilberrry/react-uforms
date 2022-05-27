@@ -8,7 +8,7 @@ export interface TextProps extends Omit<React.HTMLProps<HTMLInputElement>, 'valu
   emptyValue?: string | null;
   validateOnChange?: boolean;
   validateDelay?: number;
-  onStopTyping?: () => {};
+  onStopTyping?: () => void;
   stopTypingDelay?: number;
 }
 
