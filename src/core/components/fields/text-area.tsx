@@ -37,13 +37,13 @@ const TextAreaComponent = <Values extends FormValues>({
       const timeOutId = setTimeout(() => validate(), validateDelay || 500);
       return () => clearTimeout(timeOutId);
     }
-  }, [value, validateOnChange]);
+  }, [value]);
   useEffect(() => {
     if (onStopTyping) {
       const timeOutId = setTimeout(() => onStopTyping(), stopTypingDelay || 500);
       return () => clearTimeout(timeOutId);
     }
-  }, [value, onStopTyping]);
+  }, [value]);
 
   return (
     <>
