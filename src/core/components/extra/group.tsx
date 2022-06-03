@@ -10,7 +10,7 @@ export interface GroupState {
 
 type GroupApiChildren = (group: GroupApiInterface, api: GroupsApiInterface) => ReactNode;
 
-export interface GroupProps extends React.HTMLProps<HTMLDivElement> {
+export interface GroupProps extends Omit<React.HTMLProps<HTMLDivElement>, 'children'> {
   name: string;
   defaultActive?: boolean;
   children: ReactNode | GroupApiChildren;
