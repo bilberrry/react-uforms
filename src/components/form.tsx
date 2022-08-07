@@ -1,5 +1,8 @@
 import React, { FormEvent, ReactElement } from 'react';
-import _ from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
+import set from 'lodash.set';
+import get from 'lodash.get';
+import omit from 'lodash.omit';
 import { ContextApi, ContextForm } from './form-context';
 import { getValuesDiff } from './helpers';
 import { ValidatorInterface, ValueType } from './validator';
@@ -102,7 +105,7 @@ export interface FormApiInterface<Values extends ValuesType = ValuesType> {
 export interface FormProps<Values>
   extends Omit<
     React.HTMLProps<HTMLFormElement & HTMLDivElement>,
-    'onChange' | 'onSubmit' | 'onError' | 'defaultValues'
+    'onChange' | 'onSubmit' | 'onError' | 'defaultValues' | 'children'
   > {
   children: ((api: FormApiInterface<Values>) => ReactElement) | ReactElement | ReactElement[];
   onSubmit: (values: Values, api: FormApiInterface<Values>) => void;
@@ -153,7 +156,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
       console.warn('`errorClass` is deprecated, use `classes` instead');
     }
     this.state = {
-      values: _.cloneDeep(defaultValues) as Values,
+      values: cloneDeep(defaultValues) as Values,
       errors: {},
       disabled: [],
       groups: [],
@@ -183,7 +186,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         if (error && error.length > 0) {
           // eslint-disable-next-line no-param-reassign
           result.count += 1;
-          _.set(result.errors, currentPath, error);
+          set(result.errors, currentPath, error);
         }
       } else if (typeof validator === 'object' && validator !== null) {
         this.validateForm(result, validator, currentPath);
@@ -218,11 +221,11 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
         combinedCallback();
         return;
       }
-      const validators = _.get(validation(this.api), name);
+      const validators = get(validation(this.api), name);
       if (validators && Array.isArray(validators) && validators.length > 0) {
         this.setState(({ errors, values }) => {
-          const value = _.get(values, name);
-          _.set(errors, name, this.validateValue(validators, value));
+          const value = get(values, name);
+          set(errors, name, this.validateValue(validators, value));
           return {
             errors,
             values,
@@ -237,8 +240,8 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
 
       this.setState(
         ({ errors, values }) => {
-          _.set(values, name, value);
-          _.set(errors, name, []);
+          set(values, name, value);
+          set(errors, name, []);
           return {
             values,
             errors,
@@ -256,16 +259,16 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     getValue: (name: string): ValueType => {
       const { values } = this.state;
-      return _.get(values, name);
+      return get(values, name);
     },
     removeValue: (name: string): any => {
       const { values } = this.state;
-      return _.omit(values, name);
+      return omit(values, name);
     },
     getValidator: (name: string): ValidatorInterface[] | void => {
       const { validation } = this.props;
       if (validation) {
-        return _.get(validation(this.api), name) as ValidatorInterface[];
+        return get(validation(this.api), name) as ValidatorInterface[];
       }
     },
     validate: (name: string): ValidationErrorType | void => {
@@ -277,11 +280,11 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
     },
     getErrors: (name: string): ValidationErrorsInterface | ValidationErrorType => {
       const { errors } = this.state;
-      return _.get(errors, name);
+      return get(errors, name);
     },
     setErrors: (name: string, value: ValidationErrorType, callback?: () => void): void => {
       this.setState(({ errors }) => {
-        _.set(errors, name, value);
+        set(errors, name, value);
         return {
           errors,
         };
@@ -472,7 +475,7 @@ export class Form<Values extends ValuesType = ValuesType> extends React.Componen
           if (result.count && onError) {
             onError(result.errors, this.api);
           } else if (!result.count) {
-            onSubmit(_.cloneDeep(values), this.api);
+            onSubmit(cloneDeep(values), this.api);
           }
         },
       );

@@ -362,7 +362,7 @@ test('set default values -> validate form silently', () => {
   });
 
   expect(formApi).not.toBeNull();
-  const result1 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  const result1 = (formApi as unknown as FormApiInterface).validateForm(true);
   expect(submit).not.toHaveBeenCalled();
   expect(result1).toEqual({
     count: 2,
@@ -376,7 +376,7 @@ test('set default values -> validate form silently', () => {
 
   const firstName = getByTestId('first-name');
   fireEvent.change(firstName, { target: { value: 'Bill' } });
-  const result2 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  const result2 = (formApi as unknown as FormApiInterface).validateForm(true);
   expect(submit).not.toHaveBeenCalled();
   expect(result2).toEqual({
     count: 1,
@@ -387,7 +387,7 @@ test('set default values -> validate form silently', () => {
 
   const email = getByTestId('email');
   fireEvent.change(email, { target: { value: 'foo@example.com' } });
-  const result3 = ((formApi as unknown) as FormApiInterface).validateForm(true);
+  const result3 = (formApi as unknown as FormApiInterface).validateForm(true);
   expect(submit).not.toHaveBeenCalled();
   expect(result3).toEqual({
     count: 0,

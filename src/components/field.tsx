@@ -89,7 +89,7 @@ export const Field = <P extends FieldProps>(
           setTouched={(callback?: () => void) => api.setTouched(name, callback)}
         />
         {!hideError && errors && errors.length > 0 ? (
-          <div className={errorClassName}>{Array.isArray(errors) ? errors[0] : errors}</div>
+          <div className={errorClassName}>{Array.isArray(errors) ? errors[0].toString() : errors.toString()}</div>
         ) : null}
       </Fragment>
     );

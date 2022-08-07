@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState } from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, act } from '@testing-library/react'
 import { Form, Text, Validator, FieldGroup, FormApiInterface } from '../index';
 
 afterEach(() => {
@@ -67,7 +67,7 @@ test('get groups', () => {
     formApi = api;
   });
   expect(formApi).not.toBeNull();
-  expect(((formApi as unknown) as FormApiInterface).getGroups()).toEqual([
+  expect((formApi as unknown as FormApiInterface).getGroups()).toEqual([
     {
       name: 'group1',
       hasErrors: false,
@@ -95,7 +95,7 @@ test('unmount group', async () => {
   const hideButton = getByTestId('hideButton');
   hideButton.click();
   await new Promise((resolve) => setTimeout(resolve, 300));
-  expect(((formApi as unknown) as FormApiInterface).getGroups()).toEqual([
+  expect((formApi as unknown as FormApiInterface).getGroups()).toEqual([
     {
       name: 'group2',
       hasErrors: false,
@@ -113,21 +113,25 @@ test('touch group', () => {
     formApi = api;
   });
   const inputLastName = getByTestId('inputLastName');
-  inputLastName.focus();
-  inputLastName.blur();
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+  act(() => {
+    inputLastName.focus();
+    inputLastName.blur();
+  });
+  expect((formApi as unknown as FormApiInterface).getGroup('group2')).toMatchObject({
     isTouched: true,
   });
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+  expect((formApi as unknown as FormApiInterface).getGroup('group1')).toMatchObject({
     isTouched: false,
   });
   const inputMiddleName = getByTestId('inputMiddleName');
-  inputMiddleName.focus();
-  inputMiddleName.blur();
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+  act(() => {
+    inputMiddleName.focus();
+    inputMiddleName.blur();
+  });
+  expect((formApi as unknown as FormApiInterface).getGroup('group2')).toMatchObject({
     isTouched: true,
   });
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+  expect((formApi as unknown as FormApiInterface).getGroup('group1')).toMatchObject({
     isTouched: true,
   });
 });
@@ -138,12 +142,14 @@ test('check errors - touch field with validator', () => {
     formApi = api;
   });
   const inputFirstName = getByTestId('inputFirstName');
-  inputFirstName.focus();
-  inputFirstName.blur();
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+  act(() => {
+    inputFirstName.focus();
+    inputFirstName.blur();
+  });
+  expect((formApi as unknown as FormApiInterface).getGroup('group2')).toMatchObject({
     hasErrors: false,
   });
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+  expect((formApi as unknown as FormApiInterface).getGroup('group1')).toMatchObject({
     hasErrors: true,
   });
 });
@@ -154,12 +160,14 @@ test('check errors - touch field without validator', () => {
     formApi = api;
   });
   const inputMiddleName = getByTestId('inputMiddleName');
-  inputMiddleName.focus();
-  inputMiddleName.blur();
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+  act(() => {
+    inputMiddleName.focus();
+    inputMiddleName.blur();
+  });
+  expect((formApi as unknown as FormApiInterface).getGroup('group2')).toMatchObject({
     hasErrors: false,
   });
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+  expect((formApi as unknown as FormApiInterface).getGroup('group1')).toMatchObject({
     hasErrors: true,
   });
 });
@@ -169,11 +177,13 @@ test('set active', () => {
   renderForm((api) => {
     formApi = api;
   });
-  ((formApi as unknown) as FormApiInterface).setGroupActive('group1');
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group2')).toMatchObject({
+  act(() => {
+    (formApi as unknown as FormApiInterface).setGroupActive('group1');
+  });
+  expect((formApi as unknown as FormApiInterface).getGroup('group2')).toMatchObject({
     isActive: false,
   });
-  expect(((formApi as unknown) as FormApiInterface).getGroup('group1')).toMatchObject({
+  expect((formApi as unknown as FormApiInterface).getGroup('group1')).toMatchObject({
     isActive: true,
   });
 });

@@ -22,7 +22,7 @@ const FieldErrorComponent: React.FC<{
           }
           return errors && errors.length > 0 ? (
             <div {...props} className={classNames.join(' ')}>
-              {Array.isArray(errors) ? errors[0] : errors}
+              {Array.isArray(errors) ? errors[0].toString() : errors.toString()}
             </div>
           ) : null;
         }}

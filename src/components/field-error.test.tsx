@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, cleanup, fireEvent } from '@testing-library/react';
+import { render, cleanup, fireEvent, act } from '@testing-library/react'
 import { Form, FieldError, Text, Validator } from '../index';
 
 afterEach(() => {
@@ -47,8 +47,10 @@ test('touch input', () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
-  input.blur();
+  act(() => {
+    input.focus();
+    input.blur();
+  });
   expect(getByTestId('error')).toBeInTheDocument();
 });
 

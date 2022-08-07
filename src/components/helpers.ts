@@ -1,5 +1,6 @@
-import _ from 'lodash';
 import { ValueType } from './validator';
+import transform from 'lodash.transform';
+import isEqual from 'lodash.isequal';;
 
 export const valueToString = (value: ValueType): string => {
   if (typeof value === 'string' || value instanceof String) {
@@ -22,10 +23,10 @@ export const jsonToValue = (json: string): ValueType => {
 };
 
 export const getValuesDiff = (prev: any, current: any, maxLevel?: number, currentLevel = 1): any => {
-  return _.transform(current, (result: any, value: any, key: string) => {
+  return transform(current, (result: any, value: any, key: string) => {
     if (prev[key] === undefined) {
       result[key] = value;
-    } else if (!_.isEqual(value, prev[key])) {
+    } else if (!isEqual(value, prev[key])) {
       result[key] =
         ((value !== null && typeof value === 'object') || Array.isArray(value)) &&
         (!maxLevel || (maxLevel && currentLevel < maxLevel))
