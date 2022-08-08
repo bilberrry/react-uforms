@@ -74,7 +74,10 @@ const compareDynamicValues =
   };
 
 export const useForm = <Values extends FormValues>(): FormApiInterface<Values> => {
-  const state = useFormStore((state) => state, compareForm) as unknown as FormStateInterface<Values>;
+  const state = useFormStore(
+    (state) => state as unknown as FormStateInterface<FormValues>,
+    compareForm,
+  ) as unknown as FormStateInterface<Values>;
   return state.formApi;
 };
 
@@ -90,6 +93,7 @@ export const useField = <Values extends FormValues>(
   let group: undefined | GroupState = undefined;
   try {
     group = useGroupStore();
+    // eslint-disable-next-line no-empty
   } catch (e) {}
 
   const formApi = state.formApi as unknown as FormApiInterface<Values>;
@@ -169,7 +173,7 @@ export const useFieldArray = <Values extends FormValues>(
   fieldArrayId: string,
 ): [items: Array<string>, fieldArrayApi: FieldArrayApiInterface, formApi: FormApiInterface<Values>] => {
   const state = useFormStore(
-    (state) => state,
+    (state) => state as unknown as FormStateInterface<FormValues>,
     compareDynamicValues(fieldArrayId),
   ) as unknown as FormStateInterface<Values>;
   const formApi = state.formApi;

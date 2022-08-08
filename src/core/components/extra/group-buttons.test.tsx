@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Group } from './group';
@@ -69,28 +69,40 @@ test('clickPrev', async () => {
   await waitFor(() => expect(group1).not.toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).toHaveStyle('display: none'));
-  fireEvent.click(g1Next);
+  act(() => {
+    fireEvent.click(g1Next);
+  });
   await waitFor(() => expect(submit).not.toHaveBeenCalled());
   await waitFor(() => expect(group1).toHaveStyle('display: none'));
   await waitFor(() => expect(group2).not.toHaveStyle('display: none'));
   await waitFor(() => expect(group3).toHaveStyle('display: none'));
-  fireEvent.click(g2Prev);
+  act(() => {
+    fireEvent.click(g2Prev);
+  });
   await waitFor(() => expect(submit).not.toHaveBeenCalled());
   await waitFor(() => expect(group1).not.toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).toHaveStyle('display: none'));
-  fireEvent.click(g1Next);
+  act(() => {
+    fireEvent.click(g1Next);
+  });
   await waitFor(() => expect(submit).not.toHaveBeenCalled());
   await waitFor(() => expect(group2).not.toHaveStyle('display: none'));
-  fireEvent.click(g2Next);
+  act(() => {
+    fireEvent.click(g2Next);
+  });
   await waitFor(() => expect(submit).not.toHaveBeenCalled());
   await waitFor(() => expect(g2Success).toHaveBeenCalled());
   await waitFor(() => expect(group1).toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).not.toHaveStyle('display: none'));
-  fireEvent.click(g3Next);
+  act(() => {
+    fireEvent.click(g3Next);
+  });
   await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.any(Object)));
-  fireEvent.click(g3Jump);
+  act(() => {
+    fireEvent.click(g3Jump);
+  });
   await waitFor(() => expect(group1).not.toHaveStyle('display: none'));
   await waitFor(() => expect(group2).toHaveStyle('display: none'));
   await waitFor(() => expect(group3).toHaveStyle('display: none'));

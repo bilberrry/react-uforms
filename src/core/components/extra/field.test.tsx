@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Field } from './field';
@@ -33,8 +33,10 @@ test('change input value -> submit form', async () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('input');
-  fireEvent.click(input);
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.click(input);
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -72,10 +74,14 @@ test('set default values -> change input value -> submit form', async () => {
   const input = getByTestId('input');
   const form = getByTestId('input');
   expect(input.innerHTML).toBe('on');
-  fireEvent.click(input);
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.click(input);
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(input.innerHTML).toBe('off'));
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({

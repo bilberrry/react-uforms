@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
 import * as yup from 'yup';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Text } from '../fields/text';
@@ -34,7 +34,9 @@ test('submit form', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(getByTestId('error')).toBeInTheDocument());
 });
 
@@ -52,7 +54,9 @@ test('touch input', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
-  input.blur();
+  act(() => {
+    input.focus();
+    input.blur();
+  });
   await waitFor(() => expect(getByTestId('error')).toBeInTheDocument());
 });

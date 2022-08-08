@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { CheckboxGroupItem } from './checkbox-group-item';
@@ -38,9 +38,13 @@ test('check input -> submit form', async () => {
   const inputUpdates = getByTestId('input-updates');
   const inputCompany = getByTestId('input-company');
   const form = getByTestId('form');
-  fireEvent.click(inputNews);
+  act(() => {
+    fireEvent.click(inputNews);
+  });
   expect(inputNews).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -52,11 +56,17 @@ test('check input -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.click(inputUpdates);
+  act(() => {
+    fireEvent.click(inputUpdates);
+  });
   expect(inputUpdates).toHaveProperty('checked');
-  fireEvent.click(inputCompany);
+  act(() => {
+    fireEvent.click(inputCompany);
+  });
   expect(inputCompany).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -94,8 +104,10 @@ test('set default values -> uncheck input -> submit form', async () => {
   const inputCompany = getByTestId('input-company');
   const form = getByTestId('form');
   await waitFor(() => expect(inputUpdates).toHaveProperty('checked', true));
-  fireEvent.click(inputUpdates);
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.click(inputUpdates);
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -110,11 +122,17 @@ test('set default values -> uncheck input -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.click(inputCompany);
+  act(() => {
+    fireEvent.click(inputCompany);
+  });
   expect(inputCompany).toHaveProperty('checked');
-  fireEvent.click(inputNews);
+  act(() => {
+    fireEvent.click(inputNews);
+  });
   expect(inputNews).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -143,9 +161,13 @@ test('set onChange attribute -> change input value ', async () => {
     </Form>,
   );
   const inputNews = getByTestId('input-news');
-  fireEvent.click(inputNews);
+  act(() => {
+    fireEvent.click(inputNews);
+  });
   await waitFor(() => expect(change).toHaveBeenCalledTimes(1));
-  fireEvent.click(inputNews);
+  act(() => {
+    fireEvent.click(inputNews);
+  });
   await waitFor(() => expect(change).toHaveBeenCalledTimes(2));
 });
 
@@ -165,22 +187,36 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
   const inputNews = getByTestId('input-news');
   const inputUpdates = getByTestId('input-updates');
   const inputCompany = getByTestId('input-company');
-  inputNews.focus();
+  act(() => {
+    inputNews.focus();
+  });
   expect(inputNews).toHaveFocus();
-  inputNews.blur();
+  act(() => {
+    inputNews.blur();
+  });
   expect(inputNews).not.toHaveFocus();
-  fireEvent.click(inputNews);
+  act(() => {
+    fireEvent.click(inputNews);
+  });
   await waitFor(() => expect(blurNews).toHaveBeenCalled());
   await waitFor(() => expect(blurUpdates).not.toHaveBeenCalled());
-  inputUpdates.focus();
+  act(() => {
+    inputUpdates.focus();
+  });
   expect(inputUpdates).toHaveFocus();
-  inputUpdates.blur();
+  act(() => {
+    inputUpdates.blur();
+  });
   expect(inputUpdates).not.toHaveFocus();
   await waitFor(() => expect(blurUpdates).toHaveBeenCalled());
   await waitFor(() => expect(blurCompany).not.toHaveBeenCalled());
-  inputCompany.focus();
+  act(() => {
+    inputCompany.focus();
+  });
   expect(inputCompany).toHaveFocus();
-  inputCompany.blur();
+  act(() => {
+    inputCompany.blur();
+  });
   expect(inputCompany).not.toHaveFocus();
   await waitFor(() => expect(blurCompany).toHaveBeenCalled());
 });

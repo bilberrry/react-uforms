@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { TextArea } from './text-area';
@@ -28,8 +28,10 @@ test('change input value -> submit form', async () => {
   const input = getByTestId('input');
   const form = getByTestId('input');
   expect(input).toHaveValue('');
-  fireEvent.change(input, { target: { value: 'John' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: 'John' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -60,8 +62,10 @@ test('set default values -> change input value -> submit form', async () => {
   const input = getByTestId('input');
   const form = getByTestId('input');
   expect(input).toHaveValue('John');
-  fireEvent.change(input, { target: { value: 'Bill' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Bill' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -94,8 +98,10 @@ test('set emptyValue attribute -> change input value -> submit form', async () =
   const input = getByTestId('input');
   const form = getByTestId('input');
   expect(input).toHaveValue('John');
-  fireEvent.change(input, { target: { value: '' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -119,7 +125,9 @@ test('set onChange attribute -> change input value ', () => {
     </Form>,
   );
   const input = getByTestId('input');
-  fireEvent.change(input, { target: { value: 'John' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'John' } });
+  });
   expect(change).toHaveBeenCalled();
 });
 
@@ -131,9 +139,13 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
+  act(() => {
+    input.focus();
+  });
   expect(input).toHaveFocus();
-  input.blur();
+  act(() => {
+    input.blur();
+  });
   expect(input).not.toHaveFocus();
   await waitFor(() => expect(blur).toHaveBeenCalled());
 });
@@ -146,8 +158,10 @@ test('set onStopTyping attribute -> change input value ', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  fireEvent.change(input, { target: { value: 'Jo' } });
-  fireEvent.change(input, { target: { value: 'John' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Jo' } });
+    fireEvent.change(input, { target: { value: 'John' } });
+  });
   expect(stopTyping).not.toHaveBeenCalled();
   await new Promise((resolve) => setTimeout(resolve, 600));
   expect(stopTyping).toHaveBeenCalled();
@@ -161,8 +175,10 @@ test('set onStopTyping / stopTypingDelay attribute -> change input value ', asyn
     </Form>,
   );
   const input = getByTestId('input');
-  fireEvent.change(input, { target: { value: 'Jo' } });
-  fireEvent.change(input, { target: { value: 'John' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Jo' } });
+    fireEvent.change(input, { target: { value: 'John' } });
+  });
   expect(stopTyping).not.toHaveBeenCalled();
   await new Promise((resolve) => setTimeout(resolve, 600));
   expect(stopTyping).not.toHaveBeenCalled();

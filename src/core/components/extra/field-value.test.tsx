@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { FieldValue } from './field-value';
@@ -40,6 +40,8 @@ test('set default values -> change value', async () => {
   const values = getByTestId('values');
   expect(values.innerHTML).toBe('Brown John');
   const firstName = getByTestId('firstName');
-  fireEvent.change(firstName, { target: { value: 'Bill' } });
+  act(() => {
+    fireEvent.change(firstName, { target: { value: 'Bill' } });
+  });
   expect(values.innerHTML).toBe('Brown Bill');
 });

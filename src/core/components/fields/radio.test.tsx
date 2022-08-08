@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Radio } from './radio';
@@ -30,9 +30,13 @@ test('check input -> submit form', async () => {
   const inputMale = getByTestId('input-male');
   const inputFemale = getByTestId('input-female');
   const form = getByTestId('form');
-  fireEvent.click(inputMale);
+  act(() => {
+    fireEvent.click(inputMale);
+  });
   expect(inputMale).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -44,9 +48,13 @@ test('check input -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.click(inputFemale);
+  act(() => {
+    fireEvent.click(inputFemale);
+  });
   expect(inputFemale).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -80,7 +88,9 @@ test('set default values -> uncheck input -> submit form', async () => {
   const inputFemale = getByTestId('input-female');
   const form = getByTestId('form');
   expect(inputMale).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -88,9 +98,13 @@ test('set default values -> uncheck input -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.click(inputFemale);
+  act(() => {
+    fireEvent.click(inputFemale);
+  });
   expect(inputFemale).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -121,15 +135,21 @@ test('set onChange attribute -> change input value ', () => {
   const inputMale = getByTestId('input-male');
   const inputFemale = getByTestId('input-female');
   const inputNone = getByTestId('input-none');
-  fireEvent.click(inputMale);
+  act(() => {
+    fireEvent.click(inputMale);
+  });
   expect(changeMale).toHaveBeenCalledTimes(1);
   expect(changeFemale).not.toHaveBeenCalled();
   expect(changeNone).not.toHaveBeenCalled();
-  fireEvent.click(inputFemale);
+  act(() => {
+    fireEvent.click(inputFemale);
+  });
   expect(changeMale).toHaveBeenCalledTimes(1);
   expect(changeFemale).toHaveBeenCalledTimes(1);
   expect(changeNone).not.toHaveBeenCalled();
-  fireEvent.click(inputNone);
+  act(() => {
+    fireEvent.click(inputNone);
+  });
   expect(changeMale).toHaveBeenCalledTimes(1);
   expect(changeFemale).toHaveBeenCalledTimes(1);
   expect(changeNone).toHaveBeenCalledTimes(1);
@@ -146,14 +166,22 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
   );
   const inputMale = getByTestId('input-male');
   const inputFemale = getByTestId('input-female');
-  inputMale.focus();
+  act(() => {
+    inputMale.focus();
+  });
   expect(inputMale).toHaveFocus();
-  inputMale.blur();
+  act(() => {
+    inputMale.blur();
+  });
   expect(inputMale).not.toHaveFocus();
   await waitFor(() => expect(blurMale).toHaveBeenCalled());
   await waitFor(() => expect(blurFemale).not.toHaveBeenCalled());
-  inputFemale.focus();
+  act(() => {
+    inputFemale.focus();
+  });
   expect(inputFemale).toHaveFocus();
-  inputFemale.blur();
+  act(() => {
+    inputFemale.blur();
+  });
   await waitFor(() => expect(blurFemale).toHaveBeenCalled());
 });

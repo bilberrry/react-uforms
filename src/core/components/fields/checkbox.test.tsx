@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Checkbox } from './checkbox';
@@ -27,9 +27,13 @@ test('check input -> submit form', async () => {
   );
   const input = getByTestId('input');
   const form = getByTestId('form');
-  fireEvent.click(input);
+  act(() => {
+    fireEvent.click(input);
+  });
   expect(input).toHaveProperty('checked');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -61,8 +65,10 @@ test('set default values -> uncheck input -> submit form', async () => {
   const input = getByTestId('input');
   const form = getByTestId('form');
   expect(input).toHaveProperty('checked');
-  fireEvent.click(input);
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.click(input);
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -87,7 +93,9 @@ test('set onChange attribute -> change input value ', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  fireEvent.click(input);
+  act(() => {
+    fireEvent.click(input);
+  });
   await waitFor(() => expect(change).toHaveBeenCalled());
 });
 
@@ -99,9 +107,13 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
+  act(() => {
+    input.focus();
+  });
   expect(input).toHaveFocus();
-  input.blur();
+  act(() => {
+    input.blur();
+  });
   expect(input).not.toHaveFocus();
   await waitFor(() => expect(blur).toHaveBeenCalled());
 });

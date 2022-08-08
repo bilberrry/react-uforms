@@ -1,6 +1,6 @@
 import React, { CSSProperties, PropsWithoutRef, ReactNode } from 'react';
 import { useGroup } from '../../hooks';
-import create from 'zustand';
+import create, { StoreApi } from 'zustand';
 import createContext from 'zustand/context';
 import { FieldRefProp, GroupApiInterface, GroupsApiInterface } from '../../types';
 
@@ -17,7 +17,7 @@ export interface GroupProps extends Omit<React.HTMLProps<HTMLDivElement>, 'child
   displayAll?: boolean;
 }
 
-const { Provider, useStore } = createContext<GroupState>();
+const { Provider, useStore } = createContext<StoreApi<GroupState>>();
 
 const GroupComponent = ({
   name,

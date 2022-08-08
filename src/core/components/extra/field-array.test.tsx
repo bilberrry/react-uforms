@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { FieldArray } from './field-array';
@@ -50,10 +50,14 @@ test('default values -> change item -> submit', async () => {
   const title7 = getByTestId('7-title');
   await waitFor(() => expect(title5).toHaveValue('Foo'));
   await waitFor(() => expect(title7).toHaveValue('Bar'));
-  fireEvent.change(title7, { target: { value: 'Baz' } });
+  act(() => {
+    fireEvent.change(title7, { target: { value: 'Baz' } });
+  });
   await waitFor(() => expect(title5).toHaveValue('Foo'));
   await waitFor(() => expect(title7).toHaveValue('Baz'));
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -108,9 +112,13 @@ test('default values -> add item -> submit', async () => {
   const itemsLength = getByTestId('items-length');
   const addButton = getByTestId('add-button');
   expect(itemsLength.innerHTML).toBe('2');
-  fireEvent.click(addButton);
+  act(() => {
+    fireEvent.click(addButton);
+  });
   await waitFor(() => expect(itemsLength.innerHTML).toBe('3'));
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -127,8 +135,10 @@ test('default values -> add item -> submit', async () => {
     ),
   );
   const newTitle = getByTestId('-1-title');
-  fireEvent.change(newTitle, { target: { value: 'Baz' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(newTitle, { target: { value: 'Baz' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -181,9 +191,13 @@ test('default values -> remove item -> submit', async () => {
   const itemsLength = getByTestId('items-length');
   const removeButton = getByTestId('remove-button');
   expect(itemsLength.innerHTML).toBe('3');
-  fireEvent.click(removeButton);
+  act(() => {
+    fireEvent.click(removeButton);
+  });
   await waitFor(() => expect(itemsLength.innerHTML).toBe('2'));
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -200,8 +214,10 @@ test('default values -> remove item -> submit', async () => {
   );
   const title9 = getByTestId('9-title');
   await waitFor(() => expect(title9).toHaveValue('Baz'));
-  fireEvent.change(title9, { target: { value: 'Foobar' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(title9, { target: { value: 'Foobar' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
 import { Select } from './select';
@@ -45,8 +45,10 @@ test('change input value -> submit form', async () => {
   const optAs = getByTestId('opt-as');
   const input = getByTestId('input');
   const form = getByTestId('form');
-  fireEvent.change(input, { target: { value: optUs.getAttribute('value') } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: optUs.getAttribute('value') } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -58,8 +60,10 @@ test('change input value -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -71,8 +75,10 @@ test('change input value -> submit form', async () => {
       }),
     ),
   );
-  fireEvent.change(input, { target: { value: optAs.getAttribute('value') } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: optAs.getAttribute('value') } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -112,8 +118,10 @@ test('set default values -> change input value -> submit form', async () => {
   const input = getByTestId('input');
   const form = getByTestId('form');
   expect(optAs).toHaveProperty('selected');
-  fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: optNull.getAttribute('value') } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -148,7 +156,9 @@ test('set onChange attribute -> change input value ', async () => {
 
   const input = getByTestId('input');
   const optAs = getByTestId('opt-as');
-  fireEvent.change(input, { target: { value: optAs.getAttribute('value') } });
+  act(() => {
+    fireEvent.change(input, { target: { value: optAs.getAttribute('value') } });
+  });
   await waitFor(() => expect(change).toHaveBeenCalled());
 });
 
@@ -169,9 +179,13 @@ test('set onBlur attribute -> focus input -> blur input', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
+  act(() => {
+    input.focus();
+  });
   expect(input).toHaveFocus();
-  input.blur();
+  act(() => {
+    input.blur();
+  });
   expect(input).not.toHaveFocus();
   await waitFor(() => expect(blur).toHaveBeenCalled());
 });

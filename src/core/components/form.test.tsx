@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from './form';
 import { Text } from './fields/text';
@@ -27,7 +27,9 @@ test('submit form', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(submit).toHaveBeenCalled());
 });
 
@@ -46,7 +48,9 @@ test('set default values -> submit form', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.objectContaining({ values: defaultValues })));
 });
 
@@ -65,7 +69,9 @@ test('submit form -> ensure field is disabled ', async () => {
   const form = getByTestId('form');
   const input = getByTestId('input');
   expect(input).toHaveProperty('disabled');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(isInputDisabled).toBe(true));
 });
 
@@ -110,13 +116,19 @@ test('set default values -> change input -> submit form', async () => {
   const form = getByTestId('form');
   const email = getByTestId('email');
   const firstName = getByTestId('first-name');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(submitValues[0]).toEqual(defaultValues));
-  fireEvent.change(email, { target: { value: 'bar@example.com' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(email, { target: { value: 'bar@example.com' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(submitValues[1]).toEqual(targetValues1));
-  fireEvent.change(firstName, { target: { value: 'Bill' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(firstName, { target: { value: 'Bill' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(submitValues[2]).toEqual(targetValues2));
 });
 
@@ -128,7 +140,9 @@ test('change input -> unsure onChange is called ', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  fireEvent.change(input, { target: { value: 'Bill' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Bill' } });
+  });
   await waitFor(() =>
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -147,8 +161,10 @@ test('touch input -> unsure onTouch is called ', async () => {
     </Form>,
   );
   const input = getByTestId('input');
-  input.focus();
-  input.blur();
+  act(() => {
+    input.focus();
+    input.blur();
+  });
   await waitFor(() =>
     expect(onTouch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -171,7 +187,9 @@ test('set onError -> submit', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(onError).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -207,9 +225,13 @@ test('change input -> unsure isChanged is true ', async () => {
   const input = getByTestId('input');
   const button = getByTestId('button');
   await waitFor(() => expect(button).toHaveAttribute('disabled'));
-  fireEvent.change(input, { target: { value: 'Bill' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Bill' } });
+  });
   await waitFor(() => expect(button).not.toHaveAttribute('disabled'));
-  fireEvent.change(input, { target: { value: 'John' } });
+  act(() => {
+    fireEvent.change(input, { target: { value: 'John' } });
+  });
   await waitFor(() => expect(button).toHaveAttribute('disabled'));
 });
 
@@ -232,10 +254,14 @@ test('set classes -> field:invalid -> submit', async () => {
   );
   const form = getByTestId('form');
   const input = getByTestId('input');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(input).toHaveClass(invalidClass));
-  fireEvent.change(input, { target: { value: 'Bill' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: 'Bill' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() => expect(input).not.toHaveClass(invalidClass));
 });
 
@@ -261,7 +287,9 @@ test('set cast validation', async () => {
   );
   const form = getByTestId('form');
   const input = getByTestId('input');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -276,8 +304,10 @@ test('set cast validation', async () => {
       }),
     ),
   );
-  fireEvent.change(input, { target: { value: '32' } });
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.change(input, { target: { value: '32' } });
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -323,7 +353,9 @@ test('set stripUnknown', async () => {
     </Form>,
   );
   const form = getByTestId('form');
-  fireEvent.submit(form);
+  act(() => {
+    fireEvent.submit(form);
+  });
   await waitFor(() =>
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({
