@@ -18,6 +18,7 @@ import isEqual from 'lodash.isequal';
 import { useEffect } from 'react';
 import { GroupState, useGroupStore } from './components/extra/group';
 import oGet from 'lodash.get';
+import { isArrayEqual } from './helpers'
 
 const selector = (state) => state;
 const compareForm = <Values extends FormValues>(
@@ -46,7 +47,7 @@ const compareGroup =
 const compareGroups =
   <Values extends FormValues>() =>
   (oldState: FormStateInterface<Values>, newState: FormStateInterface<Values>) => {
-    return isEqual(oldState.groups, newState.groups);
+    return isArrayEqual(oldState.groups, newState.groups);
   };
 
 const compareFieldValue =
@@ -70,7 +71,7 @@ const compareDynamicValues =
   (oldState: FormStateInterface<Values>, newState: FormStateInterface<Values>) => {
     const oldValue = oGet(oldState.dynamicValues, path);
     const newValue = oGet(newState.dynamicValues, path);
-    return isEqual(oldValue, newValue);
+    return isArrayEqual(oldValue, newValue);
   };
 
 export const useForm = <Values extends FormValues>(): FormApiInterface<Values> => {

@@ -1,5 +1,7 @@
 import { FieldValueType } from './types';
 import isEqual from 'lodash.isequal';
+import isEmpty from 'lodash.isempty';
+import xorWith from 'lodash.xorwith';
 import transform from 'lodash.transform';
 
 export const generateId = () => Math.random().toString(36).substring(2);
@@ -41,3 +43,5 @@ export const getValuesDiff = (prev: any, current: any, maxLevel?: number, curren
 export const isPromise = (value: any): boolean => Boolean(value && typeof value?.then === 'function');
 
 export const isArrayHasPromise = (arr: Array<any>): boolean => arr.some((item) => isPromise(item));
+
+export const isArrayEqual = (x, y) => isEmpty(xorWith(x, y, isEqual));

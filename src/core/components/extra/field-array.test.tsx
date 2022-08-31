@@ -234,4 +234,79 @@ test('default values -> remove item -> submit', async () => {
   );
 });
 
+test('default values -> manage items', async () => {
+  const submit = jest.fn();
+  const defaultValues = {
+    posts: [
+      { id: 5, title: 'Foo5' },
+      { id: 7, title: 'Foo7' },
+      { id: 9, title: 'Foo9' },
+      { id: 11, title: 'Foo11' },
+    ],
+  };
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
+      <FieldArray name="posts">
+        {(items, fieldArrayApi) => (
+          <>
+            {items.map((item, index) => (
+              <div key={item.id}>
+                <Text name={`posts.${index}.id`} data-testid={`${item.id}-id`} />
+                <Text name={`posts.${index}.title`} data-testid={`${item.id}-title`} />
+              </div>
+            ))}
+            <button type="button" onClick={() => fieldArrayApi.removeItem(2)} data-testid="remove-button">
+              Remove item
+            </button>
+            <button
+              type="button"
+              onClick={() => fieldArrayApi.addItem({ id: 33, title: 'Foo33' })}
+              data-testid="add-button"
+            >
+              Add item
+            </button>
+          </>
+        )}
+      </FieldArray>
+    </Form>,
+  );
+  const removeButton = getByTestId('remove-button');
+  const addButton = getByTestId('add-button');
+
+  expect(getByTestId('5-id')).toBeInTheDocument();
+  expect(getByTestId('7-id')).toBeInTheDocument();
+  expect(getByTestId('9-id')).toBeInTheDocument();
+  expect(getByTestId('11-id')).toBeInTheDocument();
+
+  act(() => {
+    fireEvent.click(removeButton);
+  });
+
+  expect(getByTestId('5-id')).toBeInTheDocument();
+  expect(getByTestId('7-id')).toBeInTheDocument();
+  expect(getByTestId('11-id')).toBeInTheDocument();
+
+  act(() => {
+    fireEvent.click(removeButton);
+  });
+
+  expect(getByTestId('5-id')).toBeInTheDocument();
+  expect(getByTestId('7-id')).toBeInTheDocument();
+
+  act(() => {
+    fireEvent.click(addButton);
+  });
+
+  expect(getByTestId('5-id')).toBeInTheDocument();
+  expect(getByTestId('7-id')).toBeInTheDocument();
+  expect(getByTestId('33-id')).toBeInTheDocument();
+
+  act(() => {
+    fireEvent.click(removeButton);
+  });
+
+  expect(getByTestId('5-id')).toBeInTheDocument();
+  expect(getByTestId('7-id')).toBeInTheDocument();
+});
+
 // TODO move test case

@@ -20,3 +20,4 @@ export * from './core/components/extra/field-errors';
 export * from './core/components/extra/group';
 export * from './core/components/extra/group-buttons';
 export * from './core/components/extra/group-nav';
+export * from './core/components/extra/field-array';
