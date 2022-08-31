@@ -18,7 +18,7 @@ import isEqual from 'lodash.isequal';
 import { useEffect } from 'react';
 import { GroupState, useGroupStore } from './components/extra/group';
 import oGet from 'lodash.get';
-import { isArrayEqual } from './helpers'
+import { isArrayEqual } from './helpers';
 
 const selector = (state) => state;
 const compareForm = <Values extends FormValues>(
