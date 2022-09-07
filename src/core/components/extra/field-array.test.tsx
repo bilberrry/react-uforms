@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
+import * as yup from 'yup';
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Form } from '../form';
@@ -310,3 +311,323 @@ test('default values -> manage items', async () => {
 });
 
 // TODO move test case
+
+test('change item (Form children is component)', async () => {
+  const submit = jest.fn();
+
+  const defaultValues = {
+    profile: {
+      posts: [
+        { id: 5, title: '' },
+        { id: 7, title: '' },
+      ],
+    },
+  };
+
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
+      <FieldArray name="profile.posts">
+        {(items, fieldArrayApi, formApi) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const formValues = formApi.getValues()?.profile?.posts;
+          return (
+            <>
+              {items.map((item, index) => (
+                <div key={item.id}>
+                  <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
+                </div>
+              ))}
+              <span data-testid="formValues">{JSON.stringify(formValues)}</span>
+              <span data-testid="items">{JSON.stringify(items)}</span>
+            </>
+          );
+        }}
+      </FieldArray>
+    </Form>,
+  );
+
+  const formValues = getByTestId('formValues');
+  const items = getByTestId('items');
+
+  expect(formValues.innerHTML).toBe(
+    JSON.stringify([
+      { id: 5, title: '' },
+      { id: 7, title: '' },
+    ]),
+  );
+  expect(items.innerHTML).toBe(
+    JSON.stringify([
+      { id: 5, title: '' },
+      { id: 7, title: '' },
+    ]),
+  );
+
+  const title7 = getByTestId('7-title');
+
+  act(() => {
+    fireEvent.change(title7, { target: { value: 'Baz' } });
+  });
+
+  await waitFor(() => expect(title7).toHaveValue('Baz'));
+  await waitFor(() =>
+    expect(formValues.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 7, title: 'Baz' },
+      ]),
+    ),
+  );
+  await waitFor(() =>
+    expect(items.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 7, title: 'Baz' },
+      ]),
+    ),
+  );
+});
+
+test('change item (Form children is function)', async () => {
+  const submit = jest.fn();
+
+  const defaultValues = {
+    profile: {
+      posts: [
+        { id: 5, title: '' },
+        { id: 7, title: '' },
+      ],
+    },
+  };
+
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
+      {(formApi) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const formValues0 = formApi.getValues()?.profile?.posts;
+        return (
+          <>
+            <span data-testid="formValues0">{JSON.stringify(formValues0)}</span>
+            <FieldArray name="profile.posts">
+              {(items, fieldArrayApi, formApi) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                const formValues1 = formApi.getValues()?.profile?.posts;
+                return (
+                  <>
+                    {items.map((item, index) => (
+                      <div key={item.id}>
+                        <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
+                      </div>
+                    ))}
+                    <span data-testid="formValues1">{JSON.stringify(formValues1)}</span>
+                    <span data-testid="items">{JSON.stringify(items)}</span>
+                  </>
+                );
+              }}
+            </FieldArray>
+          </>
+        );
+      }}
+    </Form>,
+  );
+
+  const formValues0 = getByTestId('formValues0');
+  const formValues1 = getByTestId('formValues1');
+  const items = getByTestId('items');
+
+  expect(formValues0.innerHTML).toBe(
+    JSON.stringify([
+      { id: 5, title: '' },
+      { id: 7, title: '' },
+    ]),
+  );
+  expect(formValues1.innerHTML).toBe(
+    JSON.stringify([
+      { id: 5, title: '' },
+      { id: 7, title: '' },
+    ]),
+  );
+  expect(items.innerHTML).toBe(
+    JSON.stringify([
+      { id: 5, title: '' },
+      { id: 7, title: '' },
+    ]),
+  );
+
+  const title7 = getByTestId('7-title');
+
+  act(() => {
+    fireEvent.change(title7, { target: { value: 'Baz' } });
+  });
+
+  await waitFor(() => expect(title7).toHaveValue('Baz'));
+  await waitFor(() =>
+    expect(formValues0.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 7, title: 'Baz' },
+      ]),
+    ),
+  );
+  await waitFor(() =>
+    expect(formValues1.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 7, title: 'Baz' },
+      ]),
+    ),
+  );
+  await waitFor(() =>
+    expect(items.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 7, title: 'Baz' },
+      ]),
+    ),
+  );
+});
+
+test('remove item', async () => {
+  const submit = jest.fn();
+
+  const defaultValues = {
+    profile: {
+      posts: [
+        { id: 5, title: '' },
+        { id: 7, title: '' },
+        { id: 9, title: '' },
+      ],
+    },
+  };
+
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} data-testid="form">
+      <FieldArray name="profile.posts">
+        {(items, fieldArrayApi, formApi) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const formValues = formApi.getValues()?.profile?.posts;
+          return (
+            <>
+              {items.map((item, index) => (
+                <div key={item.id}>
+                  <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
+                </div>
+              ))}
+              <button type="button" onClick={() => fieldArrayApi.removeItem(1)} data-testid="remove-button">
+                Remove item
+              </button>
+              <span data-testid="items-length">{items.length}</span>
+              <span data-testid="formValues">{JSON.stringify(formValues)}</span>
+              <span data-testid="items">{JSON.stringify(items)}</span>
+            </>
+          );
+        }}
+      </FieldArray>
+    </Form>,
+  );
+
+  const title9 = getByTestId('9-title');
+
+  await waitFor(() => expect(title9).toHaveValue(''));
+
+  act(() => {
+    fireEvent.change(title9, { target: { value: 'Foobar' } });
+  });
+
+  await waitFor(() => expect(title9).toHaveValue('Foobar'));
+
+  const removeButton = getByTestId('remove-button');
+
+  const itemsLength = getByTestId('items-length');
+  const formValues = getByTestId('formValues');
+  const items = getByTestId('items');
+
+  expect(itemsLength.innerHTML).toBe('3');
+
+  act(() => {
+    fireEvent.click(removeButton);
+  });
+
+  await waitFor(() => expect(itemsLength.innerHTML).toBe('2'));
+  await waitFor(() => expect(title9).toHaveValue('Foobar'));
+
+  await waitFor(() =>
+    expect(formValues.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 9, title: 'Foobar' },
+      ]),
+    ),
+  );
+  await waitFor(() =>
+    expect(items.innerHTML).toBe(
+      JSON.stringify([
+        { id: 5, title: '' },
+        { id: 9, title: 'Foobar' },
+      ]),
+    ),
+  );
+});
+
+test('validation', async () => {
+  const submit = jest.fn();
+
+  const defaultValues = {
+    name: '',
+    posts: [{ id: 5, title: '' }],
+  };
+  const validation = yup.object().shape({
+    name: yup.string().required(),
+    posts: yup
+      .array()
+      .of(
+        yup.object().shape({
+          id: yup.number().required(),
+          title: yup.string().required(),
+        }),
+      )
+      .required(),
+  });
+
+  const { getByTestId } = render(
+    <Form onSubmit={submit} defaultValues={defaultValues} validation={validation} data-testid="form">
+      <div data-testid={`name-input-wrapper`}>
+        <Text name={`name`} data-testid={`name`} />
+      </div>
+      <FieldArray name="posts">
+        {(items) => (
+          <>
+            {items.map((item, index) => (
+              <div key={item.id}>
+                <div data-testid={`${item.id}-post-title-input-wrapper`}>
+                  <Text name={`posts.${index}.title`} data-testid={`${item.id}-post-title`} />
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </FieldArray>
+    </Form>,
+  );
+
+  const form = getByTestId('form');
+
+  const nameInputWrapper = getByTestId('name-input-wrapper');
+  const postTitleInputWrapper = getByTestId('5-post-title-input-wrapper');
+
+  const name = getByTestId('name');
+  const postTitle = getByTestId('5-post-title');
+
+  await waitFor(() => expect(name).toHaveValue(''));
+  await waitFor(() => expect(postTitle).toHaveValue(''));
+
+  act(() => {
+    fireEvent.submit(form);
+  });
+
+  await waitFor(() => expect(nameInputWrapper).toHaveTextContent('required field'));
+  await waitFor(() => expect(postTitleInputWrapper).toHaveTextContent('required field'));
+});
