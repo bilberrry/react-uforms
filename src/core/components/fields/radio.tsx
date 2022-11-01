@@ -25,6 +25,7 @@ const RadioComponent = <Values extends FormValues>({
   return (
     <input
       {...props}
+      name={name}
       type="radio"
       ref={uRef}
       value={valueToJson(value)}
