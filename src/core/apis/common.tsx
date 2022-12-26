@@ -1,5 +1,6 @@
 import { FieldInterface, GroupInterface } from '../types';
 import oSet from 'lodash.set';
+import cloneDeep from 'lodash.cloneDeep';
 
 export const commonApiPure = (set, get) => {
   const setField = (id: string, data: Partial<FieldInterface>) => {
@@ -32,10 +33,12 @@ export const commonApiPure = (set, get) => {
   };
   const getValues = (): any => {
     const { fields, dynamicValues } = get();
-    const values = JSON.parse(JSON.stringify(dynamicValues));
+    const values = cloneDeep(dynamicValues);
+
     for (let i = 0; i < fields.length; i++) {
       oSet(values, fields[i].id, fields[i].value);
     }
+
     return values;
   };
   const validate = async (): Promise<any> => {
@@ -74,7 +77,7 @@ export const commonApiPure = (set, get) => {
   const setFieldArray = (path: string, data: Array<any>) => {
     set((state) => {
       // TODO improve speed
-      const dynamicValues = JSON.parse(JSON.stringify(state.dynamicValues));
+      const dynamicValues = cloneDeep(state.dynamicValues);
       oSet(dynamicValues, path, data);
       return {
         dynamicValues,
