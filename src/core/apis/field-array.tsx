@@ -1,10 +1,11 @@
 import { FieldArrayApiInterface } from '../types';
 import { commonApiPure } from './common';
 import oGet from 'lodash.get';
+import cloneDeep from 'lodash.clonedeep';
 
 export const fieldArrayApiPure = (set, get, path: string): FieldArrayApiInterface => {
   const { setFieldArray } = commonApiPure(set, get);
-  const dynamicValues = JSON.parse(JSON.stringify(get().dynamicValues));
+  const dynamicValues = cloneDeep(get().dynamicValues);
   const items = oGet(dynamicValues, path) || [];
   return {
     addItem(data: any, index?: number): void {

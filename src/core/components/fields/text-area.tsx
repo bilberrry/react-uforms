@@ -49,6 +49,7 @@ const TextAreaComponent = <Values extends FormValues>({
     <>
       <textarea
         {...props}
+        name={name}
         ref={uRef}
         value={valueToString(value, emptyValue)}
         disabled={disabled}

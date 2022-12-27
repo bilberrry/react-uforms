@@ -38,6 +38,7 @@ const SelectComponent = <Values extends FormValues>({
     <>
       <select
         {...props}
+        name={name}
         ref={uRef}
         value={valueToJson(value)}
         className={getInputClassName(className)}

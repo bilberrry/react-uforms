@@ -26,6 +26,7 @@ const CheckboxComponent = <Values extends FormValues>({
   return (
     <input
       {...props}
+      name={name}
       type="checkbox"
       ref={uRef}
       checked={value === onValue}
