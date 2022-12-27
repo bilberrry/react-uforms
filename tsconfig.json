@@ -13,7 +13,10 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "node"
+    ]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src"]
