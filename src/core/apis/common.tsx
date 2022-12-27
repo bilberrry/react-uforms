@@ -1,6 +1,6 @@
 import { FieldInterface, GroupInterface } from '../types';
 import oSet from 'lodash.set';
-import cloneDeep from 'lodash.cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 
 export const commonApiPure = (set, get) => {
   const setField = (id: string, data: Partial<FieldInterface>) => {

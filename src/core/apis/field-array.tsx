@@ -1,7 +1,7 @@
 import { FieldArrayApiInterface } from '../types';
 import { commonApiPure } from './common';
 import oGet from 'lodash.get';
-import cloneDeep from 'lodash.cloneDeep';
+import cloneDeep from 'lodash.clonedeep';
 
 export const fieldArrayApiPure = (set, get, path: string): FieldArrayApiInterface => {
   const { setFieldArray } = commonApiPure(set, get);
