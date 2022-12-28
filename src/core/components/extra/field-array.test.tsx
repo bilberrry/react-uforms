@@ -37,7 +37,6 @@ test('default values -> change item -> submit', async () => {
           <>
             {items.map((item, index) => (
               <div key={item.id}>
-                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
                 <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
@@ -92,7 +91,6 @@ test('default values -> add item -> submit', async () => {
           <>
             {items.map((item, index) => (
               <div key={item.id}>
-                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
                 <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
@@ -175,7 +173,6 @@ test('default values -> remove item -> submit', async () => {
           <>
             {items.map((item, index) => (
               <div key={item.id}>
-                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
                 <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
@@ -251,8 +248,7 @@ test('default values -> manage items', async () => {
         {(items, fieldArrayApi) => (
           <>
             {items.map((item, index) => (
-              <div key={item.id}>
-                <Text name={`posts.${index}.id`} data-testid={`${item.id}-id`} />
+              <div key={item.id} data-testid={`${item.id}-id`}>
                 <Text name={`posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
@@ -266,6 +262,7 @@ test('default values -> manage items', async () => {
             >
               Add item
             </button>
+            <span data-testid="items-length">{items.length}</span>
           </>
         )}
       </FieldArray>
@@ -273,6 +270,7 @@ test('default values -> manage items', async () => {
   );
   const removeButton = getByTestId('remove-button');
   const addButton = getByTestId('add-button');
+  const itemsLength = getByTestId('items-length');
 
   expect(getByTestId('5-id')).toBeInTheDocument();
   expect(getByTestId('7-id')).toBeInTheDocument();
@@ -283,6 +281,8 @@ test('default values -> manage items', async () => {
     fireEvent.click(removeButton);
   });
 
+  await waitFor(() => expect(itemsLength.innerHTML).toBe('3'));
+
   expect(getByTestId('5-id')).toBeInTheDocument();
   expect(getByTestId('7-id')).toBeInTheDocument();
   expect(getByTestId('11-id')).toBeInTheDocument();
@@ -291,12 +291,16 @@ test('default values -> manage items', async () => {
     fireEvent.click(removeButton);
   });
 
+  await waitFor(() => expect(itemsLength.innerHTML).toBe('2'));
+
   expect(getByTestId('5-id')).toBeInTheDocument();
   expect(getByTestId('7-id')).toBeInTheDocument();
 
   act(() => {
     fireEvent.click(addButton);
   });
+
+  await waitFor(() => expect(itemsLength.innerHTML).toBe('3'));
 
   expect(getByTestId('5-id')).toBeInTheDocument();
   expect(getByTestId('7-id')).toBeInTheDocument();
@@ -305,6 +309,8 @@ test('default values -> manage items', async () => {
   act(() => {
     fireEvent.click(removeButton);
   });
+
+  await waitFor(() => expect(itemsLength.innerHTML).toBe('2'));
 
   expect(getByTestId('5-id')).toBeInTheDocument();
   expect(getByTestId('7-id')).toBeInTheDocument();

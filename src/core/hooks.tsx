@@ -175,7 +175,7 @@ export const useFieldArray = <Values extends FormValues>(
 ): [items: Array<string>, fieldArrayApi: FieldArrayApiInterface, formApi: FormApiInterface<Values>] => {
   const state = useFormStore(
     (state) => state as unknown as FormStateInterface<FormValues>,
-    compareDynamicValues(fieldArrayId),
+    // compareDynamicValues(fieldArrayId),
   ) as unknown as FormStateInterface<Values>;
   const formApi = state.formApi;
   const fieldArrayApi = formApi.getFieldArray(fieldArrayId) as FieldArrayApiInterface;

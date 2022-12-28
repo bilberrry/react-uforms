@@ -60,7 +60,7 @@ export const commonApiPure = (set, get) => {
     } catch (err: any) {
       for (let i = 0; i < err.inner.length; i++) {
         const { path, errors } = err.inner[i];
-        ids.push(path as string);
+        ids.push(path.replace(/\[([^\]]+)\]/g, '.$1'));
         data.push({ errors: errors, isValid: false });
       }
     }
