@@ -37,6 +37,7 @@ test('default values -> change item -> submit', async () => {
           <>
             {items.map((item, index) => (
               <div key={item.id}>
+                <Text name={`profile.posts.${index}.id`} data-testid={`${item.id}-id`} />
                 <Text name={`profile.posts.${index}.title`} data-testid={`${item.id}-title`} />
               </div>
             ))}
