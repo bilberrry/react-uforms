@@ -1,6 +1,6 @@
 import React, { CSSProperties, PropsWithoutRef, ReactNode } from 'react';
 import { useGroup } from '../../hooks';
-import create, { StoreApi } from 'zustand';
+import { create, StoreApi } from 'zustand';
 import createContext from 'zustand/context';
 import { FieldRefProp, GroupApiInterface, GroupsApiInterface } from '../../types';
 

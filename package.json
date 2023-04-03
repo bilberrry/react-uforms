@@ -51,7 +51,7 @@
     "lodash.set": "^4.3.2",
     "lodash.transform": "^4.6.0",
     "lodash.xorwith": "^4.5.0",
-    "zustand": "^4.1.4"
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",
