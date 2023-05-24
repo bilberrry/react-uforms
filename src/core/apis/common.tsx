@@ -60,8 +60,13 @@ export const commonApiPure = (set, get) => {
     } catch (err: any) {
       for (let i = 0; i < err.inner.length; i++) {
         const { path, errors } = err.inner[i];
-        ids.push(path as string);
-        data.push({ errors: errors, isValid: false });
+        const errorIndex = data.findIndex(({ id }) => id === path);
+        if (data[errorIndex]) {
+          data[errorIndex].errors?.push(errors);
+        } else {
+          ids.push(path as string);
+          data.push({ errors, isValid: false, id: path });
+        }
       }
     }
     setFields(ids, data, { errors: [], isValid: true });
